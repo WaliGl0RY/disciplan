@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-klausuren_data.py — Daten fuer build.py: MODULES (Moduldaten), DAYS (Tagesplan) und
+klausuren_data.py — Daten fuer scripts/build.py: MODULES (Moduldaten), DAYS (Tagesplan) und
 TEXT (Titel und Strategietexte der Uebersicht).
 
 In diesem Repo stehen hier nur DEMO-Daten fuer drei erfundene Module (KAF, GAR, RAD).
 Die Struktur ist dieselbe wie im echten Einsatz: eigene Module eintragen, dann
 `python scripts/build.py`.
 
-check.py --plan liest diese Datei als Text (Tagesplan-Pruefung). Deshalb:
+scripts/check.py --plan liest diese Datei als Text (Tagesplan-Pruefung). Deshalb:
 Texte in doppelten Anfuehrungszeichen ohne innere doppelte Anfuehrungszeichen,
 Schrittlisten als JSON-kompatible Dicts.
 """

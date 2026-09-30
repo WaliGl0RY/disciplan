@@ -3,7 +3,7 @@
 <title>disciplan — Demo</title>
 <style>
 
-/* ---- Der laufende Plan (Ansicht ab 28.08.) ---- */
+/* ---- Der laufende Plan (Ansicht ab PLAN.start) ---- */
 .lauf{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);
  border-radius:10px;padding:16px 18px 18px;margin:0 0 20px}
 .lauf .lh{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
@@ -447,7 +447,7 @@ html[data-t=dark] mark{background:#2a3f6a;color:#fff}
       <div class="lfil" id="lauffil"></div>
       <div class="lhd" id="laufheuteh">Heute im Detail</div>
       <div id="laufheute"></div>
-      <div class="fin">Alles vor dem 28.08. steht unten im vollständigen Kalender &mdash; als Archiv, nicht als offene Rechnung.</div>
+      <div class="fin">Alles vor dem <span class="plstart"></span> steht unten im vollständigen Kalender &mdash; als Archiv, nicht als offene Rechnung.</div>
     </div>
     <button class="tglr" id="tgla"><span class="ar">&#9656;</span>
       <h3>Der alte Plan bis 27.08. &mdash; zum Abhaken</h3>
@@ -816,38 +816,26 @@ const dt=s=>new Date(s+"T00:00:00");
 const dd=s=>Math.round((dt(s)-T)/864e5);
 const WD=["So","Mo","Di","Mi","Do","Fr","Sa"];
 const fm=s=>{const d=dt(s);return WD[d.getDay()]+" "+String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."};
-let ST={};try{ST=JSON.parse(localStorage.getItem("kl2609")||"{}")}catch(e){}
-const save=()=>{try{localStorage.setItem("kl2609",JSON.stringify(ST))}catch(e){}};
-/* Einmalige Bereinigung: der Plan ab 29.08.2026 (Tagindex 25) wurde am 29.08. neu
-   geschnitten. Haken haengen an Tag- und Positionsindex, alte Haken ab dort zeigen
-   also auf voellig andere Ziele. Tage 0-24 bleiben unangetastet. */
-/* 18.09.2026: der Leseblock am 18.09. (Tagindex 44) wurde aus einem Block
-   herausgeloest, dadurch verschieben sich dort alle Positionen ab 1 um eins.
-   Nur dieser eine Tag wird zurueckgesetzt, alles andere bleibt. Schritt-Haken
-   dieses Tages ebenso. */
-try{if(localStorage.getItem("kl-recut2209")!=="1"){
-  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=47)delete ST[k];}
-  ST["47_0"]=ST["47_1"]=ST["48_0"]=ST["48_1"]=true;save();
-  try{const raw=JSON.parse(localStorage.getItem("kl-step")||"{}");for(const k of Object.keys(raw)){if(parseInt(k.split("_")[0],10)>=47)delete raw[k];}localStorage.setItem("kl-step",JSON.stringify(raw));}catch(e2){}
-  localStorage.setItem("kl-recut2209","1");
-}}catch(e){}
-try{if(localStorage.getItem("kl-split1809")!=="1"){
-  for(const k of Object.keys(ST)){if(parseInt(k.split("_")[0],10)===44)delete ST[k];}
+/* Plan-Konfiguration aus klausuren_data.PLAN: start, countdown, store, migrations */
+const PLAN={"start": "2026-08-28", "countdown": "2026-09-01", "store": "kl-demo", "migrations": []};
+const START=PLAN.start;
+const STORE=PLAN.store;
+let ST={};try{ST=JSON.parse(localStorage.getItem(STORE)||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem(STORE,JSON.stringify(ST))}catch(e){}};
+/* Migrationen: wenn der Plan neu geschnitten wird, haengen alte Haken an Tag- und
+   Positionsindex und zeigen auf andere Ziele. Jede Migration laeuft einmal pro Browser
+   (Merker: localStorage[key]=value). days=[von,bis] (bis=null: offen), steps=true raeumt
+   auch die Schritt-Haken, tick=["47_0",...] setzt danach Haken. */
+for(const mg of (PLAN.migrations||[])){try{if(localStorage.getItem(mg.key)!==mg.value){
+  const inr=k=>{const d=parseInt(k.split("_")[0],10);return d>=mg.days[0]&&(mg.days[1]==null||d<=mg.days[1]);};
+  for(const k of Object.keys(ST)){if(inr(k))delete ST[k];}
+  for(const k of (mg.tick||[]))ST[k]=true;
   save();
-  /* Schritt-Haken desselben Tages direkt im Speicher, SP gibt es hier noch nicht */
-  try{const raw=JSON.parse(localStorage.getItem("kl-step")||"{}");
-      for(const k of Object.keys(raw)){if(parseInt(k.split("_")[0],10)===44)delete raw[k];}
-      localStorage.setItem("kl-step",JSON.stringify(raw));}catch(e2){}
-  localStorage.setItem("kl-split1809","1");
-}}catch(e){}
-try{if(localStorage.getItem("kl-recut2")!=="2026-08-30"){
-  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=29)delete ST[k];}
-  save();localStorage.setItem("kl-recut2","2026-08-30");
-}}catch(e){}
-try{if(localStorage.getItem("kl-recut")!=="2026-08-29b"){
-  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=24)delete ST[k];}
-  save();localStorage.setItem("kl-recut","2026-08-29b");
-}}catch(e){}
+  if(mg.steps){try{const raw=JSON.parse(localStorage.getItem("kl-step")||"{}");
+    for(const k of Object.keys(raw)){if(inr(k))delete raw[k];}
+    localStorage.setItem("kl-step",JSON.stringify(raw));}catch(e2){}}
+  localStorage.setItem(mg.key,mg.value);
+}}catch(e){}}
 
 /* ---------- Navigation ---------- */
 function go(k,tab){
@@ -891,9 +879,10 @@ function kpi(){
  const w=D.days.map((d,i)=>({...d,i})).filter(d=>d.d>=D.start);
  const done=w.reduce((a,d)=>a+d.o.filter((_,j)=>ST[d.i+"_"+j]).length,0);
  const tot=w.reduce((a,d)=>a+d.o.length,0);
- p.push(`<div class="cdb"><div class="n">${done}/${tot}</div><div class="l">Ziele ab 28.08.</div></div>`);
+ p.push(`<div class="cdb"><div class="n">${done}/${tot}</div><div class="l">Ziele ab ${fm(START).slice(3)}</div></div>`);
  p.push(`<div class="cdb"><div class="n">${D.mods.filter(m=>m.has).length}/${D.mods.length}</div><div class="l">Module dokumentiert</div></div>`);
  document.getElementById("cd").innerHTML=p.join("");
+ document.querySelectorAll(".plstart").forEach(e=>{e.textContent=fm(START).slice(3)});
  document.getElementById("today").textContent="Heute: "+fm(iso(T));
 }
 kpi();
@@ -932,7 +921,7 @@ function days(){
   d.o.forEach((o,j)=>{const id=i+"_"+j,c=!!ST[id];
    const jb=o.to?`<button class="jp" title="Zum Lernstoff: ${o.m}" onclick="jump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
    out+=`<div class="obj${c?" done":""}"><input type="checkbox" id="k${id}" ${c?"checked":""} onchange="tog('${id}')">
-     <span class="mk">${o.m}</span><span class="ty ${o.ty}">${o.ty}</span>
+     <span class="mk" style="color:var(--mc-${o.m},var(--mut))">${o.m}</span><span class="ty ${o.ty}">${o.ty}</span>
      <label for="k${id}">${o.x} <span style="color:var(--mut);font-size:12px">· ${o.min} Min</span></label>${jb}</div>`});
   out+="</div></div>"});
  document.getElementById("days").innerHTML=out;
@@ -1046,7 +1035,7 @@ function dRender(){
   const jb=o.to?`<button class="go" title="Zum Lernstoff: ${o.m}" onclick="dJump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
   return `<div class="tsk${c?" done":""}">
     <input type="checkbox" ${c?"checked":""} onchange="dTog('${id}')">
-    <span class="meta"><span class="mk3">${o.m}</span>
+    <span class="meta"><span class="mk3" style="color:var(--mc-${o.m},var(--mut))">${o.m}</span>
       <span class="ty ${o.ty}">${TY[o.ty]||o.ty}</span>
       <span class="mn2">${o.min} Min</span></span>
     <span class="tt">${o.x}</span>${jb}</div>`}).join("")
@@ -1231,7 +1220,7 @@ function lauf(){
  document.getElementById("laufheute").innerHTML=h+"</div>";
 }
 /* ---------- Archiv: derselbe Aufbau, aber alles VOR START ---------- */
-const AEND="2026-08-27";
+const AEND=iso(new Date(dt(START).getTime()-864e5));
 const AW0=monday(dt(D.days[0].d)), AWN=monday(dt(AEND));
 const ANW=Math.max(1,Math.round((AWN-AW0)/6048e5)+1);
 let awi=ANW-1, aKey=null, aMod=null;
@@ -1373,7 +1362,7 @@ let pCur=null;
 function pOpen(di,j){
  const d=D.days[di],o=d.o[j];pCur=[di,j];
  const st=o.st||[];
- let h='<div class="ph"><div class="pmeta"><span class="pmk">'+o.m+'</span>'+
+ let h='<div class="ph"><div class="pmeta"><span class="pmk" style="color:var(--mc-'+o.m+',var(--mut))">'+o.m+'</span>'+
    '<span class="pty">'+fm(d.d)+' &middot; '+o.min+' Min &middot; '+(TYN[o.ty]||o.ty)+
    (o.ty==="V"?' <b>(K\u00fcr \u2014 optional)</b>':'')+'</span>'+
    '<button class="pcl" onclick="pClose()" title="Schlie\u00dfen">&times;</button></div>'+
