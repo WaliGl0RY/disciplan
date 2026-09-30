@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """check.py — eine Textpruefung statt zehn Screenshots.
 
-    python3 check.py                 alles, fuer alle Module
-    python3 check.py KAF             nur ein Modul
-    python3 check.py KAF  --plan     zusaetzlich die Planpruefungen
+    python3 scripts/check.py         alles, fuer alle Module
+    python3 scripts/check.py KAF     nur ein Modul
+    python3 scripts/check.py KAF --plan zusaetzlich die Planpruefungen
 
 Prueft, ohne Browser:
   1 tote Anker im Modul-HTML
@@ -18,7 +18,7 @@ Rueckgabe 0 = sauber, 1 = Befunde.
 import sys, os, re, io, ast, html, json, glob
 
 MAXCOL = 118   # gemessen: 123 Zeichen passen in die Spalte, 118 ist der sichere Rand
-ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # Repo-Wurzel (Skripte liegen in scripts/)
 findings = []
 
 

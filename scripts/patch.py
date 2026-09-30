@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """patch.py — Textstellen in einer HTML-Datei ersetzen, tolerant und nachvollziehbar.
 
-    python3 patch.py module/KAF/KAF.html ops.json           ausfuehren
-    python3 patch.py module/KAF/KAF.html ops.json --dry      nur pruefen
+    python3 scripts/patch.py module/KAF/KAF.html ops.json   ausfuehren
+    python3 scripts/patch.py module/KAF/KAF.html ops.json --dry nur pruefen
 
 ops.json ist eine Liste von Operationen:
 

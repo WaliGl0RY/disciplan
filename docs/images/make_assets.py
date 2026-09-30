@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Generates the README images (SVG), stdlib only:  python docs/readme/make_assets.py
+"""Generates the README images (SVG), stdlib only:  python docs/images/make_assets.py
 
 Palette (crimson brand, no orange/olive). Base contrast >= 4.5:1, light >= 7:1 on #131016
 (checked at the end of this script).
@@ -12,7 +12,7 @@ Palette (crimson brand, no orange/olive). Base contrast >= 4.5:1, light >= 7:1 o
   zone 5 ai        #8E86F0 / #C3BEFA   lavender
   demo modules     KAF #6d4fd6/#a995f5  RAD #2563c9/#7fb0f5  GAR #1b9a5f/#5fd49a  (dark/light UI colour)
   real modules     see MOD8 (one colour per module, used by its study-doc and trainer pill)
-Outputs: docs/readme/*.svg (README) and docs/readme/mine/*.svg (docs/MY-EXAM-PERIOD.md).
+Outputs: docs/images/*.svg (README) and docs/images/mine/*.svg (docs/MY-EXAM-PERIOD.md).
 """
 import os, re, sys
 
@@ -48,6 +48,17 @@ ZONES = [  # key, number, title, subtitle, base, light, icon
      '<rect x="-12" y="-10" width="24" height="20" rx="3"/><path d="M-7 -3 L-3 0 L-7 3"/><path d="M0 4 H6"/>'),
     ("ai", "05", "How I built it and what the AI did", "my decisions, Claude as coding assistant", "#8E86F0", "#C3BEFA",
      '<path d="M-11 -9 H11 V5 H2 L-4 11 V5 H-11 Z"/><path d="M-5 -2 H5"/>'),
+]
+
+
+MINE_ZONES = [  # the three zones of docs/MY-EXAM-PERIOD.md, same strip design
+    ("modules", "01", "The eight modules", "one colour per module · study document and trainer", "#E5483B", "#FF9D93",
+     '<rect x="-11" y="-11" width="9" height="9" rx="2"/><rect x="2" y="-11" width="9" height="9" rx="2"/>'
+     '<rect x="-11" y="2" width="9" height="9" rx="2"/><rect x="2" y="2" width="9" height="9" rx="2"/>'),
+    ("plan", "02", "A day in the real plan", "typed blocks, checkable steps", "#E8608F", "#FFA9C6",
+     '<rect x="-11" y="-9" width="22" height="20" rx="3"/><path d="M-11 -3 H11"/><path d="M-6 -12 V-7"/><path d="M6 -12 V-7"/>'),
+    ("numbers", "03", "In numbers", "the September 2026 exam period", "#C26AE0", "#E3A9F5",
+     '<path d="M-10 10 V2"/><path d="M-3 10 V-4"/><path d="M4 10 V-9"/><path d="M11 10 V-1"/>'),
 ]
 
 
@@ -242,10 +253,12 @@ def main():
     recolor_copy("how-it-works.svg", HERE)
     # my exam period
     w(os.path.join(MINE, "banner.svg"), banner_mine())
-    for n in ("hook.svg", "story-button.svg", "how-it-works.svg", "badge-modules.svg", "badge-trainers.svg", "badge-python.svg",
-              "badge-server.svg", "badge-nav-dayplan.svg", "badge-nav-trainers.svg", "badge-nav-studydocs.svg",
-              "badge-nav-cockpit.svg", "badge-nav-sources.svg", "badge-nav-build.svg", "badge-nav-addmodule.svg"):
+    for n in ("hook.svg", "story-button.svg"):
         recolor_copy(n, MINE)
+    for z in MINE_ZONES:
+        w(os.path.join(MINE, f"strip-{z[0]}.svg"), strip(z))
+        if contrast(z[4], CARD) < 4.5 or contrast(z[5], CARD) < 7:
+            bad.append(z[0])
     for f in sorted(os.listdir(SRC)):
         m = re.match(r"pill-(doc|trainer)-([a-z0-9]+)\.svg$", f)
         if m:

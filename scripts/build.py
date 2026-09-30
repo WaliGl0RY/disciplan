@@ -3,7 +3,7 @@
 """
 build.py — baut alle Modul-HTMLs zu EINER Datei klausuren.html zusammen.
 
-Aufruf:  python build.py
+Aufruf:  python scripts/build.py
 Ergebnis: klausuren.html (neben dieser Datei)
 
 Jedes Modul behaelt sein eigenes CSS — es wird beim Bauen auf #m-<KUERZEL>
@@ -12,12 +12,12 @@ Neue Module fallen automatisch rein: einfach module/<K>/<K>.html anlegen.
 """
 import os, re, json, datetime, sys
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # Repo-Wurzel (Skripte liegen in scripts/)
 OUT  = os.path.join(ROOT, "klausuren.html")
 
 # ─────────────────────────── Kursdaten ───────────────────────────
 # MODULES (Moduldaten), DAYS (Tagesplan) und TEXT (Titel, Strategietexte) liegen in
-# klausuren_data.py neben dieser Datei (in diesem Repo: Demo-Daten fuer KAF, GAR, RAD).
+# klausuren_data.py im Repo-Wurzelordner (in diesem Repo: Demo-Daten fuer KAF, GAR, RAD).
 sys.path.insert(0, ROOT)
 from klausuren_data import MODULES, DAYS, TEXT, PLAN  # noqa: E402
 

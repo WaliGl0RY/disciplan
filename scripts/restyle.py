@@ -10,8 +10,8 @@ Zwei Dinge passieren je Datei:
      in die Fragekarte geholt — solange die Frage offen ist direkt unter die
      Antworten, nach dem Aufloesen direkt hinter das Urteil.
 
-Aufruf:  python3 restyle.py module/KAF/trainer/shell.html [weitere ...]
-         python3 restyle.py --alle      (alle module/*/trainer/shell.html)
+Aufruf:  python3 scripts/restyle.py module/KAF/trainer/shell.html [weitere ...]
+         python3 scripts/restyle.py --alle      (alle module/*/trainer/shell.html)
 
 Danach das jeweilige trainer/build.py laufen lassen, sonst aendert sich an der
 fertigen <K>-Trainer.html nichts. Mehrfaches Aufrufen ist ungefaehrlich.
@@ -19,10 +19,12 @@ fertigen <K>-Trainer.html nichts. Mehrfaches Aufrufen ist ungefaehrlich.
 import io, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CSS = os.path.join(HERE, "trainer-style.css")
-JS  = os.path.join(HERE, "trainer-kopf.js")
-JS_BLATT = os.path.join(HERE, "trainer-blatt.js")
-JS_RAIL  = os.path.join(HERE, "trainer-rail.js")
+ROOT = os.path.dirname(HERE)                      # Repo-Wurzel
+ASSETS = os.path.join(ROOT, "assets", "trainer")   # gemeinsames Trainer-CSS und -JS
+CSS = os.path.join(ASSETS, "trainer-style.css")
+JS  = os.path.join(ASSETS, "trainer-kopf.js")
+JS_BLATT = os.path.join(ASSETS, "trainer-blatt.js")
+JS_RAIL  = os.path.join(ASSETS, "trainer-rail.js")
 KOPFFUNKTION = io.open(JS, encoding="utf-8").read()
 ADDON = ("/*__ADDON_START__*/\n" + io.open(JS_BLATT, encoding="utf-8").read()
          + io.open(JS_RAIL, encoding="utf-8").read() + "/*__ADDON_END__*/\n")
@@ -206,7 +208,7 @@ def main():
     if not args:
         sys.exit(__doc__)
     if args[0] == "--alle":
-        mod = os.path.join(HERE, "module")
+        mod = os.path.join(ROOT, "module")
         args = [os.path.join(mod, k, "trainer", "shell.html") for k in sorted(os.listdir(mod))
                 if os.path.exists(os.path.join(mod, k, "trainer", "shell.html"))]
     css = io.open(CSS, encoding="utf-8").read()

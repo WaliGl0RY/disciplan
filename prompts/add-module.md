@@ -23,13 +23,13 @@ Everything else stays as it is.
  4. After my ok, build:
     - module/<K>/README.md (the six sections from CLAUDE.md), fehler-log.md, the artefacts
     - module/<K>/<K>.html in the six parts (LERNDOKUMENT — Aufbau), reusing the <head>,
-      CSS and sidebar of KAF.html so build.py picks it up unchanged
+      CSS and sidebar of KAF.html so scripts/build.py picks it up unchanged
     - a MODULES entry in klausuren_data.py (k, name, d, t, v, typ, prof, mode, desc;
       trainer=dict(...) only with a trainer), in exam-date order; DAYS only if I ask
     - trainer, only if confirmed: copy module/KAF/trainer/, replace data/, set OUT and the
       file lists in its build.py, replace every KAF-specific text in shell.html (title,
-      header, KEY), run restyle.py on shell.html, then the trainer's build.py
- 5. Run python build.py and python check.py <K>. Fix the findings for the new module and
+      header, KEY), run scripts/restyle.py on shell.html, then the trainer's build.py
+ 5. Run python scripts/build.py and python scripts/check.py <K>. Fix the findings for the new module and
     report the files created, the build output, and what is still open.
  Rules: German Fachsprache in module files. At most three .md per module plus README.md.
  No dates in file names. Don't touch other modules.

@@ -5,15 +5,15 @@ You need Python 3 (standard library only) and a browser. Nothing else is install
 ## 1 · First build
 
 ```bash
-python build.py      # → klausuren.html
-python check.py      # optional lint; check.py <K> --plan also checks the day plan
+python scripts/build.py      # → klausuren.html
+python scripts/check.py      # optional lint; scripts/check.py <K> --plan also checks the day plan
 ```
 
 Open `klausuren.html` from disk. You see the three fictional demo modules (KAF, RAD, GAR), a day plan and the strategy tab. Each demo module has a study document (`module/<K>/<K>.html`), KAF and RAD also a trainer (`module/<K>/<K>-Trainer.html`). Rebuild one trainer with `python module/KAF/trainer/build.py`.
 
 ## 2 · Set your dates
 
-`build.py` contains no dates. Everything date-related lives in `PLAN` in `klausuren_data.py`:
+`scripts/build.py` contains no dates. Everything date-related lives in `PLAN` in `klausuren_data.py`:
 
 ```python
 PLAN = dict(
@@ -31,7 +31,7 @@ PLAN = dict(
 | `store` | The browser key your ticks are saved under | Change it and progress starts empty. Use one key per exam period |
 | `migrations` | One-time resets of ticks after the plan changed | Leave `[]` at the start |
 
-The exam dates of the modules are in `MODULES` (`d="YYYY-MM-DD"`), the day plan in `DAYS`. After a change, run `python build.py` again.
+The exam dates of the modules are in `MODULES` (`d="YYYY-MM-DD"`), the day plan in `DAYS`. After a change, run `python scripts/build.py` again.
 
 ### Migrations (only when you re-cut a running plan)
 
@@ -52,10 +52,10 @@ Give every re-cut a new `key` (or `value`), otherwise browsers that already ran 
 
 1. Put the old exams in `module/<K>/altklausuren/` and the lecture material in `module/<K>/quellen/`.
 2. Open Claude Code in the repo root and paste [prompts/add-module.md](prompts/add-module.md) with your module filled in. It analyses first, proposes a mode and waits for your ok before it creates anything. The rules it follows are in [CLAUDE.md](CLAUDE.md).
-3. Delete the demo modules when you no longer need them: remove their folders and their entries in `MODULES` and `DAYS` in `klausuren_data.py`. A folder that isn't in `MODULES` is ignored by `build.py`.
-4. `python build.py`, then `python check.py <K>`.
+3. Delete the demo modules when you no longer need them: remove their folders and their entries in `MODULES` and `DAYS` in `klausuren_data.py`. A folder that isn't in `MODULES` is ignored by `scripts/build.py`.
+4. `python scripts/build.py`, then `python scripts/check.py <K>`.
 
-A trainer is optional: GAR has none. Give each module a colour with `col` and `dcol` (light and dark) in its `MODULES` entry. The cockpit uses it for the module card, the sidebar and the plan chips; a trainer takes its colour from `PALETTEN` in `restyle.py`.
+A trainer is optional: GAR has none. Give each module a colour with `col` and `dcol` (light and dark) in its `MODULES` entry. The cockpit uses it for the module card, the sidebar and the plan chips; a trainer takes its colour from `PALETTEN` in `scripts/restyle.py`.
 
 ## 4 · Drill
 

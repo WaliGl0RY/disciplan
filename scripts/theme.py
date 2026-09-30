@@ -18,8 +18,8 @@ Die Wahl liegt unter dem Schluessel "kl-theme" im localStorage — demselben,
 den klausuren.html schon benutzt. Alle Seiten des Ordners teilen sich diesen
 Speicher, die Einstellung gilt also ueberall.
 
-Aufruf:  python3 theme.py datei.html [datei.html ...]
-         python3 theme.py --alle        (module/*/*.html; index.html ist seit 27.09.2026 archiviert)
+Aufruf:  python3 scripts/theme.py datei.html [datei.html ...]
+         python3 scripts/theme.py --alle        (module/*/*.html; index.html ist seit 27.09.2026 archiviert)
 
 Mehrfaches Aufrufen ist ungefaehrlich: ein vorhandener Block wird ersetzt.
 klausuren.html wird uebersprungen — die Datei wird von build.py erzeugt und
@@ -145,7 +145,7 @@ def main():
     if not args:
         sys.exit(__doc__)
     if args[0] == "--alle":
-        root = os.path.dirname(os.path.abspath(__file__))
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         args = []
         mod = os.path.join(root, "module")
         for k in sorted(os.listdir(mod)):

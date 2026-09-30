@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-klausuren_data.py — Daten fuer build.py: MODULES (Moduldaten), DAYS (Tagesplan) und
+klausuren_data.py — Daten fuer scripts/build.py: MODULES (Moduldaten), DAYS (Tagesplan) und
 TEXT (Titel und Strategietexte der Uebersicht).
 
 In diesem Repo stehen hier nur DEMO-Daten fuer drei erfundene Module (KAF, GAR, RAD).
 Die Struktur ist dieselbe wie im echten Einsatz: eigene Module eintragen, dann
-`python build.py`.
+`python scripts/build.py`.
 
-check.py --plan liest diese Datei als Text (Tagesplan-Pruefung). Deshalb:
+scripts/check.py --plan liest diese Datei als Text (Tagesplan-Pruefung). Deshalb:
 Texte in doppelten Anfuehrungszeichen ohne innere doppelte Anfuehrungszeichen,
 Schrittlisten als JSON-kompatible Dicts.
 """
@@ -22,7 +22,7 @@ Schrittlisten als JSON-kompatible Dicts.
 # mode   Modus aus der Analyse (siehe CLAUDE.md) oder None
 # desc   ein, zwei Saetze Begruendung (HTML erlaubt)
 # col, dcol  Modulfarbe (hell / dunkel): Karte, Chips, Knoepfe im Cockpit
-#            (die Trainer-Farbe steht in restyle.py, PALETTEN)
+#            (die Trainer-Farbe steht in scripts/restyle.py, PALETTEN)
 # trainer  optional: dict(file=..., was=...) — nur wenn es eine Trainer-App gibt
 MODULES = [
  dict(k="KAF", col="#6d4fd6", dcol="#a995f5", name="Kaffeemaschinen-Technik (Demo)", d="2026-09-02", t="10:00", v=1, typ="PF", prof="Demo",
