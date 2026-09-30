@@ -33,13 +33,29 @@ MODULES = [
       mode=None, desc="Erfundenes Beispielmodul ohne Trainer und noch ohne Modus."),
 ]
 
+# ─────────────────────────── Plan-Konfiguration ───────────────────────────
+# Alles, was build.py an Daten braucht und was nicht aus MODULES/DAYS folgt.
+# start       erster Tag der laufenden Planansicht (YYYY-MM-DD); alles davor ist Archiv
+# countdown   Ende der Vorbereitung, worauf "Tage Vorbereitung uebrig" zaehlt
+# store       localStorage-Schluessel fuer die Haken. Anderer Wert = Fortschritt startet leer
+# migrations  Liste; leer lassen, solange der Plan nicht neu geschnitten wird. Jeder Eintrag:
+#             dict(key="kl-recut-1", value="1", days=[24, None], steps=False, tick=[])
+#             loescht einmalig pro Browser alle Haken der Tagindizes von..bis (None = offen)
+#             und setzt optional "Tagindex_Position"-Haken (tick). Siehe GUIDE.md.
+PLAN = dict(
+  start="2026-08-28",
+  countdown="2026-09-01",
+  store="kl-demo",
+  migrations=[],
+)
+
 # ───────────────────────────── Tagesplan ─────────────────────────────
 # (Datum, [ (Modul, Minuten, Typ, Text, Anker?, Schritte?, Merksaetze?), ... ], Tagestyp)
 # Aufgabentyp: L lesen · U ueben · D aus dem Kopf · T Test/kalt · W Wiederholung · O Orga
 #              V Kuer — ausdruecklich optional, faellt als erstes weg (steht unter der Feierabend-Linie)
 # Tagestyp:    "" normal · "deadline" · "klausur"
 # Schritte:    [{"t": Titel, "d": Beschreibung, "to": Anker, "min": Minuten}, ...]
-# Hinweis:     build.py startet die laufende Planansicht am 2026-08-28 (siehe START in build.py).
+# Hinweis:     die laufende Planansicht beginnt an PLAN['start'] (siehe oben).
 DAYS = [
  ("2026-08-26", [("KAF",50,"L","<b>KAF.html Orientierung und G1–G2</b> lesen.","orient"),("GAR",25,"L","<b>GAR Orientierung</b> überfliegen.","orient")], ""),
  ("2026-08-27", [("KAF",50,"L","<b>G3–G5</b> lesen, zu jedem Begriff zwei Sätze notieren.","g3"),("RAD",50,"L","<b>Antrieb</b> lesen.","antrieb")], ""),
