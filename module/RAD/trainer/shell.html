@@ -10,30 +10,30 @@
 </script>
 <style>
 /* ══ Farbwelt und Formensprache der vorigen Trainer-Version:
-      Rot-Akzent, roter Hero, weiche runde Karten, Tiefe durch Schatten ══ */
+      Teal-Akzent, farbiger Hero, weiche runde Karten, Tiefe durch Schatten ══ */
 :root{
-  --bg:#faf6f6; --card:#ffffff; --card2:#f5eeee; --ink:#1f1718; --mut:#7a6a6c;
-  --line:#ece4e4; --acc:#c8283a; --acc2:#a51d2d; --acc-w:#fcebec; --on-acc:#ffffff;
+  --bg:#f4f9f8; --card:#ffffff; --card2:#eef5f4; --ink:#16201f; --mut:#5f7270;
+  --line:#dce8e6; --acc:#0e8f86; --acc2:#0a6f68; --acc-w:#e0f3f1; --on-acc:#ffffff;
   --good:#1f9d62; --good-w:#e2f5ec; --bad:#c75454; --bad-w:#fbe9e9;
-  --warn:#b7791f; --warn-w:#faf1de; --none:#b9bacb;
-  --g-violet:linear-gradient(135deg,#b3172b,#e8474c);
-  --g-blue:linear-gradient(135deg,#d2293b,#f0705a);
-  --shadow:0 12px 32px rgba(110,30,36,.13);
-  --shadow-sm:0 4px 14px rgba(110,30,36,.08);
+  --warn:#4a6fa5; --warn-w:#e6eef9; --none:#b9bacb;
+  --g-violet:linear-gradient(135deg,#0a7d74,#2fb5a8);
+  --g-blue:linear-gradient(135deg,#1a9a90,#5cc9bd);
+  --shadow:0 12px 32px rgba(14,100,94,.13);
+  --shadow-sm:0 4px 14px rgba(14,100,94,.08);
   --r:16px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-t="light"]){
-  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
-  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --bg:#101716; --card:#18211f; --card2:#22302d; --ink:#e3f0ee; --mut:#9bb3af;
+  --line:#2b3d3a; --acc:#5cc9bd; --acc2:#8fdcd2; --acc-w:#12332f; --on-acc:#0a1a18;
   --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
-  --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
+  --warn:#8fb0e6; --warn-w:#1c2a42; --none:#4a4b62;
   --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
 }}
 :root[data-t="dark"]{
-  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
-  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --bg:#101716; --card:#18211f; --card2:#22302d; --ink:#e3f0ee; --mut:#9bb3af;
+  --line:#2b3d3a; --acc:#5cc9bd; --acc2:#8fdcd2; --acc-w:#12332f; --on-acc:#0a1a18;
   --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
-  --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
+  --warn:#8fb0e6; --warn-w:#1c2a42; --none:#4a4b62;
   --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
@@ -79,7 +79,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 8
 .hero-btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
 .hb{border:0;border-radius:11px;padding:10px 17px;font-size:13.5px;font-weight:680;background:rgba(255,255,255,.2);color:#fff;transition:background .16s,transform .16s}
 .hb:hover{background:rgba(255,255,255,.34);transform:translateY(-1px)}
-.hb.p{background:#fff;color:#a51d2d}
+.hb.p{background:#fff;color:#0a6f68}
 .hero-r{display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap}
 .hring{width:84px;height:84px;position:relative;flex:none}
 .hring svg{transform:rotate(-90deg);display:block}

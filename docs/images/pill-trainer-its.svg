@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119" height="28" viewBox="0 0 119 28" font-family="Verdana, DejaVu Sans, sans-serif">
+<rect x=".5" y=".5" width="118" height="27" rx="14" fill="#1c1418" stroke="#1D9E75"/>
+<rect x=".5" y=".5" width="48" height="27" rx="14" fill="#1D9E75"/><rect x="34" y=".5" width="14" height="27" fill="#1D9E75"/>
+<text x="24.0" y="18.5" fill="#0b0a0f" font-size="12" font-weight="bold" text-anchor="middle">ITS</text>
+<text x="83.5" y="18.5" fill="#f3e9e0" font-size="12" text-anchor="middle">Trainer</text></svg>

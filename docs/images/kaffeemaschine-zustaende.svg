@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -70 980 520" font-family="sans-serif" role="img" aria-label="Zustandsdiagramm einer Kaffeemaschine (Demo)">
+<rect x="-20" y="-70" width="980" height="520" fill="#241f35"/>
+<text x="10" y="-38" fill="#e9e6f2" font-size="17" font-weight="bold">Kaffeemaschine — Zustandsdiagramm (Demo)</text>
+<text x="10" y="-16" fill="#8fa6c9" font-size="12">Moore-Automat: die Ausgaben (violett) hängen am Zustand, die Übergänge (blau) an Ereignissen.</text>
+<circle cx="12" cy="210" r="5" fill="#7C5CD6"/><path d="M18,210 L26,210" stroke="#918e9a" stroke-width="2"/><polygon points="28.0,210.0 18.0,205.0 18.0,215.0" fill="#918e9a"/>
+<path d="M195,192 C232,152 252,92 286,74" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="286.0,74.0 274.8,74.3 279.5,83.1" fill="#918e9a"/>
+<text x="236" y="118" fill="#8fa6c9" font-size="13" text-anchor="middle">Ein-Taste</text>
+<path d="M455,62 L606,62" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="606.0,62.0 596.0,57.0 596.0,67.0" fill="#918e9a"/>
+<text x="530" y="52" fill="#8fa6c9" font-size="13" text-anchor="middle">T ≥ 93 °C</text>
+<path d="M606,84 L459,84" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="459.0,84.0 469.0,89.0 469.0,79.0" fill="#918e9a"/>
+<text x="530" y="103" fill="#8fa6c9" font-size="13" text-anchor="middle">T &lt; 90 °C</text>
+<path d="M676,102 L676,314" stroke="#a48bf0" stroke-width="2" fill="none"/><polygon points="676.0,314.0 681.0,304.0 671.0,304.0" fill="#a48bf0"/>
+<text x="632" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Bezug-Taste</text>
+<path d="M716,314 L716,106" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="716.0,106.0 711.0,116.0 721.0,116.0" fill="#918e9a"/>
+<text x="772" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Menge erreicht</text>
+<path d="M606,349 L459,349" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="459.0,349.0 469.0,354.0 469.0,344.0" fill="#918e9a"/>
+<text x="532" y="339" fill="#8fa6c9" font-size="13" text-anchor="middle">Zähler ≥ 200</text>
+<path d="M372,316 L372,106" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="372.0,106.0 367.0,116.0 377.0,116.0" fill="#918e9a"/>
+<text x="322" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Programm fertig</text>
+<path d="M290,370 C232,370 150,330 120,245" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="120.0,245.0 118.6,256.1 128.0,252.8" fill="#918e9a"/>
+<text x="178" y="372" fill="#8fa6c9" font-size="13" text-anchor="middle">Aus-Taste</text>
+<rect x="30" y="179" width="165" height="62" rx="8" fill="#110f16" stroke="#a48bf0" stroke-width="2.5"/>
+<text x="112" y="203" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">AUS</text>
+<text x="112" y="219" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung aus</text>
+<text x="112" y="234" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe aus</text>
+<rect x="290" y="40" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="372" y="64" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">AUFHEIZEN</text>
+<text x="372" y="80" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung an</text>
+<text x="372" y="95" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED blinkt</text>
+<rect x="610" y="40" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="692" y="64" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">BEREIT</text>
+<text x="692" y="80" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung regelt</text>
+<text x="692" y="95" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED an</text>
+<rect x="610" y="318" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="692" y="342" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">BRÜHEN</text>
+<text x="692" y="358" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe an</text>
+<text x="692" y="373" fill="#a48bf0" font-size="11.5" text-anchor="middle">Zähler + 1</text>
+<rect x="290" y="318" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="372" y="342" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">ENTKALKEN</text>
+<text x="372" y="358" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe im Intervall</text>
+<text x="372" y="373" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED rot</text>
+<text x="10" y="435" fill="#918e9a" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der Normalbetrieb; „Aus-Taste" gilt sinngemäß aus jedem Zustand (nur einmal gezeichnet).</text>
+</svg>

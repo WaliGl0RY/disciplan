@@ -4,25 +4,26 @@
 restyle.py — gibt allen Trainer-Apps dieselbe Oberflaeche.
 
 Zwei Dinge passieren je Datei:
-  1. Der Inhalt des <style>-Blocks wird durch trainer-style.css ersetzt
+  1. Der Inhalt des <style>-Blocks wird durch assets/trainer/trainer-style.css ersetzt
      (Gestaltung aus dem Bewerbungs-Cockpit: Indigo, weiche Karten, Schatten).
   2. Die Aktionsleiste #nav wird aus der fest am Fensterboden klebenden Leiste
      in die Fragekarte geholt — solange die Frage offen ist direkt unter die
      Antworten, nach dem Aufloesen direkt hinter das Urteil.
 
-Aufruf:  python3 restyle.py module/KAF/trainer/shell.html [weitere ...]
-         python3 restyle.py --alle      (alle module/*/trainer/shell.html)
+Aufruf:  python3 scripts/restyle.py module/KAF/trainer/shell.html [weitere ...]
+         python3 scripts/restyle.py --alle      (alle module/*/trainer/shell.html)
 
 Danach das jeweilige trainer/build.py laufen lassen, sonst aendert sich an der
 fertigen <K>-Trainer.html nichts. Mehrfaches Aufrufen ist ungefaehrlich.
 """
 import io, os, re, sys
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-CSS = os.path.join(HERE, "trainer-style.css")
-JS  = os.path.join(HERE, "trainer-kopf.js")
-JS_BLATT = os.path.join(HERE, "trainer-blatt.js")
-JS_RAIL  = os.path.join(HERE, "trainer-rail.js")
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # Repo-Wurzel
+ASSETS = os.path.join(ROOT, "assets", "trainer")
+CSS = os.path.join(ASSETS, "trainer-style.css")
+JS  = os.path.join(ASSETS, "trainer-kopf.js")
+JS_BLATT = os.path.join(ASSETS, "trainer-blatt.js")
+JS_RAIL  = os.path.join(ASSETS, "trainer-rail.js")
 KOPFFUNKTION = io.open(JS, encoding="utf-8").read()
 ADDON = ("/*__ADDON_START__*/\n" + io.open(JS_BLATT, encoding="utf-8").read()
          + io.open(JS_RAIL, encoding="utf-8").read() + "/*__ADDON_END__*/\n")
@@ -34,10 +35,10 @@ PALETTEN = {
               dacc="#5cc9bd", daccw="#12332f",
               g1="linear-gradient(135deg,#0f9b8e,#46bfa6)",
               g2="linear-gradient(135deg,#2aa39a,#6fd0c0)"),
-  "kaf": dict(acc="#c05a1e", acc2="#96430f", accw="#fbeee2",
-              dacc="#e9975f", daccw="#33210e",
-              g1="linear-gradient(135deg,#cf6425,#e8a35b)",
-              g2="linear-gradient(135deg,#c9622a,#efa96b)"),
+  "kaf": dict(acc="#7C5CD6", acc2="#5a3fb8", accw="#efe9fb",
+              dacc="#a48bf0", daccw="#231c40",
+              g1="linear-gradient(135deg,#6d4cc9,#9d83ea)",
+              g2="linear-gradient(135deg,#7c5cd6,#b19af0)"),
 }
 
 def palette(kuerzel):
@@ -206,7 +207,7 @@ def main():
     if not args:
         sys.exit(__doc__)
     if args[0] == "--alle":
-        mod = os.path.join(HERE, "module")
+        mod = os.path.join(ROOT, "module")
         args = [os.path.join(mod, k, "trainer", "shell.html") for k in sorted(os.listdir(mod))
                 if os.path.exists(os.path.join(mod, k, "trainer", "shell.html"))]
     css = io.open(CSS, encoding="utf-8").read()

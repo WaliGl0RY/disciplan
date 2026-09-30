@@ -89,9 +89,8 @@ These are open points from the project files, phrased as next steps. [CHECK] Con
 
 ```
 study-cockpit/
-├── build.py            engine; reads data/plan.json + module/*/
-├── theme.py  restyle.py  check.py  patch.py
-├── trainer-style.css  trainer-kopf.js  trainer-blatt.js  trainer-rail.js
+├── scripts/            build.py (engine; reads data/plan.json + module/*/), theme.py, restyle.py, check.py, patch.py
+├── assets/trainer/     trainer-style.css  trainer-kopf.js  trainer-blatt.js  trainer-rail.js
 ├── module/DEMO1/ DEMO2/     demo documents + demo trainer data
 ├── data/plan.json           demo plan
 └── docs/screenshots/        taken from the demo build

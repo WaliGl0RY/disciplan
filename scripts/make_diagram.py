@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """make_diagram.py: draws the demo state diagram (a coffee machine, invented example).
 
-Output: docs/kaffeemaschine-zustaende.svg, plus the same drawing inline in
+Output: docs/images/kaffeemaschine-zustaende.svg, plus the same drawing inline in
 module/KAF/KAF.html (between <!--SVG--> and <!--/SVG-->).
 
 Arrowheads are drawn as polygons instead of SVG markers: build.py namespaces
@@ -10,7 +10,7 @@ rewrite url(#...) references, so markers would disappear there.
 """
 import html, math, os
 
-BG, BOX, EDGE, HOT, TXT, OUT, LBL = "#33351f", "#16160f", "#5b5b52", "#e8925c", "#f2f0e6", "#e8925c", "#8fa6c9"
+BG, BOX, EDGE, HOT, TXT, OUT, LBL = "#241f35", "#110f16", "#54525b", "#a48bf0", "#e9e6f2", "#a48bf0", "#8fa6c9"
 W, H = 165, 62
 
 STATES = {  # name: (x, y, output line 1, output line 2, initial?)
@@ -49,12 +49,12 @@ def svg():
          'aria-label="Zustandsdiagramm einer Kaffeemaschine (Demo)">',
          '<rect x="-20" y="-70" width="980" height="520" fill="%s"/>' % BG,
          '<text x="10" y="-38" fill="%s" font-size="17" font-weight="bold">Kaffeemaschine — Zustandsdiagramm (Demo)</text>' % TXT,
-         '<text x="10" y="-16" fill="%s" font-size="12">Moore-Automat: die Ausgaben (orange) hängen am Zustand, '
+         '<text x="10" y="-16" fill="%s" font-size="12">Moore-Automat: die Ausgaben (violett) hängen am Zustand, '
          'die Übergänge (blau) an Ereignissen.</text>' % LBL]
-    o.append('<circle cx="12" cy="210" r="5" fill="#b0522c"/><path d="M18,210 L26,210" stroke="#9a9a8e" stroke-width="2"/>'
-             '<polygon points="%s" fill="#9a9a8e"/>' % arrowhead("M18,210 L28,210"))
+    o.append('<circle cx="12" cy="210" r="5" fill="#7C5CD6"/><path d="M18,210 L26,210" stroke="#918e9a" stroke-width="2"/>'
+             '<polygon points="%s" fill="#918e9a"/>' % arrowhead("M18,210 L28,210"))
     for d, lx, ly, lab, hot in EDGES:
-        col = HOT if hot else "#9a9a8e"
+        col = HOT if hot else "#918e9a"
         o.append('<path d="%s" stroke="%s" stroke-width="2" fill="none"/><polygon points="%s" fill="%s"/>'
                  % (d, col, arrowhead(d), col))
         o.append('<text x="%d" y="%d" fill="%s" font-size="13" text-anchor="middle">%s</text>' % (lx, ly, LBL, html.escape(lab)))
@@ -65,18 +65,19 @@ def svg():
         o.append('<text x="%d" y="%d" fill="%s" font-size="15" font-weight="bold" text-anchor="middle">%s</text>' % (cx, y + 24, TXT, name))
         o.append('<text x="%d" y="%d" fill="%s" font-size="11.5" text-anchor="middle">%s</text>' % (cx, y + 40, OUT, a))
         o.append('<text x="%d" y="%d" fill="%s" font-size="11.5" text-anchor="middle">%s</text>' % (cx, y + 55, OUT, b))
-    o.append('<text x="10" y="435" fill="#9a9a8e" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der '
+    o.append('<text x="10" y="435" fill="#918e9a" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der '
              'Normalbetrieb; „Aus-Taste" gilt sinngemäß aus jedem Zustand (nur einmal gezeichnet).</text>')
     o.append("</svg>")
     return "\n".join(o)
 
 
 if __name__ == "__main__":
-    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "kaffeemaschine-zustaende.svg")
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # Repo-Wurzel
+    out = os.path.join(root, "docs", "images", "kaffeemaschine-zustaende.svg")
     open(out, "w", encoding="utf-8", newline="\n").write(svg() + "\n")
     print("OK ->", out)
     # the same drawing, inline in the demo study document (between the markers)
-    doc = os.path.join(os.path.dirname(out), "..", "module", "KAF", "KAF.html")
+    doc = os.path.join(root, "module", "KAF", "KAF.html")
     if os.path.exists(doc):
         t = open(doc, encoding="utf-8").read()
         a, b = t.index("<!--SVG-->") + len("<!--SVG-->"), t.index("<!--/SVG-->")

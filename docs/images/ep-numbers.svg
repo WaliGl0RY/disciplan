@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="150" viewBox="0 0 1200 150" font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif">
+<rect x="0.5" y="0.5" width="1199" height="149" rx="16" fill="#14111a" stroke="#5a1525"/>
+<rect x="32" y="26" width="266" height="98" rx="12" fill="#1c1418" stroke="#3a1420"/>
+<rect x="32" y="40" width="5" height="70" rx="2.5" fill="#C8102E"/>
+<text x="58" y="86" fill="#F0566A" font-size="52" font-weight="700" letter-spacing="-1">51</text>
+<text x="60" y="112" fill="#b8aeb4" font-size="17">days planned</text>
+<rect x="322" y="26" width="266" height="98" rx="12" fill="#1c1418" stroke="#3a1420"/>
+<rect x="322" y="40" width="5" height="70" rx="2.5" fill="#C8102E"/>
+<text x="348" y="86" fill="#F0566A" font-size="52" font-weight="700" letter-spacing="-1">269</text>
+<text x="350" y="112" fill="#b8aeb4" font-size="17">blocks</text>
+<rect x="612" y="26" width="266" height="98" rx="12" fill="#1c1418" stroke="#3a1420"/>
+<rect x="612" y="40" width="5" height="70" rx="2.5" fill="#C8102E"/>
+<text x="638" y="86" fill="#F0566A" font-size="52" font-weight="700" letter-spacing="-1">5</text>
+<text x="640" y="112" fill="#b8aeb4" font-size="17">trainers</text>
+<rect x="902" y="26" width="266" height="98" rx="12" fill="#1c1418" stroke="#3a1420"/>
+<rect x="902" y="40" width="5" height="70" rx="2.5" fill="#C8102E"/>
+<text x="928" y="86" fill="#F0566A" font-size="52" font-weight="700" letter-spacing="-1">8</text>
+<text x="930" y="112" fill="#b8aeb4" font-size="17">exams</text>
+</svg>

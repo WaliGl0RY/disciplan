@@ -1,7 +1,7 @@
 # disciplan — Lernsystem für eine Klausurenphase
 
 Regelwerk für Claude-Sitzungen in diesem Repo. Das Repo enthält die Engine
-(`build.py`, Trainer-Shell, Werkzeuge) und drei erfundene Demo-Module
+(`scripts/build.py`, Trainer-Shell, Werkzeuge) und drei erfundene Demo-Module
 (`KAF`, `GAR`, `RAD`). Echte Module kommen nach `module/<K>/` und in
 `klausuren_data.py`.
 
@@ -120,7 +120,7 @@ Weitere Regeln:
   Auftreten übersetzen.
 - **Kein Wall of Text.** Absätze kurz, Tabellen für Abgrenzungen, Code als `<pre>`.
 - Sidebar-Navigation, gleiche CSS-Struktur wie die bestehenden Dokumente, damit
-  `build.py` sie ohne Anpassung einsammelt.
+  `scripts/build.py` sie ohne Anpassung einsammelt.
 
 ## README.md — die Bedienungsanleitung des Moduls
 

@@ -5,7 +5,7 @@ TEXT (Titel und Strategietexte der Uebersicht).
 
 In diesem Repo stehen hier nur DEMO-Daten fuer drei erfundene Module (KAF, GAR, RAD).
 Die Struktur ist dieselbe wie im echten Einsatz: eigene Module eintragen, dann
-`python build.py`.
+`python scripts/build.py`.
 
 check.py --plan liest diese Datei als Text (Tagesplan-Pruefung). Deshalb:
 Texte in doppelten Anfuehrungszeichen ohne innere doppelte Anfuehrungszeichen,
@@ -21,17 +21,24 @@ Schrittlisten als JSON-kompatible Dicts.
 # prof   Pruefer
 # mode   Modus aus der Analyse (siehe CLAUDE.md) oder None
 # desc   ein, zwei Saetze Begruendung (HTML erlaubt)
+# col    Modulfarbe (Hex). Dieselbe Farbe in Cockpit-Chip, Lerndokument-Kopf und Trainer. Nicht rot, nicht orange.
 # trainer  optional: dict(file=..., was=...) — nur wenn es eine Trainer-App gibt
 MODULES = [
- dict(k="KAF", name="Kaffeemaschinen-Technik (Demo)", d="2026-09-02", t="10:00", v=1, typ="PF", prof="Demo",
+ dict(k="KAF", col="#7C5CD6", name="Kaffeemaschinen-Technik (Demo)", d="2026-09-02", t="10:00", v=1, typ="PF", prof="Demo",
       trainer=dict(file="module/KAF/KAF-Trainer.html", was="Demo-Trainer: Begriffe, zwei Kapitel, Probeklausur, Spickzettel"),
       mode="DEMO · ALTKLAUSUR-DRIVEN", desc="<b>Erfundenes Beispielmodul.</b> Zeigt ein Lerndokument mit Zustandsautomat und einen Trainer der ersten Generation."),
- dict(k="RAD", name="Fahrrad-Werkstatt (Demo)",       d="2026-09-04", t="14:00", v=2, typ="PF", prof="Demo",
+ dict(k="RAD", col="#0E8F86", name="Fahrrad-Werkstatt (Demo)",       d="2026-09-04", t="14:00", v=2, typ="PF", prof="Demo",
       trainer=dict(file="module/RAD/RAD-Trainer.html", was="Demo-Trainer der zweiten Generation: Dashboard, Simulationen, Spickzettel"),
       mode="DEMO · MIXED", desc="Erfundenes Beispielmodul mit Praxisteil. Zeigt den Trainer der zweiten Generation."),
- dict(k="GAR", name="Gartenplanung (Demo)",           d="2026-09-07", t="?",     v=1, typ="WP", prof="Demo",
+ dict(k="GAR", col="#4C9A2A", name="Gartenplanung (Demo)",           d="2026-09-07", t="?",     v=1, typ="WP", prof="Demo",
       mode=None, desc="Erfundenes Beispielmodul ohne Trainer und noch ohne Modus."),
 ]
+
+# ───────────────────────────── Daten der Planansicht ─────────────────────────────
+# PLAN_START  erster Tag der laufenden Planansicht (alles davor steht im Archiv)
+# PREP_END    Stichtag des Zaehlers "Tage Vorbereitung uebrig" (meist der Tag vor der ersten Klausur)
+PLAN_START = "2026-08-28"
+PREP_END = "2026-09-01"
 
 # ───────────────────────────── Tagesplan ─────────────────────────────
 # (Datum, [ (Modul, Minuten, Typ, Text, Anker?, Schritte?, Merksaetze?), ... ], Tagestyp)
@@ -39,7 +46,7 @@ MODULES = [
 #              V Kuer — ausdruecklich optional, faellt als erstes weg (steht unter der Feierabend-Linie)
 # Tagestyp:    "" normal · "deadline" · "klausur"
 # Schritte:    [{"t": Titel, "d": Beschreibung, "to": Anker, "min": Minuten}, ...]
-# Hinweis:     build.py startet die laufende Planansicht am 2026-08-28 (siehe START in build.py).
+# Hinweis:     die laufende Planansicht beginnt an PLAN_START (siehe oben).
 DAYS = [
  ("2026-08-26", [("KAF",50,"L","<b>KAF.html Orientierung und G1–G2</b> lesen.","orient"),("GAR",25,"L","<b>GAR Orientierung</b> überfliegen.","orient")], ""),
  ("2026-08-27", [("KAF",50,"L","<b>G3–G5</b> lesen, zu jedem Begriff zwei Sätze notieren.","g3"),("RAD",50,"L","<b>Antrieb</b> lesen.","antrieb")], ""),

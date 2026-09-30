@@ -3,7 +3,7 @@
 """
 build.py — baut aus shell.html, gen2.js und data/*.js die eine Datei KAF-Trainer.html.
 
-Aufruf:  python build.py
+Aufruf:  python module/KAF/trainer/build.py
 Ergebnis: ../KAF-Trainer.html  (liegt dann neben KAF.html)
 
 Neues Kapitel ergaenzen: data/kapN.js anlegen und unten in QUIZZES eintragen.

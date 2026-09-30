@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """patch.py — Textstellen in einer HTML-Datei ersetzen, tolerant und nachvollziehbar.
 
-    python3 patch.py module/KAF/KAF.html ops.json           ausfuehren
-    python3 patch.py module/KAF/KAF.html ops.json --dry      nur pruefen
+    python3 scripts/patch.py module/KAF/KAF.html ops.json           ausfuehren
+    python3 scripts/patch.py module/KAF/KAF.html ops.json --dry      nur pruefen
 
 ops.json ist eine Liste von Operationen:
 
@@ -75,7 +75,7 @@ def find(s, nrm, idx, needle):
     return (idx[a], idx[a + len(n)]), 1
 
 
-CSS_ANCHOR = ".pic b:first-child{color:#b0522c}\n"
+CSS_ANCHOR = ".pic b:first-child{color:#7C5CD6}\n"
 DARK_ANCHOR = "@media (prefers-color-scheme: dark){\n:root{color-scheme:dark}\n"
 
 

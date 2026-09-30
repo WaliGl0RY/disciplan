@@ -3,7 +3,7 @@
 """
 build.py — baut alle Modul-HTMLs zu EINER Datei klausuren.html zusammen.
 
-Aufruf:  python build.py
+Aufruf:  python scripts/build.py
 Ergebnis: klausuren-2026-09/klausuren.html
 
 Jedes Modul behaelt sein eigenes CSS — es wird beim Bauen auf #m-<KUERZEL>
@@ -12,14 +12,14 @@ Neue Module fallen automatisch rein: einfach module/<K>/<K>.html anlegen.
 """
 import os, re, json, datetime, sys
 
-ROOT = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # Repo-Wurzel (scripts/ liegt eine Ebene tiefer)
 OUT  = os.path.join(ROOT, "klausuren.html")
 
 # ─────────────────────────── Kursdaten ───────────────────────────
 # MODULES (Moduldaten), DAYS (Tagesplan) und TEXT (Titel, Strategietexte) liegen seit 28.09.2026 in
-# klausuren_data.py neben dieser Datei (in diesem Repo: Demo-Daten fuer KAF, GAR, RAD).
+# klausuren_data.py im Repo-Wurzelordner (in diesem Repo: Demo-Daten fuer KAF, GAR, RAD).
 sys.path.insert(0, ROOT)
-from klausuren_data import MODULES, DAYS, TEXT  # noqa: E402
+from klausuren_data import MODULES, DAYS, TEXT, PLAN_START, PREP_END  # noqa: E402
 
 # ─────────────────────── CSS-Scoping ───────────────────────
 def scope_css(css, sel):
@@ -227,13 +227,13 @@ SHELL_CSS = r"""
 .lnx{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);
  border-radius:7px;margin-bottom:6px;cursor:pointer;background:var(--card);font-size:13.5px}
 .lnx:hover{border-color:var(--acc)}
-.lnx.kl{border-left:3px solid #c2703f}
+.lnx.kl{border-left:3px solid #C8102E}
 .lnx .d1{font:700 13px sans-serif;min-width:62px}
 .lnx .c1{font-size:11.5px;color:var(--mut);min-width:74px}
 .lnx .m1{display:flex;gap:4px;flex-wrap:wrap;flex:1}
 .lnx .m1 span{font:600 10px sans-serif;background:var(--soft);border-radius:4px;padding:2px 5px}
 .lnx .a1{color:var(--acc);font-size:14px}
-.lnx .kb{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.lnx .kb{font:700 9.5px sans-serif;background:#C8102E;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
 .lnx.gestern{opacity:.72;border-style:dashed}
 .lmore{width:100%;margin-top:4px;padding:7px;border:1px dashed var(--line);border-radius:7px;
  background:none;color:var(--mut);font:600 12px sans-serif;cursor:pointer;font-family:inherit}
@@ -248,16 +248,18 @@ SHELL_CSS = r"""
 .lchip i{font-style:normal;font-size:11px;opacity:.7}
 .lchip.on i{opacity:.85}
 .lchip.fertig{opacity:.45}
+.kd{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:7px;flex:0 0 auto;vertical-align:baseline}
+.mk{display:inline-block;padding:2px 10px;border-radius:999px;color:#fff;font-weight:700;letter-spacing:.02em}
 .ldh{display:flex;align-items:baseline;gap:9px;margin:15px 0 4px;padding-top:11px;border-top:1px solid var(--line)}
 .ldh:first-child{border-top:0;padding-top:0;margin-top:0}
 .ldh b{font:700 13.5px sans-serif}
 .ldh span{font-size:11.5px;color:var(--mut)}
-.ldh .kl{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.ldh .kl{font:700 9.5px sans-serif;background:#C8102E;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
 .ldh a{margin-left:auto;font-size:11.5px;color:var(--acc);text-decoration:none}
 .lauf .fin{font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.6}
 *{box-sizing:border-box}
-:root{--bg:#f4f4f1;--fg:#1b1b19;--mut:#6d6d66;--line:#e3e3dc;--card:#fff;--acc:#b0522c;--soft:#efeee8}
-html[data-t=dark]{--bg:#16161a;--fg:#e9e8e3;--mut:#9a9a92;--line:#2c2c33;--card:#1e1e24;--acc:#e08858;--soft:#25252c}
+:root{--bg:#f4f4f1;--fg:#1b1b19;--mut:#6d6d66;--line:#e3e3dc;--card:#fff;--acc:#C8102E;--soft:#efeee8}
+html[data-t=dark]{--bg:#16161a;--fg:#e9e8e3;--mut:#9a9a92;--line:#2c2c33;--card:#1e1e24;--acc:#F0566A;--soft:#25252c}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);
  font:15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -301,7 +303,7 @@ code{background:var(--soft);padding:1.5px 5px;border-radius:4px;font:12.6px ui-m
 .cdb{background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 15px;min-width:126px}
 .cdb .n{font:700 24px sans-serif;line-height:1.1}
 .cdb .l{font-size:11.5px;opacity:.72;margin-top:2px}
-.cdb.warn{background:#a3441c;color:#fff}
+.cdb.warn{background:#C8102E;color:#fff}
 .tabs{display:flex;gap:5px;margin:20px 0 0;border-bottom:2px solid var(--fg);flex-wrap:wrap}
 .tab{padding:8px 15px;border-radius:8px 8px 0 0;border:0;font:600 14px sans-serif;
  cursor:pointer;color:var(--mut);background:none}
@@ -324,9 +326,9 @@ html[data-t=dark] .tab:hover{background:#23232a;color:var(--fg)}
 .card .mn{font-size:12.4px;color:var(--mut);margin:1px 0 8px}
 .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px}
 .tg{font:600 11.2px sans-serif;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.tg.ok{background:#e7f3e1;color:#2c5220}.tg.todo{background:#fbe6dc;color:#8a3a18}
+.tg.ok{background:#e7f3e1;color:#2c5220}.tg.todo{background:#fbe4e8;color:#9c0c24}
 .tg.pf{background:#e6edf5;color:#2c5580}.tg.wp{background:var(--soft);color:var(--mut)}
-.tg.v3{background:#a3441c;color:#fff}.tg.v2{background:#f5e3c8;color:#7a5410}
+.tg.v3{background:#C8102E;color:#fff}.tg.v2{background:#dde7f5;color:#2c4a75}
 .dt{font:600 13.8px sans-serif}
 .md{font-size:13.2px;color:var(--mut);margin:2px 0 10px;flex:1 1 auto}
 .btn{display:inline-block;padding:6px 13px;border-radius:7px;font:600 13px sans-serif;
@@ -334,8 +336,8 @@ html[data-t=dark] .tab:hover{background:#23232a;color:var(--fg)}
 .btn.pri{background:var(--acc);color:#fff}
 .btn:hover{opacity:.87}
 .key{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
-.warn{background:#fdf4e8;border:1px solid #ecd6b2;color:#4a3a1c;border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
-.crit{background:#fbeee8;border:1px solid #e7c4b2;color:#5a2a14;border-radius:9px;padding:12px 16px;margin:12px 0;font-size:14.6px}
+.warn{background:#eef3fa;border:1px solid #c9d7ec;color:#243a5c;border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
+.crit{background:#fdecef;border:1px solid #efbcc4;color:#5a1420;border-radius:9px;padding:12px 16px;margin:12px 0;font-size:14.6px}
 table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.6px;background:var(--card);display:block;overflow-x:auto}
 /* Im hellen Modus haben Modulinhalte helle Kartenflaechen und dunkle Schrift; die
    table-Regel darueber wuerde sie dunkel einfaerben -> unlesbar. Deshalb hier hell halten.
@@ -374,17 +376,19 @@ td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
 .dc.past{opacity:.5}
 .dc.today{border-color:var(--acc);border-width:2px;padding:7px 7px 8px;
  box-shadow:0 0 0 4px rgba(176,82,44,.11)}
-.dc.klausur{background:linear-gradient(160deg,#fbeee8,#f7e0d4);border-color:#e0a988}
-html[data-t=dark] .dc.klausur{background:linear-gradient(160deg,#33201a,#291a15);border-color:#6b4029}
-.dc.deadline{background:linear-gradient(160deg,#fdf6ea,#f9edd6);border-color:#e3cc9a}
-html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013);border-color:#5e5127}
+.dc.klausur{background:linear-gradient(160deg,#fdecef,#f8d9df);border-color:#e89aa6}
+html[data-t=dark] .crit{background:#2a1319;border-color:#5a1525;color:#f3d6db}
+html[data-t=dark] .warn{background:#182230;border-color:#34476a;color:#c9dbf5}
+html[data-t=dark] .dc.klausur{background:linear-gradient(160deg,#2a1219,#200e14);border-color:#5a1525}
+.dc.deadline{background:linear-gradient(160deg,#eef3fa,#e2ebf7);border-color:#b9cbe6}
+html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#182230,#141c28);border-color:#34476a}
 .dch{display:flex;align-items:baseline;gap:6px;padding:1px 3px 5px;border-bottom:1px solid var(--line);margin-bottom:2px}
 .dch .wd{font:700 10.5px sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
 .dch .dn{font:700 17px sans-serif;line-height:1;letter-spacing:-.02em}
 .dch .mo{font-size:10.5px;color:var(--mut)}
 .dch .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dch .dot.part{background:linear-gradient(90deg,var(--acc) 50%,var(--line) 50%)}
-.dch .dot.full{background:#3d6b2e}
+.dch .dot.full{background:#2E9E5B}
 .tk{display:flex;gap:5px;align-items:flex-start;padding:4px 5px;border-radius:7px;min-width:0;
  background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.13s}
 .tk code{font-size:10px;padding:0 3px;word-break:break-all}
@@ -402,7 +406,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .tk .tx b{font-weight:700}
 .badge{position:absolute;top:0;right:0;font:700 8.5px sans-serif;letter-spacing:.07em;
  text-transform:uppercase;padding:2px 7px 3px;border-radius:0 11px 0 10px;color:#fff;z-index:2}
-.badge.k{background:#a3441c}.badge.d{background:#b08a2c}
+.badge.k{background:#C8102E}.badge.d{background:#5b7fb5}
 /* einklappbare Tagesliste */
 .tglr{display:flex;align-items:center;gap:9px;margin:26px 0 0;cursor:pointer;
  background:none;border:0;color:var(--fg);font:inherit;padding:0}
@@ -440,7 +444,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .mods span{font:700 9.5px sans-serif;padding:2px 6px;border-radius:20px;background:var(--soft);color:var(--mut)}
 .mods span.on{background:var(--acc);color:#fff}
 .dbar{height:4px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:auto}
-.dbar i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+.dbar i{display:block;height:100%;background:#2E9E5B;width:0;transition:.3s}
 .more{font-size:10.5px;color:var(--mut);margin-top:3px;text-align:center;opacity:.75}
 /* Modal */
 #dov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:120;
@@ -457,7 +461,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 #dhead .x{background:none;border:0;font-size:22px;line-height:1;color:var(--mut);cursor:pointer;padding:0 4px}
 #dhead .x:hover{color:var(--acc)}
 #dhead .pr{height:5px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:10px}
-#dhead .pr i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+#dhead .pr i{display:block;height:100%;background:#2E9E5B;width:0;transition:.3s}
 #dbody{padding:8px 22px 20px}
 .tsk{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
 .tsk:last-child{border:0}
@@ -465,9 +469,9 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .tsk .meta{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;align-items:flex-start;min-width:78px}
 .tsk .mk3{font:700 10px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);color:var(--mut)}
 .tsk .ty{font:700 9.5px sans-serif;padding:2px 6px;border-radius:4px;letter-spacing:.04em}
-.ty.L{background:#e6edf5;color:#2c5580}.ty.U{background:#eef4ea;color:#3d6b2e}
-.ty.D{background:#f5e9e0;color:#8a4a20}.ty.T{background:#fbe6dc;color:#8a3a18}
-.ty.W{background:#f0efe9;color:#6d6d66}.ty.O{background:#f5f0e0;color:#7a6410}
+.ty.L{background:#e6edf5;color:#2c5580}.ty.U{background:#eef4ea;color:#2E9E5B}
+.ty.D{background:#fbe4e8;color:#9c0c24}.ty.T{background:#fbe4e8;color:#9c0c24}
+.ty.W{background:#f0efe9;color:#6d6d66}.ty.O{background:#e8eef8;color:#2c4a75}
 .tsk .mn2{font:600 10.5px ui-monospace,monospace;color:var(--mut)}
 .tsk .tt{flex:1;font-size:14.4px;line-height:1.55}
 .tsk.done .tt{opacity:.42;text-decoration:line-through}
@@ -483,10 +487,10 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
  padding:10px 14px;margin:6px 0;align-items:flex-start}
 .day.today{border-color:var(--acc);border-width:2px;box-shadow:0 0 0 3px rgba(176,82,44,.1)}
 .day.past{opacity:.42}
-.day.klausur{background:#fbeee8;border-color:#e7c4b2}
-html[data-t=dark] .day.klausur{background:#2e1d17;border-color:#5a3524}
-.day.deadline{background:#fdf4e8;border-color:#ecd6b2}
-html[data-t=dark] .day.deadline{background:#2c2415;border-color:#5a4a24}
+.day.klausur{background:#fdecef;border-color:#efbcc4}
+html[data-t=dark] .day.klausur{background:#2a1319;border-color:#5a1525}
+.day.deadline{background:#eef3fa;border-color:#c9d7ec}
+html[data-t=dark] .day.deadline{background:#182230;border-color:#34476a}
 .day.puffer{opacity:.72}
 .day .dt2{flex:0 0 92px}
 .day .dnum{font:700 15px sans-serif;line-height:1.15}
@@ -512,8 +516,8 @@ html[data-t=dark] .day.deadline{background:#2c2415;border-color:#5a4a24}
 .sr:hover,.sr.sel{background:var(--soft)}
 .sr b{color:var(--acc)}
 .sr .sk{font:700 10.5px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);margin-right:7px}
-mark{background:#ffe9a8;color:inherit;padding:0 1px}
-html[data-t=dark] mark{background:#6a5518;color:#fff}
+mark{background:#d6e4ff;color:inherit;padding:0 1px}
+html[data-t=dark] mark{background:#2a3f6a;color:#fff}
 @media(max-width:820px){#side{position:fixed;left:-230px;z-index:50;transition:.2s}
  #side.open{left:0}#hub{padding:18px 14px 70px}.grid{grid-template-columns:1fr}}
 """
@@ -532,6 +536,7 @@ def build():
     js_mod = "\n".join("/* ==== %s ==== */\n%s" % (k, v["js"]) for k, v in mods.items())
 
     data = json.dumps(dict(
+        start=PLAN_START, prepEnd=PREP_END,
         mods=[dict(m, has=(m["k"] in mods)) for m in MODULES],
         days=[dict(d=d, o=[dict(m=x[0], min=x[1], ty=x[2], x=x[3], to=(x[4] if len(x) > 4 else None),
                                st=(x[5] if len(x) > 5 else None),
@@ -608,9 +613,9 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
         </div>
         <div class="wgrid" id="lwgrid"></div>
         <div class="calf">
-          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
+          <span class="lg"><i style="background:#e89aa6"></i>Klausur</span>
           <span class="lg"><i style="background:var(--acc)"></i>heute</span>
-          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="lg"><i style="background:#2E9E5B;border-radius:50%"></i>Tag komplett</span>
           <span class="sp"></span><span id="lwsum"></span>
         </div>
       </div>
@@ -639,8 +644,8 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
         </div>
         <div class="wgrid" id="awgrid"></div>
         <div class="calf">
-          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
-          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="lg"><i style="background:#e89aa6"></i>Klausur</span>
+          <span class="lg"><i style="background:#2E9E5B;border-radius:50%"></i>Tag komplett</span>
           <span class="sp"></span><span id="awsum"></span>
         </div>
       </div>
@@ -674,10 +679,10 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
       </div>
       <div class="wgrid" id="wgrid"></div>
       <div class="calf">
-        <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
-        <span class="lg"><i style="background:#e3cc9a"></i>Deadline</span>
+        <span class="lg"><i style="background:#e89aa6"></i>Klausur</span>
+        <span class="lg"><i style="background:#b9cbe6"></i>Deadline</span>
         <span class="lg"><i style="background:var(--acc)"></i>heute</span>
-        <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+        <span class="lg"><i style="background:#2E9E5B;border-radius:50%"></i>Tag komplett</span>
         <span class="sp"></span>
         <span id="wsum"></span>
       </div>
@@ -772,25 +777,27 @@ function swtab(p){
 }
 document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>swtab(t.dataset.p));
 
+/* Modulfarbe (klausuren_data.MODULES[..]['col']); ohne Angabe die Akzentfarbe */
+const mcol=k=>(D.mods.find(x=>x.k===k)||{}).col||'var(--acc)';
 /* ---------- Sidebar ---------- */
 document.getElementById("navmod").innerHTML=D.mods.map(m=>{
  const n=dd(m.d);
  return `<button class="nl${m.has?"":" dis"}" ${m.has?`data-go="${m.k}"`:""}>
-  <span class="kk">${m.k}</span>${m.has?"":"<span style='font-size:11.5px'>kein Dok</span>"}
+  <span class="kk"><i class="kd" style="background:${m.col||'var(--acc)'}"></i>${m.k}</span>${m.has?"":"<span style='font-size:11.5px'>kein Dok</span>"}
   <span class="dd">${n<0?"&#10003;":n+"T"}</span></button>`}).join("");
 document.querySelectorAll("#side .nl[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.tab));
 /* Die Trainer sind eigene Apps und oeffnen in einem neuen Tab. */
 document.getElementById("navtr").innerHTML=D.mods.filter(m=>m.trainer).map(m=>
  `<a class="nl" href="${m.trainer.file}" target="_blank" title="${m.trainer.was}">
-  <span class="kk">${m.k}</span>Trainer<span class="dd">&#8599;</span></a>`).join("");
+  <span class="kk"><i class="kd" style="background:${m.col||'var(--acc)'}"></i>${m.k}</span>Trainer<span class="dd">&#8599;</span></a>`).join("");
 
 /* ---------- Countdown ---------- */
 function kpi(){
  const nx=D.mods.filter(m=>dd(m.d)>=0).sort((a,b)=>dd(a.d)-dd(b.d));
  const p=[];
  if(nx.length)p.push(`<div class="cdb${dd(nx[0].d)<7?" warn":""}"><div class="n">${dd(nx[0].d)}</div><div class="l">Tage bis ${nx[0].k}</div></div>`);
- p.push(`<div class="cdb"><div class="n">${Math.max(0,dd("2026-09-01"))}</div><div class="l">Tage Vorbereitung übrig</div></div>`);
- const w=D.days.map((d,i)=>({...d,i})).filter(d=>d.d>="2026-08-28");
+ p.push(`<div class="cdb"><div class="n">${Math.max(0,dd(D.prepEnd))}</div><div class="l">Tage Vorbereitung übrig</div></div>`);
+ const w=D.days.map((d,i)=>({...d,i})).filter(d=>d.d>=D.start);
  const done=w.reduce((a,d)=>a+d.o.filter((_,j)=>ST[d.i+"_"+j]).length,0);
  const tot=w.reduce((a,d)=>a+d.o.length,0);
  p.push(`<div class="cdb"><div class="n">${done}/${tot}</div><div class="l">Ziele ab 28.08.</div></div>`);
@@ -802,19 +809,19 @@ kpi();
 
 /* ---------- Modulkarten ---------- */
 document.getElementById("grid").innerHTML=D.mods.map(m=>{
- const n=dd(m.d),col=n<0?"#c9c9be":n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+ const n=dd(m.d),col=n<0?"#c9c9be":n<7?"#C8102E":n<21?"#5b7fb5":"#2E9E5B";
  const vt=m.v===3?'<span class="tg v3">3. Versuch</span>':m.v===2?'<span class="tg v2">2. Versuch</span>':'';
- return `<div class="card"><div class="bar" style="background:${col}"></div>
-  <h3>${m.k}</h3><div class="mn">${m.name} &middot; ${m.prof}</div>
+ return `<div class="card"><div class="bar" style="background:${m.col||col}"></div>
+  <h3><span class="mk" style="background:${m.col||'var(--acc)'}">${m.k}</span></h3><div class="mn">${m.name} &middot; ${m.prof}</div>
   <div class="row"><span class="dt">${fm(m.d)} ${m.t}</span>
    <span class="fine">${n<0?"vorbei":n===0?"HEUTE":"noch "+n+" Tage"}</span></div>
   <div class="row"><span class="tg ${m.typ==="PF"?"pf":"wp"}">${m.typ==="PF"?"Pflicht":"Wahlpflicht"}</span>
    ${vt}<span class="tg ${m.has?"ok":"todo"}">${m.has?"dokumentiert":"offen"}</span></div>
   ${m.mode?`<div class="row"><span class="fine"><b>${m.mode}</b></span></div>`:""}
   <div class="md">${m.desc}</div>
-  <div><button class="btn ${m.has?"pri":""}" ${m.has?`onclick="go('${m.k}')"`:"disabled"}>
+  <div><button class="btn ${m.has?"pri":""}" ${m.has?`onclick="go('${m.k}')"`:"disabled"}${m.col&&m.has?` style="background:${m.col};border-color:${m.col}"`:""}>
    ${m.has?"Lerndokument öffnen":"noch kein Dokument"}</button>${m.trainer?
-   `<a class="btn" href="${m.trainer.file}" target="_blank" style="margin-left:7px"
+   `<a class="btn" href="${m.trainer.file}" target="_blank" style="margin-left:7px${m.col?`;border-color:${m.col};color:${m.col}`:""}"
       title="${m.trainer.was}">Trainer &#8599;</a>`:""}</div></div>`}).join("");
 
 /* ---------- Tagesplan ---------- */
@@ -966,7 +973,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")dClose()});
  const mx=Math.max(...D.mods.map(m=>dd(m.d)));
  document.getElementById("tlbox").innerHTML=
  '<p class="fine">Balkenlänge = verbleibende Tage.</p>'+D.mods.map(m=>{
-  const n=dd(m.d),w=Math.max(2,n/mx*100),col=n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+  const n=dd(m.d),w=Math.max(2,n/mx*100),col=n<7?"#C8102E":n<21?"#5b7fb5":"#2E9E5B";
   return `<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)">
    <span style="font:600 13px ui-monospace,monospace;color:var(--mut);min-width:76px">${fm(m.d)}</span>
    <span style="height:12px;border-radius:3px;flex:1;background:var(--soft);position:relative">
@@ -1014,7 +1021,7 @@ function jump(k,id){
     if(pill)pill.click();
    }
    e.scrollIntoView({block:"center"});
-   const o=e.style.background;e.style.background="#ffe9a8";
+   const o=e.style.background;e.style.background="#d6e4ff";
    setTimeout(()=>e.style.background=o,1600)}},60);
 }
 function openS(){document.getElementById("ov").classList.add("on");
@@ -1041,7 +1048,7 @@ document.addEventListener("keydown",e=>{
 const th=document.getElementById("theme");
 
 /* ---------- Der laufende Plan (Wochenraster ab START; davor = Archiv) ---------- */
-const START="2026-08-28";
+const START=D.start;
 function lhrs(d){return d.o.reduce((a,o)=>a+((d.t==="klausur"&&o.ty==="T"&&o.min>=90)?0:(o.min||0)),0)}
 const LW0=monday(dt(START)), LWN=monday(dt(D.days[D.days.length-1].d));
 const LNW=Math.round((LWN-LW0)/6048e5)+1;
@@ -1112,7 +1119,7 @@ function lauf(){
  let fh='<button class="lchip'+(lMod?"":" on")+'" onclick="lMod=null;lauf()">Tagesansicht</button>';
  order.forEach(k=>{const m=mods[k],offen=m.tot-m.don;
    fh+='<button class="lchip'+(lMod===k?" on":"")+(offen?"":" fertig")+'" onclick="lMod=\''+k+'\';lKey=null;lauf()">'+
-       k+' <i>'+offen+' offen</i></button>';});
+       '<i class="kd" style="background:'+mcol(k)+';margin-right:0"></i>'+k+' <i>'+offen+' offen</i></button>';});
  document.getElementById("lauffil").innerHTML=fh;
 
  if(lMod){laufmod(win);return;}
@@ -1194,7 +1201,7 @@ function arc(){
  let fh='<button class="lchip'+(aMod?"":" on")+'" onclick="aMod=null;arc()">Tagesansicht</button>';
  order.forEach(k=>{const m=mods[k];
    fh+='<button class="lchip'+(aMod===k?" on":"")+(m.don===m.tot?" fertig":"")+
-       '" onclick="aMod=\''+k+'\';aKey=null;arc()">'+k+' <i>'+m.don+'/'+m.tot+'</i></button>';});
+       '" onclick="aMod=\''+k+'\';aKey=null;arc()">'+'<i class="kd" style="background:'+mcol(k)+';margin-right:0"></i>'+k+' <i>'+m.don+'/'+m.tot+'</i></button>';});
  document.getElementById("arcfil").innerHTML=fh;
  if(aMod){arcmod(win);return;}
  const cur=win.find(d=>d.d===aKey)||win[win.length-1];

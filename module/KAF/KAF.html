@@ -2,79 +2,79 @@
 <title>KAF — Kaffee-Handwerk (Demo-Lerndokument)</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#f6f4ef;color:#23211c;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{margin:0;background:#f1eff6;color:#1e1c23;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
 .kf-shell{display:flex;min-height:100vh}
 .kf-side{position:sticky;top:0;align-self:flex-start;width:230px;flex:0 0 230px;height:100vh;overflow:auto;
- padding:22px 16px;border-right:1px solid #e2ded3;background:#efebe2}
-.kf-side h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8a8373;margin:0 0 10px}
-.kf-side a{display:block;color:#3b3629;text-decoration:none;padding:4px 8px;border-radius:6px;font-size:14px}
-.kf-side a:hover{background:#e3ddd0}
-.kf-side .kf-grp{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#9a927f;margin:14px 0 4px 8px}
+ padding:22px 16px;border-right:1px solid #d7d3e2;background:#e5e2ef}
+.kf-side h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#79738a;margin:0 0 10px}
+.kf-side a{display:block;color:#2e293b;text-decoration:none;padding:4px 8px;border-radius:6px;font-size:14px}
+.kf-side a:hover{background:#d5d0e3}
+.kf-side .kf-grp{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#867f9a;margin:14px 0 4px 8px}
 .kf-main{flex:1;max-width:900px;padding:30px 34px 90px}
 h1{font-size:28px;letter-spacing:-.02em;margin:0 0 4px}
-.kf-lead{color:#6a6352;margin:0 0 18px}
-.kf-demo{background:#fff3d6;color:#5a4410;border:1px solid #efd9a0;border-radius:8px;padding:9px 13px;font-size:13.5px;margin-bottom:22px}
-h2.kf-h{font-size:21px;margin:42px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2ded3}
+.kf-lead{color:#58526a;margin:0 0 18px}
+.kf-demo{background:#e8effa;color:#243f66;border:1px solid #c3d3ee;border-radius:8px;padding:9px 13px;font-size:13.5px;margin-bottom:22px}
+h2.kf-h{font-size:21px;margin:42px 0 10px;padding-bottom:6px;border-bottom:2px solid #d7d3e2}
 h3{font-size:17px;margin:26px 0 8px}
-.kf-idee{background:#23211c;color:#f6f4ef;border-radius:10px;padding:16px 20px;font-size:16.5px}
-.kf-idee b{color:#f0b77a}
+.kf-idee{background:#1e1c23;color:#f1eff6;border-radius:10px;padding:16px 20px;font-size:16.5px}
+.kf-idee b{color:#c4b3f5}
 table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14.5px}
-th,td{border:1px solid #e2ded3;padding:6px 9px;text-align:left;vertical-align:top}
-th{background:#efebe2}
-.kf-g{background:#fff;border:1px solid #e2ded3;border-radius:10px;padding:14px 18px;margin:14px 0}
-.kf-g .kf-bild{border-left:3px solid #c98a3c;padding-left:11px;color:#4a4436;margin-bottom:10px}
+th,td{border:1px solid #d7d3e2;padding:6px 9px;text-align:left;vertical-align:top}
+th{background:#e5e2ef}
+.kf-g{background:#fff;border:1px solid #d7d3e2;border-radius:10px;padding:14px 18px;margin:14px 0}
+.kf-g .kf-bild{border-left:3px solid #7C5CD6;padding-left:11px;color:#3b364a;margin-bottom:10px}
 .kf-g dl{display:grid;grid-template-columns:150px 1fr;gap:4px 14px;margin:0}
-.kf-g dt{font-weight:650;color:#6a6352}
+.kf-g dt{font-weight:650;color:#58526a}
 .kf-g dd{margin:0}
-details{background:#fbfaf6;border:1px solid #e2ded3;border-radius:8px;padding:8px 12px;margin:10px 0}
-summary{cursor:pointer;font-weight:600;color:#6b4b1e}
+details{background:#fbfaf6;border:1px solid #d7d3e2;border-radius:8px;padding:8px 12px;margin:10px 0}
+summary{cursor:pointer;font-weight:600;color:#4b34a8}
 .kf-pfeil{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;font-size:13.5px}
-.kf-pfeil a{background:#f3e3cf;color:#6b4b1e;border-radius:999px;padding:3px 11px;text-decoration:none}
+.kf-pfeil a{background:#ece6fb;color:#4b34a8;border-radius:999px;padding:3px 11px;text-decoration:none}
 .kf-schritt{counter-reset:s;list-style:none;padding:0}
 .kf-schritt li{counter-increment:s;position:relative;padding-left:34px;margin:8px 0}
 .kf-schritt li:before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
- background:#c98a3c;color:#fff;font-size:12.5px;font-weight:700;text-align:center;line-height:23px}
-.kf-warum{font-size:14px;color:#6a6352;font-style:italic}
-.kf-ue{background:#fff;border:1px solid #e2ded3;border-radius:10px;padding:12px 16px;margin:14px 0}
-.kf-ue .kf-kopf{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#6a6352}
-.kf-ue .kf-kopf b{color:#23211c;font-size:15px}
-.kf-badge{background:#efebe2;border-radius:6px;padding:1px 7px}
+ background:#7C5CD6;color:#fff;font-size:12.5px;font-weight:700;text-align:center;line-height:23px}
+.kf-warum{font-size:14px;color:#58526a;font-style:italic}
+.kf-ue{background:#fff;border:1px solid #d7d3e2;border-radius:10px;padding:12px 16px;margin:14px 0}
+.kf-ue .kf-kopf{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#58526a}
+.kf-ue .kf-kopf b{color:#1e1c23;font-size:15px}
+.kf-badge{background:#e5e2ef;border-radius:6px;padding:1px 7px}
 .kf-tri{display:inline-flex;gap:4px;margin-left:auto}
-.kf-tri button{border:1px solid #d8d2c3;background:#fff;color:#3b3629;border-radius:6px;padding:2px 9px;cursor:pointer;font-size:13px}
-.kf-tri button.on[data-v="no"]{background:#f6d5cc;color:#7a2a15;border-color:#e5a595}
-.kf-tri button.on[data-v="mid"]{background:#fbeccd;color:#6e4d0e;border-color:#e9c77e}
+.kf-tri button{border:1px solid #c8c3d8;background:#fff;color:#2e293b;border-radius:6px;padding:2px 9px;cursor:pointer;font-size:13px}
+.kf-tri button.on[data-v="no"]{background:#f8d9df;color:#8a0c22;border-color:#e89aa6}
+.kf-tri button.on[data-v="mid"]{background:#e3ebf8;color:#2c4a75;border-color:#b3c7e8}
 .kf-tri button.on[data-v="ok"]{background:#d7ecd3;color:#1f5a1a;border-color:#9bc993}
-.kf-stand{font-size:13.5px;color:#6a6352;margin:6px 0 0}
+.kf-stand{font-size:13.5px;color:#58526a;margin:6px 0 0}
 .kf-zurueck{font-size:13px}
-.kf-zurueck a{color:#6b4b1e}
+.kf-zurueck a{color:#4b34a8}
 .kf-svg{border-radius:10px;overflow:hidden;margin:12px 0}
 .kf-svg svg{display:block;width:100%;height:auto}
-pre{background:#23211c;color:#f6f4ef;border-radius:8px;padding:12px 14px;overflow:auto;font:13px/1.5 ui-monospace,Consolas,monospace}
-code{background:#efebe2;color:#3b3629;border-radius:4px;padding:1px 5px;font:13px ui-monospace,Consolas,monospace}
+pre{background:#1e1c23;color:#f1eff6;border-radius:8px;padding:12px 14px;overflow:auto;font:13px/1.5 ui-monospace,Consolas,monospace}
+code{background:#e5e2ef;color:#2e293b;border-radius:4px;padding:1px 5px;font:13px ui-monospace,Consolas,monospace}
 pre code{background:none;color:inherit;padding:0}
 @media (prefers-color-scheme: dark){
- body{background:#1c1b17;color:#e9e5da}
- .kf-side{background:#23221d;border-color:#34322a}
- .kf-side a{color:#d8d2c3}
- .kf-side a:hover{background:#2f2d26;color:#f2eee4}
- .kf-lead,.kf-g dt,.kf-warum,.kf-ue .kf-kopf,.kf-stand{color:#b2ab9a}
- .kf-demo{background:#3a3016;color:#f3dfae;border-color:#5a4a1f}
- h2.kf-h{border-color:#34322a}
- th{background:#2a2922;color:#e9e5da}
- th,td{border-color:#34322a}
- .kf-g,.kf-ue{background:#25241f;color:#e9e5da;border-color:#34322a}
- .kf-g .kf-bild{color:#d0c9b8}
- .kf-ue .kf-kopf b{color:#f2eee4}
- details{background:#23221d;color:#e9e5da;border-color:#34322a}
- summary{color:#f0b77a}
- .kf-pfeil a{background:#3a2e1d;color:#f0c795}
- .kf-badge{background:#34322a;color:#e9e5da}
- .kf-tri button{background:#25241f;color:#e9e5da;border-color:#4a473c}
- .kf-tri button.on[data-v="no"]{background:#5a2a1e;color:#ffd9cc}
- .kf-tri button.on[data-v="mid"]{background:#57451a;color:#ffe7b3}
+ body{background:#18171c;color:#dedae9}
+ .kf-side{background:#1e1d23;border-color:#2c2a34}
+ .kf-side a{color:#c8c3d8}
+ .kf-side a:hover{background:#28262f;color:#e8e4f2}
+ .kf-lead,.kf-g dt,.kf-warum,.kf-ue .kf-kopf,.kf-stand{color:#a09ab2}
+ .kf-demo{background:#1f2940;color:#c9dbf5;border-color:#34476a}
+ h2.kf-h{border-color:#2c2a34}
+ th{background:#24222a;color:#dedae9}
+ th,td{border-color:#2c2a34}
+ .kf-g,.kf-ue{background:#201f25;color:#dedae9;border-color:#2c2a34}
+ .kf-g .kf-bild{color:#beb8d0}
+ .kf-ue .kf-kopf b{color:#e8e4f2}
+ details{background:#1e1d23;color:#dedae9;border-color:#2c2a34}
+ summary{color:#c4b3f5}
+ .kf-pfeil a{background:#2c2450;color:#cdbff7}
+ .kf-badge{background:#2c2a34;color:#dedae9}
+ .kf-tri button{background:#201f25;color:#dedae9;border-color:#403c4a}
+ .kf-tri button.on[data-v="no"]{background:#4a1420;color:#ffd0d8}
+ .kf-tri button.on[data-v="mid"]{background:#2a3f6a;color:#d0e0f8}
  .kf-tri button.on[data-v="ok"]{background:#27491f;color:#d6f5cf}
- .kf-zurueck a{color:#f0c795}
- code{background:#2f2d26;color:#f0c795}
+ .kf-zurueck a{color:#cdbff7}
+ code{background:#28262f;color:#cdbff7}
 }
 </style>
 <div class="kf-shell">
@@ -162,47 +162,47 @@ Weil sie poröser ist: das Wasser dringt leichter ein. Deshalb braucht sie einen
 <dt>Woran erkennt man es</dt><dd>Jeder Pfeil trägt ein Ereignis; die Ausgaben stehen am Zustand (Moore).</dd>
 <dt>Zusammenhang</dt><dd>Die Temperaturgrenzen im Diagramm sind die Brühtemperatur aus V1.</dd></dl>
 <div class="kf-svg"><!--SVG--><svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -70 980 520" font-family="sans-serif" role="img" aria-label="Zustandsdiagramm einer Kaffeemaschine (Demo)">
-<rect x="-20" y="-70" width="980" height="520" fill="#33351f"/>
-<text x="10" y="-38" fill="#f2f0e6" font-size="17" font-weight="bold">Kaffeemaschine — Zustandsdiagramm (Demo)</text>
-<text x="10" y="-16" fill="#8fa6c9" font-size="12">Moore-Automat: die Ausgaben (orange) hängen am Zustand, die Übergänge (blau) an Ereignissen.</text>
-<circle cx="12" cy="210" r="5" fill="#b0522c"/><path d="M18,210 L26,210" stroke="#9a9a8e" stroke-width="2"/><polygon points="28.0,210.0 18.0,205.0 18.0,215.0" fill="#9a9a8e"/>
-<path d="M195,192 C232,152 252,92 286,74" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="286.0,74.0 274.8,74.3 279.5,83.1" fill="#9a9a8e"/>
+<rect x="-20" y="-70" width="980" height="520" fill="#241f35"/>
+<text x="10" y="-38" fill="#e9e6f2" font-size="17" font-weight="bold">Kaffeemaschine — Zustandsdiagramm (Demo)</text>
+<text x="10" y="-16" fill="#8fa6c9" font-size="12">Moore-Automat: die Ausgaben (violett) hängen am Zustand, die Übergänge (blau) an Ereignissen.</text>
+<circle cx="12" cy="210" r="5" fill="#7C5CD6"/><path d="M18,210 L26,210" stroke="#918e9a" stroke-width="2"/><polygon points="28.0,210.0 18.0,205.0 18.0,215.0" fill="#918e9a"/>
+<path d="M195,192 C232,152 252,92 286,74" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="286.0,74.0 274.8,74.3 279.5,83.1" fill="#918e9a"/>
 <text x="236" y="118" fill="#8fa6c9" font-size="13" text-anchor="middle">Ein-Taste</text>
-<path d="M455,62 L606,62" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="606.0,62.0 596.0,57.0 596.0,67.0" fill="#9a9a8e"/>
+<path d="M455,62 L606,62" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="606.0,62.0 596.0,57.0 596.0,67.0" fill="#918e9a"/>
 <text x="530" y="52" fill="#8fa6c9" font-size="13" text-anchor="middle">T ≥ 93 °C</text>
-<path d="M606,84 L459,84" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="459.0,84.0 469.0,89.0 469.0,79.0" fill="#9a9a8e"/>
+<path d="M606,84 L459,84" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="459.0,84.0 469.0,89.0 469.0,79.0" fill="#918e9a"/>
 <text x="530" y="103" fill="#8fa6c9" font-size="13" text-anchor="middle">T &lt; 90 °C</text>
-<path d="M676,102 L676,314" stroke="#e8925c" stroke-width="2" fill="none"/><polygon points="676.0,314.0 681.0,304.0 671.0,304.0" fill="#e8925c"/>
+<path d="M676,102 L676,314" stroke="#a48bf0" stroke-width="2" fill="none"/><polygon points="676.0,314.0 681.0,304.0 671.0,304.0" fill="#a48bf0"/>
 <text x="632" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Bezug-Taste</text>
-<path d="M716,314 L716,106" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="716.0,106.0 711.0,116.0 721.0,116.0" fill="#9a9a8e"/>
+<path d="M716,314 L716,106" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="716.0,106.0 711.0,116.0 721.0,116.0" fill="#918e9a"/>
 <text x="772" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Menge erreicht</text>
-<path d="M606,349 L459,349" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="459.0,349.0 469.0,354.0 469.0,344.0" fill="#9a9a8e"/>
+<path d="M606,349 L459,349" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="459.0,349.0 469.0,354.0 469.0,344.0" fill="#918e9a"/>
 <text x="532" y="339" fill="#8fa6c9" font-size="13" text-anchor="middle">Zähler ≥ 200</text>
-<path d="M372,316 L372,106" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="372.0,106.0 367.0,116.0 377.0,116.0" fill="#9a9a8e"/>
+<path d="M372,316 L372,106" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="372.0,106.0 367.0,116.0 377.0,116.0" fill="#918e9a"/>
 <text x="322" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Programm fertig</text>
-<path d="M290,370 C232,370 150,330 120,245" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="120.0,245.0 118.6,256.1 128.0,252.8" fill="#9a9a8e"/>
+<path d="M290,370 C232,370 150,330 120,245" stroke="#918e9a" stroke-width="2" fill="none"/><polygon points="120.0,245.0 118.6,256.1 128.0,252.8" fill="#918e9a"/>
 <text x="178" y="372" fill="#8fa6c9" font-size="13" text-anchor="middle">Aus-Taste</text>
-<rect x="30" y="179" width="165" height="62" rx="8" fill="#16160f" stroke="#e8925c" stroke-width="2.5"/>
-<text x="112" y="203" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">AUS</text>
-<text x="112" y="219" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung aus</text>
-<text x="112" y="234" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe aus</text>
-<rect x="290" y="40" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
-<text x="372" y="64" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">AUFHEIZEN</text>
-<text x="372" y="80" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung an</text>
-<text x="372" y="95" fill="#e8925c" font-size="11.5" text-anchor="middle">LED blinkt</text>
-<rect x="610" y="40" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
-<text x="692" y="64" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">BEREIT</text>
-<text x="692" y="80" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung regelt</text>
-<text x="692" y="95" fill="#e8925c" font-size="11.5" text-anchor="middle">LED an</text>
-<rect x="610" y="318" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
-<text x="692" y="342" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">BRÜHEN</text>
-<text x="692" y="358" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe an</text>
-<text x="692" y="373" fill="#e8925c" font-size="11.5" text-anchor="middle">Zähler + 1</text>
-<rect x="290" y="318" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
-<text x="372" y="342" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">ENTKALKEN</text>
-<text x="372" y="358" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe im Intervall</text>
-<text x="372" y="373" fill="#e8925c" font-size="11.5" text-anchor="middle">LED rot</text>
-<text x="10" y="435" fill="#9a9a8e" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der Normalbetrieb; „Aus-Taste" gilt sinngemäß aus jedem Zustand (nur einmal gezeichnet).</text>
+<rect x="30" y="179" width="165" height="62" rx="8" fill="#110f16" stroke="#a48bf0" stroke-width="2.5"/>
+<text x="112" y="203" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">AUS</text>
+<text x="112" y="219" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung aus</text>
+<text x="112" y="234" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe aus</text>
+<rect x="290" y="40" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="372" y="64" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">AUFHEIZEN</text>
+<text x="372" y="80" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung an</text>
+<text x="372" y="95" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED blinkt</text>
+<rect x="610" y="40" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="692" y="64" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">BEREIT</text>
+<text x="692" y="80" fill="#a48bf0" font-size="11.5" text-anchor="middle">Heizung regelt</text>
+<text x="692" y="95" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED an</text>
+<rect x="610" y="318" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="692" y="342" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">BRÜHEN</text>
+<text x="692" y="358" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe an</text>
+<text x="692" y="373" fill="#a48bf0" font-size="11.5" text-anchor="middle">Zähler + 1</text>
+<rect x="290" y="318" width="165" height="62" rx="8" fill="#110f16" stroke="#54525b" stroke-width="2"/>
+<text x="372" y="342" fill="#e9e6f2" font-size="15" font-weight="bold" text-anchor="middle">ENTKALKEN</text>
+<text x="372" y="358" fill="#a48bf0" font-size="11.5" text-anchor="middle">Pumpe im Intervall</text>
+<text x="372" y="373" fill="#a48bf0" font-size="11.5" text-anchor="middle">LED rot</text>
+<text x="10" y="435" fill="#918e9a" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der Normalbetrieb; „Aus-Taste" gilt sinngemäß aus jedem Zustand (nur einmal gezeichnet).</text>
 </svg><!--/SVG--></div>
 </div>
 

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="290" viewBox="0 0 1200 290" font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif">
+<rect x="0.5" y="0.5" width="1199" height="289" rx="18" fill="#14111a" stroke="#5a1525"/>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C8102E"/></marker></defs>
+<rect x="32" y="40" width="208" height="204" rx="14" fill="#1c1418" stroke="#3a1420" stroke-width="1"/>
+<circle cx="62" cy="72" r="15" fill="#C8102E"/><text x="62" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">1</text>
+<text x="88" y="78" fill="#f3ecee" font-size="19" font-weight="700">Material</text>
+<rect x="48" y="106" width="85" height="24" rx="6" fill="#2a2228"/><text x="57" y="122" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">quellen/</text>
+<rect x="48" y="136" width="127" height="24" rx="6" fill="#2a2228"/><text x="57" y="152" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">altklausuren/</text>
+<text x="48" y="226" fill="#b8aeb4" font-size="13">slides, scripts, old exams</text>
+<line x1="243" y1="142" x2="261" y2="142" stroke="#C8102E" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="264" y="40" width="208" height="204" rx="14" fill="#1c1418" stroke="#3a1420" stroke-width="1"/>
+<circle cx="294" cy="72" r="15" fill="#C8102E"/><text x="294" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">2</text>
+<text x="320" y="78" fill="#f3ecee" font-size="19" font-weight="700">Analysis</text>
+<rect x="280" y="106" width="144" height="24" rx="6" fill="#2a2228"/><text x="289" y="122" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">mode per module</text>
+<text x="280" y="226" fill="#b8aeb4" font-size="13">what the exam rewards</text>
+<line x1="475" y1="142" x2="493" y2="142" stroke="#C8102E" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="496" y="40" width="208" height="204" rx="14" fill="#1c1418" stroke="#3a1420" stroke-width="1"/>
+<circle cx="526" cy="72" r="15" fill="#C8102E"/><text x="526" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">3</text>
+<text x="552" y="78" fill="#f3ecee" font-size="19" font-weight="700">Build</text>
+<rect x="512" y="106" width="85" height="24" rx="6" fill="#2a2228"/><text x="521" y="122" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">&lt;K&gt;.html</text>
+<rect x="512" y="136" width="85" height="24" rx="6" fill="#2a2228"/><text x="521" y="152" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">trainer/</text>
+<rect x="512" y="166" width="127" height="24" rx="6" fill="#2a2228"/><text x="521" y="182" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">fehler-log.md</text>
+<text x="512" y="226" fill="#b8aeb4" font-size="13">doc · self-test · error log</text>
+<line x1="707" y1="142" x2="725" y2="142" stroke="#C8102E" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="728" y="40" width="208" height="204" rx="14" fill="#1c1418" stroke="#3a1420" stroke-width="1"/>
+<circle cx="758" cy="72" r="15" fill="#C8102E"/><text x="758" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">4</text>
+<text x="784" y="78" fill="#f3ecee" font-size="19" font-weight="700">Plan</text>
+<rect x="744" y="106" width="161" height="24" rx="6" fill="#2a2228"/><text x="753" y="122" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">klausuren_data.py</text>
+<text x="744" y="226" fill="#b8aeb4" font-size="13">days with checkable steps</text>
+<line x1="939" y1="142" x2="957" y2="142" stroke="#C8102E" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="960" y="40" width="208" height="204" rx="14" fill="#1c1418" stroke="#C8102E" stroke-width="2"/>
+<circle cx="990" cy="72" r="15" fill="#C8102E"/><text x="990" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">5</text>
+<text x="1016" y="78" fill="#f3ecee" font-size="19" font-weight="700">Cockpit</text>
+<rect x="976" y="106" width="136" height="24" rx="6" fill="#2a2228"/><text x="985" y="122" fill="#F0566A" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">klausuren.html</text>
+<text x="976" y="226" fill="#b8aeb4" font-size="13">one offline page</text>
+</svg>
