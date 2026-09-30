@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="28" viewBox="0 0 160 28" font-family="Verdana, DejaVu Sans, sans-serif" font-size="12">
+<rect x=".5" y=".5" width="159" height="27" rx="14" fill="#1e1e24" stroke="#58c8b8"/>
+<rect x=".5" y=".5" width="48" height="27" rx="14" fill="#58c8b8"/><rect x="34" y=".5" width="14" height="27" fill="#58c8b8"/>
+<text x="24.1" y="18.5" fill="#16161a" font-weight="bold" text-anchor="middle">ITS</text>
+<text x="104.3" y="18.5" fill="#e9e8e3" text-anchor="middle">IT-Sicherheit</text></svg>

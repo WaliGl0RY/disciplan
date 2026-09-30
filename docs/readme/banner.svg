@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif">
+<rect x="0.5" y="0.5" width="1199" height="299" rx="22" fill="#131016" stroke="#2c2630"/>
+<rect x="0" y="60" width="6" height="180" rx="3" fill="#C0392B"/>
+<text x="70" y="156" font-size="96" font-weight="700" letter-spacing="-2"><tspan fill="#f3e9e0">disci</tspan><tspan fill="#C0392B">plan</tspan></text>
+<text x="74" y="212" font-size="30" fill="#d9d0d6">Every day knows what to study.</text>
+<text x="800" y="84" font-size="14" font-weight="700" letter-spacing="3" fill="#b8aeb4">WEEK 1 · WEEK 2</text>
+<rect x="800" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M811 128 L817 134 L828 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="848" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M859 128 L865 134 L876 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="896" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M907 128 L913 134 L924 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="944" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M955 128 L961 134 L972 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="992" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M1003 128 L1009 134 L1020 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1040" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M1051 128 L1057 134 L1068 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1088" y="108" width="38" height="38" rx="8" fill="#C0392B"/><path d="M1099 128 L1105 134 L1116 121" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="800" y="156" width="38" height="38" rx="8" fill="#C0392B"/><path d="M811 176 L817 182 L828 169" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="848" y="156" width="38" height="38" rx="8" fill="#C0392B"/><path d="M859 176 L865 182 L876 169" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="896" y="156" width="38" height="38" rx="8" fill="#C0392B"/><path d="M907 176 L913 182 L924 169" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="944" y="156" width="38" height="38" rx="8" fill="#C0392B"/><path d="M955 176 L961 182 L972 169" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="992" y="156" width="38" height="38" rx="8" fill="#2a262c"/>
+<rect x="1040" y="156" width="38" height="38" rx="8" fill="#2a262c"/>
+<rect x="1088" y="156" width="38" height="38" rx="8" fill="#2a262c"/>
+</svg>

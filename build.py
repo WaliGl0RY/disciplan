@@ -227,13 +227,13 @@ SHELL_CSS = r"""
 .lnx{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);
  border-radius:7px;margin-bottom:6px;cursor:pointer;background:var(--card);font-size:13.5px}
 .lnx:hover{border-color:var(--acc)}
-.lnx.kl{border-left:3px solid #c2703f}
+.lnx.kl{border-left:3px solid #c0392b}
 .lnx .d1{font:700 13px sans-serif;min-width:62px}
 .lnx .c1{font-size:11.5px;color:var(--mut);min-width:74px}
 .lnx .m1{display:flex;gap:4px;flex-wrap:wrap;flex:1}
 .lnx .m1 span{font:600 10px sans-serif;background:var(--soft);border-radius:4px;padding:2px 5px}
 .lnx .a1{color:var(--acc);font-size:14px}
-.lnx .kb{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.lnx .kb{font:700 9.5px sans-serif;background:#c0392b;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
 .lnx.gestern{opacity:.72;border-style:dashed}
 .lmore{width:100%;margin-top:4px;padding:7px;border:1px dashed var(--line);border-radius:7px;
  background:none;color:var(--mut);font:600 12px sans-serif;cursor:pointer;font-family:inherit}
@@ -252,12 +252,12 @@ SHELL_CSS = r"""
 .ldh:first-child{border-top:0;padding-top:0;margin-top:0}
 .ldh b{font:700 13.5px sans-serif}
 .ldh span{font-size:11.5px;color:var(--mut)}
-.ldh .kl{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.ldh .kl{font:700 9.5px sans-serif;background:#c0392b;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
 .ldh a{margin-left:auto;font-size:11.5px;color:var(--acc);text-decoration:none}
 .lauf .fin{font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.6}
 *{box-sizing:border-box}
-:root{--bg:#f4f4f1;--fg:#1b1b19;--mut:#6d6d66;--line:#e3e3dc;--card:#fff;--acc:#b0522c;--soft:#efeee8}
-html[data-t=dark]{--bg:#16161a;--fg:#e9e8e3;--mut:#9a9a92;--line:#2c2c33;--card:#1e1e24;--acc:#e08858;--soft:#25252c}
+:root{--bg:#f4f4f1;--fg:#1b1b19;--mut:#6d6d66;--line:#e3e3dc;--card:#fff;--acc:#c0392b;--soft:#efeee8}
+html[data-t=dark]{--bg:#16161a;--fg:#e9e8e3;--mut:#9a9a92;--line:#2c2c33;--card:#1e1e24;--acc:#e5614f;--soft:#25252c}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--bg);color:var(--fg);
  font:15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
@@ -301,7 +301,7 @@ code{background:var(--soft);padding:1.5px 5px;border-radius:4px;font:12.6px ui-m
 .cdb{background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 15px;min-width:126px}
 .cdb .n{font:700 24px sans-serif;line-height:1.1}
 .cdb .l{font-size:11.5px;opacity:.72;margin-top:2px}
-.cdb.warn{background:#a3441c;color:#fff}
+.cdb.warn{background:#b3332b;color:#fff}
 .tabs{display:flex;gap:5px;margin:20px 0 0;border-bottom:2px solid var(--fg);flex-wrap:wrap}
 .tab{padding:8px 15px;border-radius:8px 8px 0 0;border:0;font:600 14px sans-serif;
  cursor:pointer;color:var(--mut);background:none}
@@ -324,9 +324,9 @@ html[data-t=dark] .tab:hover{background:#23232a;color:var(--fg)}
 .card .mn{font-size:12.4px;color:var(--mut);margin:1px 0 8px}
 .row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px}
 .tg{font:600 11.2px sans-serif;padding:3px 9px;border-radius:20px;white-space:nowrap}
-.tg.ok{background:#e7f3e1;color:#2c5220}.tg.todo{background:#fbe6dc;color:#8a3a18}
+.tg.ok{background:#e7f3e1;color:#2c5220}.tg.todo{background:#fbe6e4;color:#8a2a25}
 .tg.pf{background:#e6edf5;color:#2c5580}.tg.wp{background:var(--soft);color:var(--mut)}
-.tg.v3{background:#a3441c;color:#fff}.tg.v2{background:#f5e3c8;color:#7a5410}
+.tg.v3{background:#b3332b;color:#fff}.tg.v2{background:#e9eef8;color:#3f5a94}
 .dt{font:600 13.8px sans-serif}
 .md{font-size:13.2px;color:var(--mut);margin:2px 0 10px;flex:1 1 auto}
 .btn{display:inline-block;padding:6px 13px;border-radius:7px;font:600 13px sans-serif;
@@ -334,8 +334,9 @@ html[data-t=dark] .tab:hover{background:#23232a;color:var(--fg)}
 .btn.pri{background:var(--acc);color:#fff}
 .btn:hover{opacity:.87}
 .key{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
-.warn{background:#fdf4e8;border:1px solid #ecd6b2;color:#4a3a1c;border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
-.crit{background:#fbeee8;border:1px solid #e7c4b2;color:#5a2a14;border-radius:9px;padding:12px 16px;margin:12px 0;font-size:14.6px}
+.warn{background:#eef2fc;border:1px solid #b3c3e8;color:#25304a;border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
+.crit{background:#fce9e7;border:1px solid #e8b8b4;color:#5c211d;border-radius:9px;padding:12px 16px;margin:12px 0;font-size:14.6px}
+html[data-t=dark] .crit{background:#2e1718;border-color:#5a2a2b;color:#f0c9c6}
 table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.6px;background:var(--card);display:block;overflow-x:auto}
 /* Im hellen Modus haben Modulinhalte helle Kartenflaechen und dunkle Schrift; die
    table-Regel darueber wuerde sie dunkel einfaerben -> unlesbar. Deshalb hier hell halten.
@@ -374,17 +375,17 @@ td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
 .dc.past{opacity:.5}
 .dc.today{border-color:var(--acc);border-width:2px;padding:7px 7px 8px;
  box-shadow:0 0 0 4px rgba(176,82,44,.11)}
-.dc.klausur{background:linear-gradient(160deg,#fbeee8,#f7e0d4);border-color:#e0a988}
-html[data-t=dark] .dc.klausur{background:linear-gradient(160deg,#33201a,#291a15);border-color:#6b4029}
-.dc.deadline{background:linear-gradient(160deg,#fdf6ea,#f9edd6);border-color:#e3cc9a}
-html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013);border-color:#5e5127}
+.dc.klausur{background:linear-gradient(160deg,#fce9e7,#f8d9d6);border-color:#e3a29d}
+html[data-t=dark] .dc.klausur{background:linear-gradient(160deg,#33191a,#2a1415);border-color:#6b2d2f}
+.dc.deadline{background:linear-gradient(160deg,#eef2fc,#e3eafa);border-color:#b3c3e8}
+html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#1b2132,#161b2a);border-color:#3a4a78}
 .dch{display:flex;align-items:baseline;gap:6px;padding:1px 3px 5px;border-bottom:1px solid var(--line);margin-bottom:2px}
 .dch .wd{font:700 10.5px sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
 .dch .dn{font:700 17px sans-serif;line-height:1;letter-spacing:-.02em}
 .dch .mo{font-size:10.5px;color:var(--mut)}
 .dch .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--line)}
 .dch .dot.part{background:linear-gradient(90deg,var(--acc) 50%,var(--line) 50%)}
-.dch .dot.full{background:#3d6b2e}
+.dch .dot.full{background:#1f9d62}
 .tk{display:flex;gap:5px;align-items:flex-start;padding:4px 5px;border-radius:7px;min-width:0;
  background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.13s}
 .tk code{font-size:10px;padding:0 3px;word-break:break-all}
@@ -402,7 +403,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .tk .tx b{font-weight:700}
 .badge{position:absolute;top:0;right:0;font:700 8.5px sans-serif;letter-spacing:.07em;
  text-transform:uppercase;padding:2px 7px 3px;border-radius:0 11px 0 10px;color:#fff;z-index:2}
-.badge.k{background:#a3441c}.badge.d{background:#b08a2c}
+.badge.k{background:#b3332b}.badge.d{background:#4a6fb5}
 /* einklappbare Tagesliste */
 .tglr{display:flex;align-items:center;gap:9px;margin:26px 0 0;cursor:pointer;
  background:none;border:0;color:var(--fg);font:inherit;padding:0}
@@ -440,7 +441,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .mods span{font:700 9.5px sans-serif;padding:2px 6px;border-radius:20px;background:var(--soft);color:var(--mut)}
 .mods span.on{background:var(--acc);color:#fff}
 .dbar{height:4px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:auto}
-.dbar i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+.dbar i{display:block;height:100%;background:#1f9d62;width:0;transition:.3s}
 .more{font-size:10.5px;color:var(--mut);margin-top:3px;text-align:center;opacity:.75}
 /* Modal */
 #dov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:120;
@@ -457,7 +458,7 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 #dhead .x{background:none;border:0;font-size:22px;line-height:1;color:var(--mut);cursor:pointer;padding:0 4px}
 #dhead .x:hover{color:var(--acc)}
 #dhead .pr{height:5px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:10px}
-#dhead .pr i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+#dhead .pr i{display:block;height:100%;background:#1f9d62;width:0;transition:.3s}
 #dbody{padding:8px 22px 20px}
 .tsk{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
 .tsk:last-child{border:0}
@@ -465,9 +466,9 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
 .tsk .meta{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;align-items:flex-start;min-width:78px}
 .tsk .mk3{font:700 10px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);color:var(--mut)}
 .tsk .ty{font:700 9.5px sans-serif;padding:2px 6px;border-radius:4px;letter-spacing:.04em}
-.ty.L{background:#e6edf5;color:#2c5580}.ty.U{background:#eef4ea;color:#3d6b2e}
-.ty.D{background:#f5e9e0;color:#8a4a20}.ty.T{background:#fbe6dc;color:#8a3a18}
-.ty.W{background:#f0efe9;color:#6d6d66}.ty.O{background:#f5f0e0;color:#7a6410}
+.ty.L{background:#e6edf5;color:#2c5580}.ty.U{background:#eef4ea;color:#1f9d62}
+.ty.D{background:#efe9fa;color:#5a3f9a}.ty.T{background:#fbe6e4;color:#8a2a25}
+.ty.W{background:#f0efe9;color:#6d6d66}.ty.O{background:#e9eef8;color:#3f5a94}
 .tsk .mn2{font:600 10.5px ui-monospace,monospace;color:var(--mut)}
 .tsk .tt{flex:1;font-size:14.4px;line-height:1.55}
 .tsk.done .tt{opacity:.42;text-decoration:line-through}
@@ -483,10 +484,10 @@ html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013
  padding:10px 14px;margin:6px 0;align-items:flex-start}
 .day.today{border-color:var(--acc);border-width:2px;box-shadow:0 0 0 3px rgba(176,82,44,.1)}
 .day.past{opacity:.42}
-.day.klausur{background:#fbeee8;border-color:#e7c4b2}
-html[data-t=dark] .day.klausur{background:#2e1d17;border-color:#5a3524}
-.day.deadline{background:#fdf4e8;border-color:#ecd6b2}
-html[data-t=dark] .day.deadline{background:#2c2415;border-color:#5a4a24}
+.day.klausur{background:#fce9e7;border-color:#e8b8b4}
+html[data-t=dark] .day.klausur{background:#2e1718;border-color:#5a2a2b}
+.day.deadline{background:#eef2fc;border-color:#b3c3e8}
+html[data-t=dark] .day.deadline{background:#1b2132;border-color:#3a4a78}
 .day.puffer{opacity:.72}
 .day .dt2{flex:0 0 92px}
 .day .dnum{font:700 15px sans-serif;line-height:1.15}
@@ -525,7 +526,9 @@ def build():
         if r: mods[m["k"]] = r
         else: missing.append(m["k"])
 
-    css = SHELL_CSS + "\n" + "\n".join(v["css"] for v in mods.values())
+    mc = ":root{" + "".join("--mc-%s:%s;" % (m["k"], m["col"]) for m in MODULES if m.get("col")) + "}\n" \
+       + "html[data-t=dark]{" + "".join("--mc-%s:%s;" % (m["k"], m.get("dcol", m["col"])) for m in MODULES if m.get("col")) + "}\n"
+    css = SHELL_CSS + "\n" + mc + "\n".join(v["css"] for v in mods.values())
     panes = "".join(
         '<div class="view mv" id="v-%s"><div id="m-%s">%s</div></div>' % (k, k, v["body"])
         for k, v in mods.items())
@@ -609,9 +612,9 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
         </div>
         <div class="wgrid" id="lwgrid"></div>
         <div class="calf">
-          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
+          <span class="lg"><i style="background:#e3a29d"></i>Klausur</span>
           <span class="lg"><i style="background:var(--acc)"></i>heute</span>
-          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="lg"><i style="background:#1f9d62;border-radius:50%"></i>Tag komplett</span>
           <span class="sp"></span><span id="lwsum"></span>
         </div>
       </div>
@@ -640,8 +643,8 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
         </div>
         <div class="wgrid" id="awgrid"></div>
         <div class="calf">
-          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
-          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="lg"><i style="background:#e3a29d"></i>Klausur</span>
+          <span class="lg"><i style="background:#1f9d62;border-radius:50%"></i>Tag komplett</span>
           <span class="sp"></span><span id="awsum"></span>
         </div>
       </div>
@@ -675,10 +678,10 @@ TPL = r"""<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
       </div>
       <div class="wgrid" id="wgrid"></div>
       <div class="calf">
-        <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
-        <span class="lg"><i style="background:#e3cc9a"></i>Deadline</span>
+        <span class="lg"><i style="background:#e3a29d"></i>Klausur</span>
+        <span class="lg"><i style="background:#b3c3e8"></i>Deadline</span>
         <span class="lg"><i style="background:var(--acc)"></i>heute</span>
-        <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+        <span class="lg"><i style="background:#1f9d62;border-radius:50%"></i>Tag komplett</span>
         <span class="sp"></span>
         <span id="wsum"></span>
       </div>
@@ -765,13 +768,13 @@ document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>swtab(t.dataset.p));
 document.getElementById("navmod").innerHTML=D.mods.map(m=>{
  const n=dd(m.d);
  return `<button class="nl${m.has?"":" dis"}" ${m.has?`data-go="${m.k}"`:""}>
-  <span class="kk">${m.k}</span>${m.has?"":"<span style='font-size:11.5px'>kein Dok</span>"}
+  <span class="kk" style="color:var(--mc-${m.k})">${m.k}</span>${m.has?"":"<span style='font-size:11.5px'>kein Dok</span>"}
   <span class="dd">${n<0?"&#10003;":n+"T"}</span></button>`}).join("");
 document.querySelectorAll("#side .nl[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.tab));
 /* Die Trainer sind eigene Apps und oeffnen in einem neuen Tab. */
 document.getElementById("navtr").innerHTML=D.mods.filter(m=>m.trainer).map(m=>
  `<a class="nl" href="${m.trainer.file}" target="_blank" title="${m.trainer.was}">
-  <span class="kk">${m.k}</span>Trainer<span class="dd">&#8599;</span></a>`).join("");
+  <span class="kk" style="color:var(--mc-${m.k})">${m.k}</span>Trainer<span class="dd">&#8599;</span></a>`).join("");
 
 /* ---------- Countdown ---------- */
 function kpi(){
@@ -792,7 +795,7 @@ kpi();
 
 /* ---------- Modulkarten ---------- */
 document.getElementById("grid").innerHTML=D.mods.map(m=>{
- const n=dd(m.d),col=n<0?"#c9c9be":n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+ const n=dd(m.d),col=`var(--mc-${m.k})`;
  const vt=m.v===3?'<span class="tg v3">3. Versuch</span>':m.v===2?'<span class="tg v2">2. Versuch</span>':'';
  return `<div class="card"><div class="bar" style="background:${col}"></div>
   <h3>${m.k}</h3><div class="mn">${m.name} &middot; ${m.prof}</div>
@@ -802,9 +805,9 @@ document.getElementById("grid").innerHTML=D.mods.map(m=>{
    ${vt}<span class="tg ${m.has?"ok":"todo"}">${m.has?"dokumentiert":"offen"}</span></div>
   ${m.mode?`<div class="row"><span class="fine"><b>${m.mode}</b></span></div>`:""}
   <div class="md">${m.desc}</div>
-  <div><button class="btn ${m.has?"pri":""}" ${m.has?`onclick="go('${m.k}')"`:"disabled"}>
+  <div><button class="btn ${m.has?"pri":""}" ${m.has?`onclick="go('${m.k}')" style="background:${col};border-color:${col}"`:"disabled"}>
    ${m.has?"Lerndokument öffnen":"noch kein Dokument"}</button>${m.trainer?
-   `<a class="btn" href="${m.trainer.file}" target="_blank" style="margin-left:7px"
+   `<a class="btn" href="${m.trainer.file}" target="_blank" style="margin-left:7px;border-color:${col};color:${col}"
       title="${m.trainer.was}">Trainer &#8599;</a>`:""}</div></div>`}).join("");
 
 /* ---------- Tagesplan ---------- */
@@ -824,7 +827,7 @@ function days(){
   d.o.forEach((o,j)=>{const id=i+"_"+j,c=!!ST[id];
    const jb=o.to?`<button class="jp" title="Zum Lernstoff: ${o.m}" onclick="jump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
    out+=`<div class="obj${c?" done":""}"><input type="checkbox" id="k${id}" ${c?"checked":""} onchange="tog('${id}')">
-     <span class="mk">${o.m}</span><span class="ty ${o.ty}">${o.ty}</span>
+     <span class="mk" style="color:var(--mc-${o.m},var(--mut))">${o.m}</span><span class="ty ${o.ty}">${o.ty}</span>
      <label for="k${id}">${o.x} <span style="color:var(--mut);font-size:12px">· ${o.min} Min</span></label>${jb}</div>`});
   out+="</div></div>"});
  document.getElementById("days").innerHTML=out;
@@ -938,7 +941,7 @@ function dRender(){
   const jb=o.to?`<button class="go" title="Zum Lernstoff: ${o.m}" onclick="dJump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
   return `<div class="tsk${c?" done":""}">
     <input type="checkbox" ${c?"checked":""} onchange="dTog('${id}')">
-    <span class="meta"><span class="mk3">${o.m}</span>
+    <span class="meta"><span class="mk3" style="color:var(--mc-${o.m},var(--mut))">${o.m}</span>
       <span class="ty ${o.ty}">${TY[o.ty]||o.ty}</span>
       <span class="mn2">${o.min} Min</span></span>
     <span class="tt">${o.x}</span>${jb}</div>`}).join("")
@@ -956,7 +959,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")dClose()});
  const mx=Math.max(...D.mods.map(m=>dd(m.d)));
  document.getElementById("tlbox").innerHTML=
  '<p class="fine">Balkenlänge = verbleibende Tage.</p>'+D.mods.map(m=>{
-  const n=dd(m.d),w=Math.max(2,n/mx*100),col=n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+  const n=dd(m.d),w=Math.max(2,n/mx*100),col=`var(--mc-${m.k})`;
   return `<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)">
    <span style="font:600 13px ui-monospace,monospace;color:var(--mut);min-width:76px">${fm(m.d)}</span>
    <span style="height:12px;border-radius:3px;flex:1;background:var(--soft);position:relative">
@@ -1261,7 +1264,7 @@ let pCur=null;
 function pOpen(di,j){
  const d=D.days[di],o=d.o[j];pCur=[di,j];
  const st=o.st||[];
- let h='<div class="ph"><div class="pmeta"><span class="pmk">'+o.m+'</span>'+
+ let h='<div class="ph"><div class="pmeta"><span class="pmk" style="color:var(--mc-'+o.m+',var(--mut))">'+o.m+'</span>'+
    '<span class="pty">'+fm(d.d)+' &middot; '+o.min+' Min &middot; '+(TYN[o.ty]||o.ty)+
    (o.ty==="V"?' <b>(K\u00fcr \u2014 optional)</b>':'')+'</span>'+
    '<button class="pcl" onclick="pClose()" title="Schlie\u00dfen">&times;</button></div>'+

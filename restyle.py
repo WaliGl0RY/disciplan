@@ -30,14 +30,14 @@ ADDON = ("/*__ADDON_START__*/\n" + io.open(JS_BLATT, encoding="utf-8").read()
 # Je Modul eine eigene Akzentfarbe, damit sich die Trainer unterscheiden.
 # Nicht eingetragene Kuerzel behalten die Grundfassung (Indigo).
 PALETTEN = {
-  "rad": dict(acc="#0e8f86", acc2="#0a6f68", accw="#e0f3f1",
-              dacc="#5cc9bd", daccw="#12332f",
-              g1="linear-gradient(135deg,#0f9b8e,#46bfa6)",
-              g2="linear-gradient(135deg,#2aa39a,#6fd0c0)"),
-  "kaf": dict(acc="#c05a1e", acc2="#96430f", accw="#fbeee2",
-              dacc="#e9975f", daccw="#33210e",
-              g1="linear-gradient(135deg,#cf6425,#e8a35b)",
-              g2="linear-gradient(135deg,#c9622a,#efa96b)"),
+  "rad": dict(acc="#2563c9", acc2="#1c4ea3", accw="#e3ecfb",
+              dacc="#7fb0f5", daccw="#15233f",
+              g1="linear-gradient(135deg,#1f55b8,#4f8ae8)",
+              g2="linear-gradient(135deg,#2563c9,#6aa2f0)"),
+  "kaf": dict(acc="#6d4fd6", acc2="#5238b0", accw="#ece8fb",
+              dacc="#a995f5", daccw="#241d45",
+              g1="linear-gradient(135deg,#5b3fc4,#8f79ea)",
+              g2="linear-gradient(135deg,#6d4fd6,#a08cf0)"),
 }
 
 def palette(kuerzel):

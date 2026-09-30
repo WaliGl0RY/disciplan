@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="196" viewBox="0 0 380 196" font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif">
+<defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#a995f5" stop-opacity=".22"/><stop offset=".6" stop-color="#a995f5" stop-opacity="0"/></linearGradient></defs>
+<rect x="0.5" y="0.5" width="379" height="195" rx="14" fill="#131016" stroke="#a995f5" stroke-opacity=".55"/>
+<rect x="1" y="1" width="378" height="194" rx="14" fill="url(#g)"/>
+<rect x="0" y="18" width="6" height="160" rx="3" fill="#a995f5"/>
+<rect x="28" y="24" width="64" height="30" rx="15" fill="#a995f5"/>
+<text x="60" y="45" font-size="16" font-weight="800" fill="#131016" text-anchor="middle" letter-spacing="1">KAF</text>
+<text x="106" y="46" font-size="11" font-weight="700" letter-spacing="2.5" fill="#a995f5">DEMO MODULE</text>
+<text x="30" y="84" font-size="22" font-weight="700" fill="#f3e9e0">Coffee machine technology</text>
+<text x="30" y="112" font-size="15" fill="#d9d0d6">study page with a state machine</text><text x="30" y="135" font-size="15" fill="#d9d0d6">trainer, 1st generation: terms,</text><text x="30" y="158" font-size="15" fill="#d9d0d6">two chapters, mock exam, cheat sheet</text>
+</svg>

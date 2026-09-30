@@ -21,15 +21,17 @@ Schrittlisten als JSON-kompatible Dicts.
 # prof   Pruefer
 # mode   Modus aus der Analyse (siehe CLAUDE.md) oder None
 # desc   ein, zwei Saetze Begruendung (HTML erlaubt)
+# col, dcol  Modulfarbe (hell / dunkel): Karte, Chips, Knoepfe im Cockpit
+#            (die Trainer-Farbe steht in restyle.py, PALETTEN)
 # trainer  optional: dict(file=..., was=...) — nur wenn es eine Trainer-App gibt
 MODULES = [
- dict(k="KAF", name="Kaffeemaschinen-Technik (Demo)", d="2026-09-02", t="10:00", v=1, typ="PF", prof="Demo",
+ dict(k="KAF", col="#6d4fd6", dcol="#a995f5", name="Kaffeemaschinen-Technik (Demo)", d="2026-09-02", t="10:00", v=1, typ="PF", prof="Demo",
       trainer=dict(file="module/KAF/KAF-Trainer.html", was="Demo-Trainer: Begriffe, zwei Kapitel, Probeklausur, Spickzettel"),
       mode="DEMO · ALTKLAUSUR-DRIVEN", desc="<b>Erfundenes Beispielmodul.</b> Zeigt ein Lerndokument mit Zustandsautomat und einen Trainer der ersten Generation."),
- dict(k="RAD", name="Fahrrad-Werkstatt (Demo)",       d="2026-09-04", t="14:00", v=2, typ="PF", prof="Demo",
+ dict(k="RAD", col="#2563c9", dcol="#7fb0f5", name="Fahrrad-Werkstatt (Demo)",       d="2026-09-04", t="14:00", v=2, typ="PF", prof="Demo",
       trainer=dict(file="module/RAD/RAD-Trainer.html", was="Demo-Trainer der zweiten Generation: Dashboard, Simulationen, Spickzettel"),
       mode="DEMO · MIXED", desc="Erfundenes Beispielmodul mit Praxisteil. Zeigt den Trainer der zweiten Generation."),
- dict(k="GAR", name="Gartenplanung (Demo)",           d="2026-09-07", t="?",     v=1, typ="WP", prof="Demo",
+ dict(k="GAR", col="#1b9a5f", dcol="#5fd49a", name="Gartenplanung (Demo)",           d="2026-09-07", t="?",     v=1, typ="WP", prof="Demo",
       mode=None, desc="Erfundenes Beispielmodul ohne Trainer und noch ohne Modus."),
 ]
 

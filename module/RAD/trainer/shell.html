@@ -12,26 +12,26 @@
 /* ══ Farbwelt und Formensprache der vorigen Trainer-Version:
       Rot-Akzent, roter Hero, weiche runde Karten, Tiefe durch Schatten ══ */
 :root{
-  --bg:#faf6f6; --card:#ffffff; --card2:#f5eeee; --ink:#1f1718; --mut:#7a6a6c;
-  --line:#ece4e4; --acc:#c8283a; --acc2:#a51d2d; --acc-w:#fcebec; --on-acc:#ffffff;
+  --bg:#f6f7fa; --card:#ffffff; --card2:#eef1f5; --ink:#171a1f; --mut:#7a6a6c;
+  --line:#e4e7ec; --acc:#2863c8; --acc2:#1d4fa5; --acc-w:#ebf1fc; --on-acc:#ffffff;
   --good:#1f9d62; --good-w:#e2f5ec; --bad:#c75454; --bad-w:#fbe9e9;
   --warn:#b7791f; --warn-w:#faf1de; --none:#b9bacb;
-  --g-violet:linear-gradient(135deg,#b3172b,#e8474c);
-  --g-blue:linear-gradient(135deg,#d2293b,#f0705a);
-  --shadow:0 12px 32px rgba(110,30,36,.13);
-  --shadow-sm:0 4px 14px rgba(110,30,36,.08);
+  --g-violet:linear-gradient(135deg,#1750b3,#4782e8);
+  --g-blue:linear-gradient(135deg,#2967d2,#5a91f0);
+  --shadow:0 12px 32px rgba(30,50,110,.13);
+  --shadow-sm:0 4px 14px rgba(30,50,110,.08);
   --r:16px;
 }
 @media (prefers-color-scheme:dark){:root:not([data-t="light"]){
-  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
-  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --bg:#121417; --card:#1a1d22; --card2:#23272e; --ink:#e6eaf0; --mut:#9ca3b0;
+  --line:#2c313a; --acc:#6a9bf0; --acc2:#8ab1f5; --acc-w:#1d293d; --on-acc:#0f131a;
   --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
   --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
   --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
 }}
 :root[data-t="dark"]{
-  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
-  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --bg:#121417; --card:#1a1d22; --card2:#23272e; --ink:#e6eaf0; --mut:#9ca3b0;
+  --line:#2c313a; --acc:#6a9bf0; --acc2:#8ab1f5; --acc-w:#1d293d; --on-acc:#0f131a;
   --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
   --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
   --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
@@ -79,7 +79,7 @@ header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 8
 .hero-btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
 .hb{border:0;border-radius:11px;padding:10px 17px;font-size:13.5px;font-weight:680;background:rgba(255,255,255,.2);color:#fff;transition:background .16s,transform .16s}
 .hb:hover{background:rgba(255,255,255,.34);transform:translateY(-1px)}
-.hb.p{background:#fff;color:#a51d2d}
+.hb.p{background:#fff;color:#1d4fa5}
 .hero-r{display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap}
 .hring{width:84px;height:84px;position:relative;flex:none}
 .hring svg{transform:rotate(-90deg);display:block}

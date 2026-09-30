@@ -55,6 +55,8 @@ Give every re-cut a new `key` (or `value`), otherwise browsers that already ran 
 3. Delete the demo modules when you no longer need them: remove their folders and their entries in `MODULES` and `DAYS` in `klausuren_data.py`. A folder that isn't in `MODULES` is ignored by `build.py`.
 4. `python build.py`, then `python check.py <K>`.
 
+A trainer is optional: GAR has none. Give each module a colour with `col` and `dcol` (light and dark) in its `MODULES` entry. The cockpit uses it for the module card, the sidebar and the plan chips; a trainer takes its colour from `PALETTEN` in `restyle.py`.
+
 ## 4 · Drill
 
 Tell Claude `drill <K>`. It reads the module's `README.md` and `fehler-log.md`, asks **one** question and stops. After your answer it grades strictly, names the exact gap, appends it to `fehler-log.md` and moves on. Details in `CLAUDE.md` → DRILL MODE.
