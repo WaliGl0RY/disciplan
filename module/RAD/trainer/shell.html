@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAD-Trainer (Demo)</title>
+<script>
+/* Theme vor dem ersten Zeichnen setzen: auto / hell / dunkel, gemerkt unter kl-theme */
+(function(){try{var t=localStorage.getItem("kl-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-t",t)}catch(e){}})();
+</script>
+<style>
+/* ══ Farbwelt und Formensprache der vorigen Trainer-Version:
+      Rot-Akzent, roter Hero, weiche runde Karten, Tiefe durch Schatten ══ */
+:root{
+  --bg:#faf6f6; --card:#ffffff; --card2:#f5eeee; --ink:#1f1718; --mut:#7a6a6c;
+  --line:#ece4e4; --acc:#c8283a; --acc2:#a51d2d; --acc-w:#fcebec; --on-acc:#ffffff;
+  --good:#1f9d62; --good-w:#e2f5ec; --bad:#c75454; --bad-w:#fbe9e9;
+  --warn:#b7791f; --warn-w:#faf1de; --none:#b9bacb;
+  --g-violet:linear-gradient(135deg,#b3172b,#e8474c);
+  --g-blue:linear-gradient(135deg,#d2293b,#f0705a);
+  --shadow:0 12px 32px rgba(110,30,36,.13);
+  --shadow-sm:0 4px 14px rgba(110,30,36,.08);
+  --r:16px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-t="light"]){
+  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
+  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
+  --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
+  --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
+}}
+:root[data-t="dark"]{
+  --bg:#171213; --card:#221a1b; --card2:#2e2324; --ink:#f0e6e6; --mut:#b09c9e;
+  --line:#3a2c2d; --acc:#f06a72; --acc2:#f58a90; --acc-w:#3d1d21; --on-acc:#1a0f10;
+  --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
+  --warn:#e0a94f; --warn-w:#38300f; --none:#4a4b62;
+  --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.6 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;text-wrap:balance}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
+code{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--card2);padding:1.5px 6px;border-radius:6px}
+pre{font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--card2);padding:10px 12px;border-radius:10px;overflow-x:auto;margin:8px 0}
+b{font-weight:660}
+.hide{display:none!important}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 60px}
+.sub{color:var(--mut);font-size:13.5px}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---- Kopfzeile ---- */
+header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hd{max-width:1180px;margin:0 auto;padding:11px 20px;display:flex;gap:9px;align-items:center}
+.hd h1{font-size:15px;margin:0;font-weight:750;letter-spacing:-.015em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.hd h1 span{color:var(--mut);font-weight:500}
+@media(max-width:900px){.hd h1 span{display:none}}
+.spacer{flex:1}
+.pill{font-size:12px;font-weight:640;padding:5px 12px;border-radius:999px;background:var(--acc-w);color:var(--acc);white-space:nowrap;max-width:40ch;overflow:hidden;text-overflow:ellipsis}
+.btn{border:1.5px solid var(--line);border-radius:11px;padding:9px 15px;font-size:13.5px;font-weight:640;
+  background:var(--card);color:var(--ink);transition:border-color .16s,color .16s,transform .16s,filter .16s}
+.btn:hover{border-color:var(--acc);color:var(--acc)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:var(--on-acc);box-shadow:var(--shadow-sm)}
+.btn.p:hover{transform:translateY(-1px);filter:brightness(1.07);color:var(--on-acc)}
+.btn.sm{padding:6px 11px;font-size:12.5px;white-space:nowrap;border-radius:9px}
+.btn.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+
+/* ---- Hero = Lernstand ---- */
+.hero{background:var(--g-violet);color:#fff;border-radius:20px;padding:16px 24px;margin:14px 0 14px;
+  box-shadow:var(--shadow);display:flex;gap:24px;align-items:center;flex-wrap:wrap;position:relative;overflow:hidden;
+  animation:rise .5s cubic-bezier(.2,.7,.3,1) backwards}
+.hero::after{content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.12)}
+.hero-l{flex:1 1 330px;min-width:0;position:relative;z-index:1}
+.hero .kick{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+.hero h2{margin:2px 0 2px;font-size:23px;letter-spacing:-.03em;line-height:1.2}
+.hero p{margin:0;font-size:13.5px;opacity:.93;max-width:60ch}
+.hero-btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
+.hb{border:0;border-radius:11px;padding:10px 17px;font-size:13.5px;font-weight:680;background:rgba(255,255,255,.2);color:#fff;transition:background .16s,transform .16s}
+.hb:hover{background:rgba(255,255,255,.34);transform:translateY(-1px)}
+.hb.p{background:#fff;color:#a51d2d}
+.hero-r{display:flex;align-items:center;gap:24px;position:relative;z-index:1;flex-wrap:wrap}
+.hring{width:84px;height:84px;position:relative;flex:none}
+.hring svg{transform:rotate(-90deg);display:block}
+.hring .v{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;font-weight:760}
+.hnums{display:flex;gap:22px}
+.hnums b{display:block;font-size:24px;font-weight:770;line-height:1.1}
+.hnums span{font-size:11.5px;opacity:.88}
+
+/* ---- Dashboard ---- */
+.dash{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;align-items:start}
+@media(max-width:980px){.dash{grid-template-columns:1fr}}
+.sech{display:flex;align-items:baseline;justify-content:space-between;margin:0 0 9px}
+.sech h3{margin:0;font-size:15.5px;letter-spacing:-.01em}
+.legend{display:flex;gap:12px;font-size:11.5px;color:var(--mut)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:0}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.lc{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:9px 12px;text-align:left;
+  box-shadow:var(--shadow-sm);display:grid;grid-template-columns:44px 1fr;gap:9px;align-items:center;min-height:78px;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s,border-color .18s;animation:rise .45s cubic-bezier(.2,.7,.3,1) backwards}
+.lc:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--acc)}
+.lc .rg{width:44px;height:44px;position:relative}
+.lc .rg svg{transform:rotate(-90deg);display:block}
+.lc .rg .v{position:absolute;inset:0;display:grid;place-items:center;font-size:12px;font-weight:760;font-variant-numeric:tabular-nums}
+.lc .nr{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.lc .tt{font-size:12.8px;font-weight:660;line-height:1.22;margin:0 0 2px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.lc .st{font-size:11px;font-weight:650;white-space:nowrap}
+.lc.lo{border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.lc.first{grid-column:span 2;grid-template-columns:58px 1fr auto;background:linear-gradient(0deg,var(--card),var(--card)) padding-box,var(--g-violet) border-box;border:2px solid transparent;padding:10px 16px}
+.lc.first .rg{width:58px;height:58px}
+.lc.first .tt{font-size:14.5px}
+.lc.first .go{font-size:12.5px;font-weight:700;color:var(--acc);white-space:nowrap}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:700px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.c-lo{color:var(--bad)}.c-md{color:var(--warn)}.c-hi{color:var(--good)}.c-no{color:var(--mut)}
+
+.simbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:14px 14px 10px}
+.simbox .sub{margin:0 0 8px}
+.sr{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;width:100%;background:none;border:0;
+  border-top:1px solid var(--line);padding:7px 4px;text-align:left;border-radius:10px;transition:background .15s}
+.sr:first-of-type{border-top:0}
+.sr:hover{background:var(--acc-w)}
+.sr .no{width:30px;height:30px;border-radius:10px;background:var(--g-blue);color:#fff;display:grid;place-items:center;font-weight:750;font-size:13px}
+.sr .nm{font-size:13.5px;font-weight:640;line-height:1.25}
+.sr .nm small{display:block;color:var(--mut);font-weight:500;font-size:11.5px}
+.sr .res{font-size:12.5px;font-weight:720;white-space:nowrap}
+.rule{font-size:12px;color:var(--mut);border-top:1px dashed var(--line);margin-top:6px;padding-top:8px}
+
+/* ---- Arbeitsansichten ---- */
+.vh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:18px 0 12px}
+.vh h2{margin:0;font-size:21px;letter-spacing:-.02em;flex:1;min-width:240px}
+.vh h2 small{display:block;font-size:12px;color:var(--mut);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.seg{display:inline-flex;background:var(--card2);border-radius:12px;padding:3px;gap:2px}
+.seg button{border:0;background:none;border-radius:9px;padding:6px 12px;font-size:13px;font-weight:640;color:var(--mut)}
+.seg button[aria-selected="true"]{background:var(--card);color:var(--acc);box-shadow:var(--shadow-sm)}
+.clock{font:750 16px ui-monospace,monospace;padding:6px 12px;border-radius:11px;background:var(--card);border:1.5px solid var(--line)}
+.clock.warn{color:var(--bad);border-color:var(--bad)}
+.note{background:var(--acc-w);color:var(--ink);border-radius:12px;padding:10px 14px;font-size:13.5px;margin:0 0 12px}
+.note b{color:var(--acc)}
+
+.skript{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:10px 28px 22px;max-width:780px}
+.skript h3{font-size:16px;margin:20px 0 4px;color:var(--acc)}
+.skript p{margin:6px 0}
+.skript blockquote{margin:10px 0;padding:8px 14px;border-left:4px solid var(--acc);background:var(--acc-w);border-radius:0 12px 12px 0}
+
+.q{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:14px 18px;margin:12px 0;max-width:860px;animation:rise .35s cubic-bezier(.2,.7,.3,1) backwards}
+.q .qh{display:flex;justify-content:space-between;gap:10px;color:var(--mut);font-size:12px;font-weight:600}
+.q .qt{margin:5px 0 9px;font-weight:640}
+.q .qt pre{font-weight:400}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:11px;cursor:pointer;border:1.5px solid transparent;transition:background .12s}
+.opt:hover{background:var(--acc-w)}
+.opt input{margin-top:4px;accent-color:var(--acc);width:16px;height:16px}
+.opt .l{font-weight:700;color:var(--mut);width:14px}
+.done .opt{cursor:default}.done .opt:hover{background:none}
+.opt.r-ok{background:var(--good-w)}
+.opt.r-miss{background:var(--warn-w);border-color:var(--warn)}
+.opt.r-bad{background:var(--bad-w);border-color:var(--bad)}
+.tag{font-size:11px;font-weight:700;margin-left:auto;white-space:nowrap;padding:2px 8px;border-radius:999px}
+.tag.ok{background:var(--good-w);color:var(--good)}.tag.miss{background:var(--warn-w);color:var(--warn)}.tag.bad{background:var(--bad-w);color:var(--bad)}
+.exp{margin-top:9px;font-size:13.5px;border-top:1px dashed var(--line);padding-top:7px}
+.exp .en{display:block;color:var(--mut);margin-top:4px}
+.result{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 20px;margin:4px 0 16px;max-width:860px;border-top:5px solid var(--acc)}
+.result h3{margin:0 0 3px;font-size:21px}
+.wrong{margin:10px 0 0;padding-left:20px;font-size:13.5px}
+.wrong li{margin:5px 0}
+.foot{display:flex;gap:10px;justify-content:flex-end;margin:16px 0;max-width:860px}
+
+.task{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:16px 20px;margin:12px 0;max-width:860px}
+.task h3{margin:0 0 6px;font-size:16px}
+.task .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:14px 0 5px}
+.chk{display:grid;grid-template-columns:22px 1fr 46px;gap:8px;align-items:start;padding:6px 8px;border-radius:10px;cursor:pointer}
+.chk:hover{background:var(--acc-w)}
+.chk input{accent-color:var(--good);margin-top:4px;width:16px;height:16px}
+.chk .p{text-align:right;font-weight:720;color:var(--acc)}
+.chk.miss{background:var(--bad-w)}
+.cmd{position:relative}
+.cmd button{position:absolute;right:8px;top:8px;font-size:11.5px;border:1px solid var(--line);background:var(--card);border-radius:8px;padding:2px 9px}
+textarea.export{width:100%;min-height:220px;font:12.5px ui-monospace,monospace;background:var(--card2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px}
+
+/* ---- Spickzettel ---- */
+.spickwrap{position:fixed;inset:0;z-index:70}
+.spickbg{position:absolute;inset:0;background:rgba(18,16,40,.42);backdrop-filter:blur(3px)}
+.spick{position:absolute;right:0;top:0;bottom:0;width:min(600px,94vw);background:var(--bg);box-shadow:var(--shadow);display:flex;flex-direction:column}
+.spickhd{display:flex;gap:9px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.spickhd input{flex:1;font:inherit;font-size:13.5px;padding:8px 12px;border-radius:11px;border:1.5px solid var(--line);background:var(--card);color:var(--ink)}
+.spickbody{overflow:auto;padding:14px 18px 50px}
+.sp{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:0 0 10px}
+.sp h4{margin:0 0 4px;font-size:12.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--acc)}
+.sp h4 span{color:var(--mut);text-transform:none;letter-spacing:0;font-weight:600}
+.sp pre{margin:5px 0;font-size:12.5px}
+u.fr{text-decoration:underline;text-underline-offset:2px;color:var(--acc)}
+.op{color:var(--warn)}
+
+/* ---- Auswertung wie im Trainer der ersten Generation: je Frage aufklappbar ---- */
+.q .qcode{margin:4px 0 10px}
+.q.rv{padding:0;overflow:hidden}
+.q.rv>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 18px}
+.q.rv>summary::-webkit-details-marker{display:none}
+.q.rv>summary .vd{font-size:11.5px;font-weight:750;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.vd.ok{background:var(--good-w);color:var(--good)}.vd.part{background:var(--warn-w);color:var(--warn)}.vd.no{background:var(--bad-w);color:var(--bad)}
+.q.rv>summary .qs{font-weight:620;font-size:14px;line-height:1.35;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.q.rv>summary .pk{font-weight:760;color:var(--mut);font-size:13px;white-space:nowrap}
+.q.rv>summary .pk::after{content:" ▸";color:var(--acc)}
+.q.rv[open]>summary .pk::after{content:" ▾"}
+.q.rv .body{padding:0 18px 14px;border-top:1px solid var(--line)}
+.rvopt{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:8px 10px;border-radius:11px;margin:6px 0;border:1.5px solid transparent}
+.rvopt .bx{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-weight:800;font-size:13px}
+.rvopt.ok .bx{background:var(--good);color:#fff}.rvopt.no .bx{background:var(--card2);color:var(--mut)}
+.rvopt.mine.ok{background:var(--good-w)}.rvopt.mine.no{background:var(--bad-w);border-color:var(--bad)}
+.rvopt.miss{background:var(--warn-w);border-color:var(--warn)}
+.rvopt .wahl{display:inline-block;margin-left:8px;font-size:11px;font-weight:750;padding:1px 8px;border-radius:999px;background:var(--card);border:1px solid var(--line)}
+.rvopt .on{display:block;color:var(--mut);font-size:13px;margin-top:3px}
+.rvopt .on.en{font-style:italic}
+.box{border-radius:12px;padding:10px 14px;margin:10px 0 0;font-size:13.5px}
+.box h4{margin:0 0 4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+.box.ex{background:var(--card2)}.box.ex h4{color:var(--mut)}
+.box.va{background:var(--acc-w)}.box.va h4{color:var(--acc)}
+.box.va ul{margin:0;padding-left:18px}
+.src{font-size:12px;color:var(--mut);margin-top:8px}
+.ergbtns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.rvtools{display:flex;gap:8px;justify-content:flex-end;max-width:860px;margin:0 0 4px}
+
+/* ---- Anzahl waehlen ---- */
+.pick{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px 24px;max-width:620px}
+.pick h3{margin:0 0 4px}
+.pick .opts{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 8px}
+.pick .opts button{min-width:92px}
+.pick .opts button small{display:block;font-weight:500;font-size:11px;opacity:.8}
+
+/* ---- Skript, gegliedert ---- */
+.sk{max-width:860px}
+.sk-toc{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.sk-toc a{font-size:12.5px;font-weight:640;text-decoration:none;color:var(--acc);background:var(--acc-w);padding:4px 10px;border-radius:999px}
+.sks{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:14px 22px 16px;margin:0 0 14px;scroll-margin-top:70px}
+.sks h3{margin:0 0 2px;font-size:17px}
+.sks .fo{font-size:11.5px;color:var(--mut);font-weight:650;letter-spacing:.04em}
+.sks .intro{margin:6px 0 10px}
+.bg{display:grid;grid-template-columns:170px 1fr;gap:4px 14px;padding:9px 0;border-top:1px solid var(--line)}
+.bg .bn{font-weight:700;color:var(--ink)}
+.bg .bw{font-size:14px}
+.bg .bwer{font-size:13px;color:var(--mut);margin-top:2px}
+.bg .ban{grid-column:2;margin:6px 0 0;padding:7px 12px;border-left:4px solid var(--acc);background:var(--acc-w);border-radius:0 10px 10px 0;font-size:13.5px}
+.bg .ban::before{content:"Bild des Dozenten: ";font-weight:700;color:var(--acc);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}
+@media(max-width:640px){.bg{grid-template-columns:1fr}.bg .ban{grid-column:1}}
+.sks .cd{margin:10px 0 0}
+.sks .cd .ct{font-size:11.5px;color:var(--mut);font-weight:650}
+.gefr{margin:12px 0 0;border:1.5px dashed var(--acc);border-radius:12px;padding:9px 14px}
+.gefr h4{margin:0 0 3px;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--acc)}
+.gefr ul{margin:0;padding-left:18px;font-size:14px}
+.selbst{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:14px 22px}
+.selbst h3{margin:0 0 8px}
+.selbst details{border-top:1px solid var(--line);padding:6px 0}
+.selbst summary{cursor:pointer;font-weight:620}
+.selbst details p{margin:4px 0 2px 18px;color:var(--mut);font-size:14px}
+
+/* ---- Navigation: immer sichtbar ---- */
+.crumb{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:14px 0 0;font-size:13px}
+.crumb button{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:5px 13px;font-weight:650;font-size:12.5px;color:var(--ink)}
+.crumb button:hover{border-color:var(--acc);color:var(--acc)}
+.crumb .sep{color:var(--mut)}
+.crumb .cur{color:var(--mut);font-weight:600}
+.homebtn{display:none}
+body.inner .homebtn{display:inline-flex}
+
+/* ---- Skript als Stichpunkte ---- */
+.sks ul.pt{margin:6px 0 4px;padding-left:18px}
+.sks ul.pt li{margin:2px 0}
+.terms{list-style:none;margin:8px 0 0;padding:0;border-top:1px solid var(--line)}
+.terms li{display:grid;grid-template-columns:180px 1fr;gap:2px 14px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}
+.terms .tn{color:var(--acc);font-weight:600}
+.terms .an{grid-column:2;font-size:13px;color:var(--mut);font-style:italic}
+.terms .an::before{content:"Bild des Dozenten: ";font-style:normal;font-weight:650;color:var(--acc)}
+@media(max-width:640px){.terms li{grid-template-columns:1fr}.terms .an{grid-column:1}}
+
+/* ══ Fragenseite: drei Spalten — Korrektur | Fragen | Varianten ══ */
+.qlay{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,760px) minmax(0,1fr);gap:18px;align-items:start}
+.qlay>.qcol{grid-column:2;min-width:0}
+.qlay>.pcol{position:relative;min-width:0;align-self:stretch}
+.qlay .q,.qlay .result,.qlay .foot,.qlay .note{max-width:none}
+.pbox{position:absolute;left:0;right:0;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);
+  padding:12px 14px;font-size:13.5px;animation:rise .25s cubic-bezier(.2,.7,.3,1)}
+.pbox h4{margin:0 0 6px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--acc);display:flex;justify-content:space-between;gap:8px}
+.pbox h4 button{border:0;background:none;color:var(--mut);font-size:14px;padding:0 2px;line-height:1}
+.pbox .rvopt{margin:5px 0;padding:6px 8px;font-size:13px}
+.pbox .src{margin-top:6px}
+.pbox .box{margin-top:8px}
+.pbox.var ul{margin:0;padding-left:18px}.pbox.var li{margin:4px 0}
+.q{position:relative}
+.sbtn{position:absolute;top:12px;width:30px;height:30px;border-radius:10px;border:1.5px solid var(--line);background:var(--card);
+  display:grid;place-items:center;font-size:14px;font-weight:800;color:var(--mut);box-shadow:var(--shadow-sm);transition:all .15s;z-index:2}
+.sbtn:hover{border-color:var(--acc);color:var(--acc)}
+.sbtn.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.sbtn.l{left:-15px}.sbtn.r{right:-15px}
+.sbtn:disabled{opacity:.35;cursor:not-allowed}
+.q .inl{display:none}
+.q .done-v{display:inline-block;font-size:11px;font-weight:750;padding:2px 9px;border-radius:999px;margin-left:8px}
+/* schmal: Panels klappen unter die Frage */
+@media(max-width:1279px){
+  .qlay{display:block}
+  .qlay>.pcol{display:none}
+  .q .inl{display:block;margin-top:10px}
+  .q .inl .pbox{position:static;box-shadow:none;margin-top:8px}
+  .sbtn{position:static;width:auto;height:auto;padding:4px 10px;display:inline-flex;gap:6px;font-size:12px;font-weight:700}
+  .sbtn .lbl{display:inline}
+  .q .sbar{display:flex;gap:8px;margin-top:8px}
+}
+@media(min-width:1280px){ .sbtn .lbl{display:none} .q .sbar{display:contents} }
+body.lay3 .wrap{max-width:1560px}
+
+/* ---- Modus 3: Summary-Fragen ---- */
+.sumbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow-sm);padding:12px 14px 12px;margin:0 0 14px}
+.sumbox .sub{margin:0 0 8px;font-size:12.5px}
+.sumgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.sumc{border:1.5px solid var(--line);background:var(--card);border-radius:11px;padding:5px 4px;text-align:center;font-size:11.5px;font-weight:700;line-height:1.25;transition:border-color .15s,transform .15s}
+.sumc:hover{border-color:var(--acc);transform:translateY(-1px)}
+.sumc b{display:block;font-size:12.5px}
+.sumc.mix{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.sumc.mix b{color:var(--on-acc)}
+.task details.lsg{margin-top:12px;border:1.5px dashed var(--good);border-radius:12px;padding:6px 12px}
+.task details.lsg summary{cursor:pointer;font-weight:700;color:var(--good)}
+.task details.lsg pre{white-space:pre-wrap}
+</style>
+</head>
+<body>
+<header><div class="hd">
+  <h1 id="ttl" title="Zur Übersicht">RAD-Trainer <span>· Fahrrad-Werkstatt (Demo)</span></h1>
+  <span class="pill hide" id="modepill"></span>
+  <span class="spacer"></span>
+  <a class="btn sm" href="../../klausuren.html" title="Zurück zur Übersicht" style="text-decoration:none">↩ Übersicht</a>
+  <button class="btn sm homebtn" id="homebtn" title="Zum Hauptmenü">⌂ Hauptmenü</button>
+  <button class="btn sm" id="spickbtn" title="Spickzettel öffnen">📋 Spickzettel</button>
+  <button class="btn sm" id="themebtn" title="Hell / Dunkel / wie System">🌙 Dunkel</button>
+  <button class="btn sm" id="enbtn" title="Englische Erklärungen mitzeigen">EN</button>
+</div></header>
+<div class="wrap" id="app"></div>
+<div class="spickwrap hide" id="spickwrap">
+  <div class="spickbg" id="spickbg"></div>
+  <aside class="spick">
+    <div class="spickhd"><b>Spickzettel</b><input id="spicksuche" type="search" placeholder="suchen — z. B. send_from_directory, compose, exposed_"><button class="btn sm" id="spickzu">✕</button></div>
+    <div class="spickbody" id="spickbody"></div>
+  </aside>
+</div>
+<script>
+const DATA = /*__DATA__*/{};
+const EXAM = new Date(DATA.exam || (Date.now() + 14 * 86400000));   /* Klausurtermin kommt aus build.py */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const shuf = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a };
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d }catch(e){ return d } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)) }catch(e){} }
+};
+const LEC_KEY='radtr-lec', SIM_KEY='radtr-sim', EN_KEY='radtr-en';
+let EN = store.get(EN_KEY,false);
+const band = p => p==null?'no':(p>=80?'hi':(p>=55?'md':'lo'));
+const bandTxt = {lo:'schwach',md:'mittel',hi:'sicher',no:'noch nicht geübt'};
+const colVar = {lo:'var(--bad)',md:'var(--warn)',hi:'var(--good)',no:'var(--none)'};
+let TIMER=null; const stopTimer=()=>{ if(TIMER){clearInterval(TIMER);TIMER=null} };
+function pill(t){ document.body.classList.toggle('inner',!!t); const p=$('#modepill'); if(t){p.textContent=t;p.classList.remove('hide')} else p.classList.add('hide') }
+
+function ring(size,stroke,pct,color,track){
+  const r=(size-stroke)/2, c=2*Math.PI*r, off=pct==null?c:c*(1-pct/100);
+  const dash=pct==null?` stroke-dasharray="3 5"`:` stroke-dasharray="${c}" stroke-dashoffset="${off}"`;
+  return `<svg width="${size}" height="${size}"><circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${track}" stroke-width="${stroke}"/>`+
+    (pct==null?`<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="2"${dash}/>`:
+    `<circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${stroke}" stroke-linecap="round"${dash}/>`)+`</svg>`;
+}
+
+/* ── Frage-Karten (gemeinsam fuer beide Modi) ── */
+function prep(q){ const idx=shuf([0,1,2,3]); const pm=a=>a&&a.length===4?idx.map(i=>a[i]):a;
+  return {...q, optionen:idx.map(i=>q.optionen[i]), richtig:q.richtig.map(i=>idx.indexOf(i)), optnotiz:pm(q.optnotiz), optnotiz_en:pm(q.optnotiz_en)} }
+/* Text mit erlaubtem Inline-Markup: nur <code> und <b> bleiben, alles andere wird escapt */
+const rich = t => esc(t||'').replace(/&lt;(\/?)(code|b)&gt;/g,'<$1$2>');
+function score(q,sel){ let p=0; for(let i=0;i<4;i++) if(q.richtig.includes(i)===sel.includes(i)) p+=.25; return p }
+/* Fragekarte: links/rechts je ein kleiner Knopf fuer die Panels.
+   lock = Panels gesperrt (Klausursimulation bis zur Auswertung). */
+function qCard(q,n,sel,done,lock){
+  const p=done?score(q,sel):null, vd=done?(p===1?['ok','richtig']:(p>=.5?['part','teilweise']:['no','falsch'])):null;
+  let h=`<div class="q${done?' done':''}" data-n="${n}"${done&&p<1?' data-wrong="1"':''} style="animation-delay:${Math.min(n,8)*30}ms">
+    <div class="sbar"><button class="sbtn l" data-pl="${n}" title="${lock?'In der Simulation bis zur Auswertung gesperrt':'Korrektur links öffnen / schließen'}"${lock?' disabled':''}>✓<span class="lbl">Korrektur</span></button>
+    <button class="sbtn r" data-pr="${n}" title="${lock?'In der Simulation bis zur Auswertung gesperrt':'Varianten rechts öffnen / schließen'}"${lock?' disabled':''}>?<span class="lbl">So könnte das sonst gefragt werden</span></button></div>
+    <div class="qh"><span>Frage ${n+1}${done?`<span class="done-v vd ${vd[0]}">${vd[1]} · ${p.toFixed(2)}/1</span>`:''}</span><span>${esc(q.quelle||'')}</span></div>
+    <div class="qt">${q.frage}</div>${q.code?`<pre class="qcode">${esc(q.code)}</pre>`:''}`;
+  q.optionen.forEach((o,i)=>{ const on=sel.includes(i), ok=q.richtig.includes(i); let c='',tag='';
+    if(done){ if(on&&ok){c='r-ok';tag='<span class="tag ok">richtig gesetzt</span>'} else if(!on&&ok){c='r-miss';tag='<span class="tag miss">fehlt — war richtig</span>'} else if(on&&!ok){c='r-bad';tag='<span class="tag bad">falsch gesetzt</span>'} }
+    h+=`<label class="opt ${c}"><input type="checkbox" data-q="${n}" data-o="${i}"${on?' checked':''}${done?' disabled':''}><span class="l">${'abcd'[i]}</span><span>${esc(o)}</span>${tag}</label>` });
+  return h+`<div class="inl" data-inl="${n}"></div></div>`;
+}
+/* Panel-Inhalt links: Korrektur, Option fuer Option */
+function korrHtml(q,sel,done){
+  let h=`<h4><span>Korrektur · Frage ${PANEL.qn+1}</span><button data-close="L" title="schließen">✕</button></h4>`;
+  if(!done) h+=`<div class="sub" style="margin:0 0 4px">Deine Kreuze bisher: ${sel.length?sel.slice().sort().map(i=>'abcd'[i]).join(', '):'keine'}</div>`;
+  q.optionen.forEach((o,i)=>{ const ok=q.richtig.includes(i), mine=sel.includes(i), note=(q.optnotiz||[])[i], en=(q.optnotiz_en||[])[i];
+    h+=`<div class="rvopt ${ok?'ok':'no'}${mine?' mine':''}${ok&&!mine&&done?' miss':''}"><span class="bx">${ok?'✓':'✕'}</span><span><b>${'abcd'[i]})</b> ${esc(o)}
+      ${mine?`<span class="wahl">deine Wahl · ${ok?'richtig':'falsch'}</span>`:(ok&&done?'<span class="wahl">nicht gesetzt · war richtig</span>':'')}
+      ${note?`<span class="on">${rich(note)}</span>`:''}${EN&&en?`<span class="on en">${rich(en)}</span>`:''}</span></div>` });
+  if(q.erklaerung) h+=`<div class="box ex"><h4>Erklärung</h4>${esc(q.erklaerung)}${EN&&q.erklaerung_en?`<div class="sub" style="margin-top:4px"><i>${esc(q.erklaerung_en)}</i></div>`:''}</div>`;
+  return h+`<div class="src">Quelle: <code>${esc(q.quelle||'')}</code></div>`;
+}
+function varHtml(q){
+  const v=q.varianten||[];
+  return `<h4><span>So könnte das sonst gefragt werden · Frage ${PANEL.qn+1}</span><button data-close="R" title="schließen">✕</button></h4>`+
+    (v.length?`<ul>${v.map(x=>`<li>${rich(x)}</li>`).join('')}</ul>`:'<p class="sub">Für diese Frage sind keine Varianten hinterlegt.</p>');
+}
+/* Zustand der Panels: je Seite die Nummer der Frage oder null */
+let PANEL={L:null,R:null,qn:0}, PCTX=null;   /* PCTX = {qs, sel, done, lock} der gerade sichtbaren Fragen */
+const wide=()=>matchMedia('(min-width:1280px)').matches;
+function panelsRender(){
+  if(!PCTX) return;
+  document.querySelectorAll('.inl').forEach(x=>x.innerHTML='');
+  ['L','R'].forEach(side=>{ const col=$('#pcol'+side); if(col) col.innerHTML='' });
+  document.querySelectorAll('.sbtn').forEach(b=>b.classList.remove('on'));
+  ['L','R'].forEach(side=>{
+    const n=PANEL[side]; if(n==null) return; const q=PCTX.qs[n], sel=PCTX.sel[n];
+    PANEL.qn=n;
+    const html=`<div class="pbox ${side==='L'?'korr':'var'}">${side==='L'?korrHtml(q,sel,PCTX.done):varHtml(q)}</div>`;
+    const btn=document.querySelector(side==='L'?`[data-pl="${n}"]`:`[data-pr="${n}"]`); if(btn) btn.classList.add('on');
+    const card=document.querySelector(`.q[data-n="${n}"]`);
+    if(wide()){ const col=$('#pcol'+side), lay=$('.qlay'); if(!col||!card) return;
+      col.innerHTML=html; const box=col.firstElementChild;
+      box.style.top=(card.getBoundingClientRect().top-lay.getBoundingClientRect().top)+'px';   /* auf Hoehe der Frage, ohne Scrollen */
+    } else { const inl=document.querySelector(`[data-inl="${n}"]`); if(!inl) return;
+      /* schmal: unter die Frage, Korrektur immer vor den Varianten */
+      if(side==='L') inl.insertAdjacentHTML('afterbegin',html); else inl.insertAdjacentHTML('beforeend',html) }
+  });
+  document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>{ PANEL[b.dataset.close]=null; panelsRender() });
+}
+function bindPanels(ctx){
+  PCTX=ctx; PANEL={L:null,R:null,qn:0};
+  document.querySelectorAll('[data-pl]').forEach(b=>b.onclick=()=>{ if(ctx.lock) return; const n=+b.dataset.pl; PANEL.L=PANEL.L===n?null:n; panelsRender() });
+  document.querySelectorAll('[data-pr]').forEach(b=>b.onclick=()=>{ if(ctx.lock) return; const n=+b.dataset.pr; PANEL.R=PANEL.R===n?null:n; panelsRender() });
+  document.body.classList.add('lay3');
+}
+function qLayout(inner){ return `<div class="qlay"><aside class="pcol" id="pcolL"></aside><div class="qcol">${inner}</div><aside class="pcol" id="pcolR"></aside></div>` }
+window.addEventListener('resize',()=>{ clearTimeout(window._rz); window._rz=setTimeout(panelsRender,120) });
+function bindChecks(sel){ document.querySelectorAll('input[data-q]').forEach(x=>x.onchange=()=>{
+  const n=+x.dataset.q,i=+x.dataset.o; sel[n]=x.checked?[...new Set([...sel[n],i])]:sel[n].filter(v=>v!==i);
+  if(PANEL.L===n) panelsRender() }) }
+function wrongList(qs,sel){ const out=[];
+  qs.forEach((q,n)=>q.optionen.forEach((o,i)=>{ const on=sel[n].includes(i),ok=q.richtig.includes(i);
+    if(on!==ok) out.push({n,text:(ok?'Nicht gesetzt, war richtig: ':'Gesetzt, war falsch: ')+o,quelle:q.quelle}) })); return out }
+
+/* ══ Startseite = Dashboard ══ */
+function lecState(){ const L=store.get(LEC_KEY,{});
+  return DATA.lectures.map(l=>{ const r0=L[l.lec], r=r0&&r0.last!==undefined?r0:null; return {l, r, rw:r0, pct:r?r.last:null, b:band(r?r.last:null)} }) }
+function order(st){ /* schwach zuerst, dann nie geuebt, dann mittel, dann sicher; innerhalb aufsteigend */
+  const rank={lo:0,no:1,md:2,hi:3};
+  return st.slice().sort((a,b)=>rank[a.b]-rank[b.b]||((a.pct??0)-(b.pct??0))||a.l.lec-b.l.lec) }
+function home(){
+  document.body.classList.remove('lay3'); PCTX=null;
+  stopTimer(); pill(null); window.scrollTo(0,0);
+  const st=lecState(), ord=order(st), done=st.filter(s=>s.r);
+  const qn=done.reduce((a,s)=>a+s.l.fragen.length,0);
+  const gesamt=qn?Math.round(done.reduce((a,s)=>a+s.pct*s.l.fragen.length,0)/qn):null;
+  const days=Math.max(0,Math.ceil((EXAM-new Date())/86400000));
+  const first=ord[0];
+  const S=store.get(SIM_KEY,{});
+  const cards=ord.map((s,i)=>{
+    const pctTxt=s.pct==null?'–':s.pct+'%';
+    const st2=s.r?`<span class="st c-${s.b}">${bandTxt[s.b]}${s.r.wrong&&s.r.wrong.length?' · '+s.r.wrong.length+' offen':''}</span>`:(s.rw?`<span class="st c-no">begonnen${s.rw.wrong&&s.rw.wrong.length?' · '+s.rw.wrong.length+' offen':''}</span>`:`<span class="st c-no">noch nicht geübt</span>`);
+    const sz=i===0?58:44, sw=i===0?7:5;
+    return `<button class="lc ${s.b}${i===0?' first':''}" data-lec="${s.l.lec}" style="animation-delay:${i*35}ms">
+      <span class="rg">${ring(sz,sw,s.pct,colVar[s.b],'var(--card2)')}<span class="v c-${s.b}">${pctTxt}</span></span>
+      <span><span class="nr">${i===0?'Hier ansetzen · ':''}VL ${s.l.lec}</span><span class="tt">${esc(s.l.titel)}</span>${st2}</span>
+      ${i===0?`<span class="go">${s.rw&&s.rw.wrong&&s.rw.wrong.length?'Falsche Fragen →':(s.rw?'Weiter →':'Starten →')}</span>`:''}</button>`}).join('');
+  const sims=DATA.sims.map(s=>{ const r=S[s.id];
+    return `<button class="sr" data-sim="${s.id}"><span class="no">${s.nr}</span><span class="nm">${esc(s.name.replace(/^Simulation \d+ — /,''))}<small>${s.mc.length} MC + ${s.aufgaben.length} Aufgaben</small></span>
+      <span class="res ${r&&r.sum!=null?'c-'+band(r.pct):(r&&r.prax!=null?'c-'+band(r.praxPct):'c-no')}">${r&&r.sum!=null?r.sum.toFixed(1)+' / '+r.max:(r&&r.prax!=null?'Praxis '+r.prax+'/'+r.praxMax:'noch offen')}</span></button>` }).join('');
+  $('#app').innerHTML=`
+  <section class="hero"><div class="hero-l"><span class="kick">Mein Lernstand · RAD</span>
+    <h2>${gesamt==null?'Noch keine Vorlesung geübt':'Gesamt '+gesamt+' % richtig'}</h2>
+    <p>Schwächste: <b>Vorlesung ${first.l.lec} · ${esc(first.l.titel)}</b> (${first.pct==null?'noch nicht geübt':first.pct+' %'}) · Klausur ${EXAM.toLocaleDateString('de-DE')}</p>
+    <div class="hero-btns"><button class="hb p" id="weiter">▶ Weitermachen — Vorlesung ${first.l.lec}</button><button class="hb" id="simgo">Klausur simulieren</button></div></div>
+    <div class="hero-r"><div class="hring">${ring(92,9,gesamt??0,'#fff','rgba(255,255,255,.25)')}<span class="v">${gesamt==null?'–':gesamt+'%'}</span></div>
+    <div class="hnums"><div><b>${done.length}/${DATA.lectures.length}</b><span>Vorlesungen geübt</span></div><div><b>${days}</b><span>${days===1?'Tag':'Tage'} bis zur Klausur</span></div></div></div></section>
+  <div class="dash">
+    <section><div class="sech"><h3>Vorlesungen — schwächste zuerst</h3><span class="legend"><span><i style="background:var(--bad)"></i>schwach &lt;55</span><span><i style="background:var(--warn)"></i>mittel</span><span><i style="background:var(--good)"></i>sicher ≥80</span></span></div>
+      <div class="cards">${cards}</div></section>
+    <aside>${sumBox()}<div class="sech"><h3>Klausur simulieren</h3></div><div class="simbox">
+      <p class="sub">Erst die Ankreuzfragen, dann die Praxis — eine Uhr über alles.</p>${sims}
+      <div class="rule"><b>MC:</b> 0,25 P pro Option, kein Abzug — nie eine Option leer lassen.</div></div></aside>
+  </div>`;
+  document.querySelectorAll('[data-lec]').forEach(b=>b.onclick=()=>openLecture(+b.dataset.lec));
+  document.querySelectorAll('[data-sim]').forEach(b=>b.onclick=()=>simStart(b.dataset.sim));
+  $('#weiter').onclick=()=>openLecture(first.l.lec);
+  document.querySelectorAll('[data-sum]').forEach(b=>b.onclick=()=>sumPick(b.dataset.sum==='mix'?'mix':+b.dataset.sum));
+  $('#simgo').onclick=()=>{ const n=DATA.sims.find(s=>!S[s.id])||DATA.sims[0]; simStart(n.id) };
+}
+
+/* ══ Modus 1: Vorlesung ══ */
+let LS=null;
+const SEEN_KEY='radtr-seen';   /* je Frage-id: letzter Stand 'ok' | 'no' */
+function openLecture(n){ const r=store.get(LEC_KEY,{})[n];
+  if(r&&r.wrong&&r.wrong.length) startRound(n,'falsch'); else if(r) pickCount(n); else { LS=null; lecture(n,'skript') } }
+/* Auswahl: erst nie gesehene, dann zuletzt falsche, dann der Rest — jeweils gemischt */
+function choose(l,k){
+  const seen=store.get(SEEN_KEY,{});
+  const neu=shuf(l.fragen.filter(q=>!seen[q.id])), falsch=shuf(l.fragen.filter(q=>seen[q.id]==='no')), rest=shuf(l.fragen.filter(q=>seen[q.id]==='ok'));
+  return neu.concat(falsch,rest).slice(0,k);
+}
+function pickCount(n){
+  stopTimer(); const l=DATA.lectures.find(x=>x.lec===n); pill('Vorlesung '+n);
+  const seen=store.get(SEEN_KEY,{}); const nNeu=l.fragen.filter(q=>!seen[q.id]).length, nF=l.fragen.filter(q=>seen[q.id]==='no').length;
+  const opts=[10,20,30].filter(k=>k<l.fragen.length).concat([l.fragen.length]);
+  $('#app').innerHTML=`${lecHead(n,'fragen')}<div class="pick"><h3>Wie viele Fragen?</h3>
+    <p class="sub" style="margin:0">Gezogen werden zuerst Fragen, die du noch nie hattest (${nNeu}), dann die zuletzt falschen (${nF}), dann der Rest.</p>
+    <div class="opts">${opts.map(k=>`<button class="btn${k===Math.min(20,l.fragen.length)?' p':''}" data-k="${k}">${k===l.fragen.length?'alle':k}<small>${k===l.fragen.length?l.fragen.length+' Fragen · zählt für den Stand':'Fragen'}</small></button>`).join('')}</div>
+    <p class="sub" style="margin:0">Nur die Runde mit <b>allen</b> Fragen setzt die Prozentzahl der Vorlesung neu; kürzere Runden aktualisieren, welche Fragen offen sind.</p></div>`;
+  window.scrollTo(0,0); bindLecHead(n);
+  document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.k;
+    LS={lec:n,art:k===l.fragen.length?'ganz':'teil',qs:choose(l,k).map(prep),done:false}; LS.sel=LS.qs.map(()=>[]); lecture(n,'fragen') });
+}
+function startRound(n,art){
+  const l=DATA.lectures.find(x=>x.lec===n), r=store.get(LEC_KEY,{})[n];
+  if(art!=='falsch') return pickCount(n);
+  const pool=l.fragen.filter(q=>(r&&r.wrong||[]).includes(q.id));
+  LS={lec:n,art:'falsch',qs:shuf(pool).map(prep),done:false}; LS.sel=LS.qs.map(()=>[]);
+  lecture(n,'fragen');
+}
+function crumb(parts){ /* parts: [label, fn] ... letzter ohne fn = aktuelle Seite */
+  window._crumb=parts; return `<nav class="crumb" aria-label="Navigation">`+parts.map((p,i)=>p[1]?`<button data-cr="${i}">${p[0]}</button>`:`<span class="cur">${p[0]}</span>`).join('<span class="sep">›</span>')+`</nav>` }
+function bindCrumb(){ document.querySelectorAll('[data-cr]').forEach(b=>b.onclick=()=>window._crumb[+b.dataset.cr][1]()) }
+function lecHead(n,tab){
+  const l=DATA.lectures.find(x=>x.lec===n), r=store.get(LEC_KEY,{})[n]; const nWrong=r&&r.wrong?r.wrong.length:0;
+  const inRound=tab==='fragen'&&LS&&LS.lec===n&&LS.qs;
+  const cr=crumb([['⌂ Hauptmenü',home],[`Vorlesung ${n}`,()=>{LS=null;lecture(n,'skript')}]].concat(tab==='skript'?[['Skript']]:inRound?[[LS.done?'Auswertung':'Runde läuft']]:[['Runde wählen']]));
+  return cr+`<div class="vh"><h2><small>Vorlesung ${n}</small>${esc(l.titel)}</h2>
+    <div class="seg"><button data-t="skript" aria-selected="${tab==='skript'}">Skript</button><button data-t="fragen" aria-selected="${tab==='fragen'}">Fragen</button></div>
+    ${nWrong?`<button class="btn sm${LS&&LS.art==='falsch'?' on':''}" id="nurf">Nur falsche (${nWrong})</button>`:''}
+    <button class="btn sm" id="ganz">Neue Runde wählen</button></div>`;
+}
+function bindLecHead(n){
+  bindCrumb();
+  document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>b.dataset.t==='skript'?lecture(n,'skript'):(LS&&LS.lec===n?lecture(n,'fragen'):pickCount(n)));
+  if($('#nurf')) $('#nurf').onclick=()=>startRound(n,'falsch');
+  $('#ganz').onclick=()=>pickCount(n);
+}
+function skriptHtml(l){
+  const S=l.skript2; if(!S) return `<article class="skript">${l.skript}</article>`;
+  const pts=t=>{ const x=(t||'').split(/(?<=[.!?])\s+(?=[A-ZÄÖÜ<])/).filter(Boolean); return x.length?`<ul class="pt">${x.map(y=>`<li>${rich(y)}</li>`).join('')}</ul>`:'' };
+  const toc=S.abschnitte.map((a,i)=>`<a href="#sk${i}">${esc(a.titel)}</a>`).join('')+`<a href="#skself">Selbstabfrage</a>`;
+  const sec=S.abschnitte.map((a,i)=>`<section class="sks" id="sk${i}"><h3>${esc(a.titel)}</h3><div class="fo">${esc(a.folie||'')}</div>
+    ${pts(a.intro)}
+    ${(a.begriffe||[]).length?`<ul class="terms">${a.begriffe.map(g=>`<li><span class="tn">${rich(g.name)}</span><span>${rich(g.was)}</span>${g.analogie?`<span class="an">${rich(g.analogie)}</span>`:''}</li>`).join('')}</ul>`:''}
+    ${(a.code||[]).map(c=>`<div class="cd"><div class="ct">${esc(c.titel||'')}</div><pre>${esc(c.code)}</pre></div>`).join('')}
+    ${a.gefragt&&a.gefragt.length?`<div class="gefr"><h4>Das wird gefragt</h4><ul>${a.gefragt.map(x=>`<li>${rich(x)}</li>`).join('')}</ul></div>`:''}</section>`).join('');
+  const self=`<section class="selbst" id="skself"><h3>Selbstabfrage — die Begriffe dieser Vorlesung</h3><p class="sub" style="margin:0 0 6px">Erst selbst erklären, dann aufklappen.</p>
+    ${(S.selbsttest||[]).map(x=>`<details><summary>${rich(x.begriff)}</summary><p>${rich(x.antwort)}</p></details>`).join('')}</section>`;
+  return `<div class="sk"><div class="sk-toc">${toc}</div>${sec}${self}</div>`;
+}
+function lecture(n,tab){
+  stopTimer(); const l=DATA.lectures.find(x=>x.lec===n);
+  pill('Vorlesung '+n);
+  if(tab==='fragen'&&(!LS||LS.lec!==n)) return pickCount(n);
+  let h=lecHead(n,tab);
+  if(tab==='skript'){
+    h+=skriptHtml(l)+`<div class="foot"><button class="btn p" id="go">Weiter zu den Fragen →</button></div>`;
+  } else {
+    if(LS.art==='falsch'&&!LS.done) h+=`<div class="note"><b>Nachüben:</b> die ${LS.qs.length} Fragen, die du zuletzt nicht ganz richtig hattest.</div>`;
+    let inner='';
+    if(LS.art==='falsch'&&!LS.done){ inner+=h.slice(h.lastIndexOf('<div class="note">')); h=h.slice(0,h.lastIndexOf('<div class="note">')) }
+    if(LS.done) inner+=LS.bericht;
+    else inner+=`<div class="note"><b>Tipp:</b> links an jeder Frage öffnet <b>✓</b> die Korrektur, rechts öffnet <b>?</b> die Varianten — auch schon während der Runde.</div>`;
+    inner+=LS.qs.map((q,i)=>qCard(q,i,LS.sel[i],LS.done,false)).join('');
+    h+=qLayout(inner+`<div class="foot"><button class="btn" id="tolec">← Vorlesung ${n}</button>${LS.done?`<button class="btn" id="home2">⌂ Hauptmenü</button><button class="btn p" id="again">Neue Runde</button>`:`<button class="btn p" id="eval">Runde auswerten</button>`}</div>`);
+  }
+  $('#app').innerHTML=h; window.scrollTo(0,0); bindLecHead(n);
+  if($('#go')) $('#go').onclick=()=>pickCount(n);
+  if($('#home2')) $('#home2').onclick=home;
+  if($('#tolec')) $('#tolec').onclick=()=>{LS=null;lecture(n,'skript')};
+  if($('#again')) $('#again').onclick=()=>{ const r=store.get(LEC_KEY,{})[n]; (r&&r.wrong&&r.wrong.length&&LS.art==='falsch')?startRound(n,'falsch'):pickCount(n) };
+  document.body.classList.remove('lay3');
+  if(tab==='fragen'&&LS&&LS.qs) bindPanels({qs:LS.qs,sel:LS.sel,done:LS.done,lock:false});
+  if(LS&&LS.done){ if($('#erg-f')) $('#erg-f').onclick=()=>startRound(n,'falsch');
+    if($('#erg-1')) $('#erg-1').onclick=()=>{ const c=document.querySelector('.q[data-wrong]'); if(!c) return; const k=+c.dataset.n;
+      c.scrollIntoView({block:'center'}); PANEL.L=k; PANEL.R=k; setTimeout(panelsRender,60) } }
+  if(tab==='fragen'&&!LS.done) bindChecks(LS.sel);
+  if($('#eval')) $('#eval').onclick=()=>{
+    const pts=LS.qs.reduce((a,q,i)=>a+score(q,LS.sel[i]),0), max=LS.qs.length, pct=Math.round(100*pts/max);
+    const seen=store.get(SEEN_KEY,{}); LS.qs.forEach((q,i)=>seen[q.id]=score(q,LS.sel[i])===1?'ok':'no'); store.set(SEEN_KEY,seen);
+    const falsch=LS.qs.filter((q,i)=>score(q,LS.sel[i])<1).map(q=>q.id), richtig=LS.qs.filter((q,i)=>score(q,LS.sel[i])===1).map(q=>q.id);
+    const L=store.get(LEC_KEY,{}); const o=L[n]||{best:0,runs:0,wrong:[]};
+    if(LS.art==='ganz') L[n]={last:pct,best:Math.max(o.best||0,pct),runs:(o.runs||0)+1,wrong:falsch,t:Date.now()};
+    else if(L[n]||LS.art==='teil'){ const w=new Set((o.wrong||[]).filter(id=>!richtig.includes(id))); falsch.forEach(id=>w.add(id));
+      L[n]={...o,wrong:[...w],t:Date.now()}; if(o.last===undefined) L[n].teil=pct }
+    store.set(LEC_KEY,L); LS.done=true;
+    const nw=falsch.length;
+    LS.bericht=`<div class="result"><h3 class="c-${band(pct)}">${pts.toFixed(2)} von ${max} Punkten · ${pct} %</h3>
+      <div class="sub">${LS.art==='ganz'?'Alle Fragen — zählt für deinen Lernstand':LS.art==='falsch'?'Nachüben':'Teilrunde ('+max+' Fragen)'} · ${max-nw} ganz richtig · ${nw} mit Fehlern · Ziel ≥ 80 %</div>
+      <p class="sub" style="margin:8px 0 0">An jeder Frage öffnet <b>✓</b> links die Korrektur — was richtig war, was du gesetzt hattest und warum, Option für Option — und <b>?</b> rechts die Varianten.</p>
+      <div class="ergbtns">${nw?`<button class="btn p" id="erg-1">Zur ersten falschen</button><button class="btn" id="erg-f">Falsche wiederholen (${(L[n]&&L[n].wrong||[]).length})</button>`:''}</div></div>`;
+    lecture(n,'fragen');
+  };
+}
+
+/* ══ Modus 3: Summary-Fragen — Kurzfragen zur Zusammenfassung jeder Vorlesung ══ */
+const SUMQ_KEY='radtr-sumq';   /* je Frage-id die letzte Punktzahl 0..1 */
+let SS=null;
+function sumPct(lec){ const q=store.get(SUMQ_KEY,{}), L=(DATA.summary||[]).find(x=>x.lec===lec); if(!L) return null;
+  const had=L.fragen.filter(f=>q[f.id]!=null); if(!had.length) return null;
+  return Math.round(100*L.fragen.reduce((a,f)=>a+(q[f.id]||0),0)/L.fragen.length) }
+function sumBox(){
+  if(!(DATA.summary||[]).length) return '';
+  const all=DATA.summary.reduce((a,l)=>a+l.fragen.length,0);
+  return `<div class="sech"><h3>Summary-Fragen</h3></div><div class="sumbox"><p class="sub">Kurzfragen zur Zusammenfassung jeder Vorlesung — schnell, gemischt, zum Wiederholen.</p>
+    <div class="sumgrid">${DATA.summary.map(l=>{ const p=sumPct(l.lec), b=band(p);
+      return `<button class="sumc" data-sum="${l.lec}" title="Vorlesung ${l.lec}: ${l.fragen.length} Fragen"><b>VL ${l.lec}</b><span class="c-${b}">${p==null?'neu':p+'%'}</span></button>` }).join('')}
+      <button class="sumc mix" data-sum="mix" title="alle Vorlesungen gemischt"><b>Mix</b>${all}</button></div></div>`;
+}
+function sumPool(scope){ return scope==='mix'?DATA.summary.flatMap(l=>l.fragen.map(f=>({...f,_lec:l.lec}))):DATA.summary.find(l=>l.lec===scope).fragen.map(f=>({...f,_lec:scope})) }
+function sumTitle(scope){ return scope==='mix'?'Summary-Fragen · alle Vorlesungen':'Summary-Fragen · Vorlesung '+scope }
+function sumPick(scope){
+  stopTimer(); document.body.classList.remove('lay3'); pill(scope==='mix'?'Summary · Mix':'Summary · VL '+scope);
+  const pool=sumPool(scope), q=store.get(SUMQ_KEY,{});
+  const nNeu=pool.filter(f=>q[f.id]==null).length, nF=pool.filter(f=>q[f.id]!=null&&q[f.id]<1).length;
+  const opts=[10,20,30].filter(k=>k<pool.length).concat([pool.length]);
+  $('#app').innerHTML=crumb([['⌂ Hauptmenü',home],[sumTitle(scope)]])+
+   `<div class="vh"><h2><small>Summary-Fragen</small>${scope==='mix'?'Alle Vorlesungen gemischt':esc('Vorlesung '+scope+' · '+DATA.lectures.find(l=>l.lec===scope).titel)}</h2>
+    <div class="seg">${['mix'].concat(DATA.summary.map(l=>l.lec)).map(x=>`<button data-sc="${x}" aria-selected="${x===scope}">${x==='mix'?'Mix':'VL '+x}</button>`).join('')}</div></div>
+    <div class="pick"><h3>Wie viele Fragen?</h3>
+    <p class="sub" style="margin:0">Zuerst die, die du noch nie hattest (${nNeu}), dann die zuletzt nicht ganz richtigen (${nF}), dann der Rest.</p>
+    <div class="opts">${opts.map(k=>`<button class="btn${k===Math.min(20,pool.length)?' p':''}" data-k="${k}">${k===pool.length?'alle':k}<small>${k===pool.length?pool.length+' Fragen':'Fragen'}</small></button>`).join('')}</div></div>`;
+  window.scrollTo(0,0); bindCrumb();
+  document.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>sumPick(b.dataset.sc==='mix'?'mix':+b.dataset.sc));
+  document.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.k;
+    const neu=shuf(pool.filter(f=>q[f.id]==null)), falsch=shuf(pool.filter(f=>q[f.id]!=null&&q[f.id]<1)), rest=shuf(pool.filter(f=>q[f.id]===1));
+    SS={scope,qs:neu.concat(falsch,rest).slice(0,k).map(prep),done:false}; SS.sel=SS.qs.map(()=>[]); sumRound() });
+}
+function sumRound(){
+  const scope=SS.scope;
+  let inner='';
+  if(SS.done) inner+=SS.bericht;
+  else inner+=`<div class="note"><b>Tipp:</b> <b>✓</b> links an jeder Frage öffnet die Korrektur, <b>?</b> rechts die Varianten — auch schon während der Runde.</div>`;
+  inner+=SS.qs.map((f,i)=>qCard(f,i,SS.sel[i],SS.done,false)).join('');
+  inner+=`<div class="foot"><button class="btn" id="sback">← Summary-Auswahl</button>${SS.done?`<button class="btn" id="shome">⌂ Hauptmenü</button><button class="btn p" id="sagain">Neue Runde</button>`:`<button class="btn p" id="seval">Runde auswerten</button>`}</div>`;
+  $('#app').innerHTML=crumb([['⌂ Hauptmenü',home],[sumTitle(scope),()=>sumPick(scope)],[SS.done?'Auswertung':'Runde läuft']])+
+    `<div class="vh"><h2><small>Summary-Fragen</small>${esc(sumTitle(scope).replace('Summary-Fragen · ',''))}</h2></div>`+qLayout(inner);
+  window.scrollTo(0,0); bindCrumb();
+  document.body.classList.remove('lay3');
+  bindPanels({qs:SS.qs,sel:SS.sel,done:SS.done,lock:false});
+  if(!SS.done) bindChecks(SS.sel);
+  $('#sback').onclick=()=>sumPick(scope);
+  if($('#shome')) $('#shome').onclick=home;
+  if($('#sagain')) $('#sagain').onclick=()=>sumPick(scope);
+  if($('#erg-1')) $('#erg-1').onclick=()=>{ const c=document.querySelector('.q[data-wrong]'); if(!c) return; const k=+c.dataset.n; c.scrollIntoView({block:'center'}); PANEL.L=k; PANEL.R=k; setTimeout(panelsRender,60) };
+  if($('#seval')) $('#seval').onclick=()=>{
+    const q=store.get(SUMQ_KEY,{}); SS.qs.forEach((f,i)=>q[f.id]=score(f,SS.sel[i])); store.set(SUMQ_KEY,q);
+    const pts=SS.qs.reduce((a,f,i)=>a+score(f,SS.sel[i]),0), max=SS.qs.length, pct=Math.round(100*pts/max);
+    const nw=SS.qs.filter((f,i)=>score(f,SS.sel[i])<1).length;
+    const per=[...new Set(SS.qs.map(f=>f._lec))].sort((a,b)=>a-b).map(l=>`VL ${l}: ${sumPct(l)??'–'} %`).join(' · ');
+    SS.done=true;
+    SS.bericht=`<div class="result"><h3 class="c-${band(pct)}">${pts.toFixed(2)} von ${max} Punkten · ${pct} %</h3>
+      <div class="sub">${max-nw} ganz richtig · ${nw} mit Fehlern · Stand jetzt: ${per}</div>
+      <p class="sub" style="margin:8px 0 0">An jeder Frage öffnet <b>✓</b> links die Korrektur und <b>?</b> rechts die Varianten.</p>
+      <div class="ergbtns">${nw?'<button class="btn p" id="erg-1">Zur ersten falschen</button>':''}</div></div>`;
+    sumRound();
+  };
+}
+
+/* ══ Modus 2: Simulation — zwei Teile, jeder fuer sich auswertbar ══
+   mode 'voll'  : Teil 1 (MC) + Teil 2 (Praxis), eine Uhr ueber beide Teile
+   mode 'praxis': nur Teil 2, eigene Uhr (Praxisanteil der Klausur)          */
+let SM=null;
+const PRAX_MIN=45;
+function simStart(id){
+  stopTimer(); const s=DATA.sims.find(x=>x.id===id); pill(s.name.replace(/ — .*/,''));
+  const S=store.get(SIM_KEY,{})[id];
+  $('#app').innerHTML=crumb([['⌂ Hauptmenü',home],['Klausursimulationen',home],[s.name.replace(/ — .*/,'')]])+
+   `<div class="vh"><h2><small>Klausursimulation</small>${esc(s.name)}</h2></div>
+    <div class="pick"><h3>Was willst du üben?</h3>
+      <p class="sub" style="margin:0">Teil 1: ${s.mc.length} MC-Fragen (${s.mc.length} P) · Teil 2: ${s.aufgaben.length} Praxisaufgaben (${s.aufgaben.reduce((x,a)=>x+a.punkte,0)} P). Jeder Teil wird für sich ausgewertet.</p>
+      <div class="opts"><button class="btn p" id="stV">Ganze Simulation<small>Teil 1 + Teil 2 · ${s.minuten} min, eine Uhr</small></button>
+        <button class="btn" id="stP">Nur Teil 2 · Praxis<small>${PRAX_MIN} min</small></button></div>
+      ${S?`<p class="sub" style="margin:0">Zuletzt: ${S.sum!=null?`${S.sum.toFixed(1)} / ${S.max} gesamt`:''}${S.prax!=null?` · Praxis allein ${S.prax}/${S.praxMax}`:''}</p>`:''}</div>`;
+  window.scrollTo(0,0); bindCrumb();
+  $('#stV').onclick=()=>sim(id,'voll'); $('#stP').onclick=()=>sim(id,'praxis');
+}
+function sim(id,mode){
+  const s=DATA.sims.find(x=>x.id===id);
+  if(!mode) return simStart(id);
+  SM={id,mode,qs:s.mc.map(prep),sel:s.mc.map(()=>[]),hak:{},phase:mode==='voll'?'mc':'prax',mcDone:false,praxDone:false,
+      ende:Date.now()+(mode==='voll'?s.minuten:PRAX_MIN)*60000,zeitUm:false};
+  pill(s.name.replace(/ — .*/,'')); simDraw(); stopTimer();
+  TIMER=setInterval(()=>{ const r=Math.max(0,SM.ende-Date.now()), c=$('#clk');
+    if(c){ const m=Math.floor(r/60000), k=Math.floor(r/1000)%60; c.textContent=m+':'+String(k).padStart(2,'0'); c.classList.toggle('warn',r<5*60000) }
+    if(!r){ stopTimer(); SM.zeitUm=true; if(SM.mode==='voll'&&!SM.mcDone) evalMC(true); if(!SM.praxDone) evalPrax(true); SM.phase='gesamt'; simDraw(); window.scrollTo(0,0) } },500);
+}
+const mcPts=()=>SM.qs.reduce((a,q,i)=>a+score(q,SM.sel[i]),0);
+function praxPts(){ const s=DATA.sims.find(x=>x.id===SM.id);
+  const je=s.aufgaben.map((a,i)=>({nr:a.nr,titel:a.titel,max:a.punkte,p:a.checkliste.reduce((x,c,j)=>x+(SM.hak[i+'_'+j]?c.p:0),0)}));
+  return {s,je,p:je.reduce((a,x)=>a+x.p,0),max:je.reduce((a,x)=>a+x.max,0)} }
+function praxMiss(){ const s=DATA.sims.find(x=>x.id===SM.id), out=[];
+  s.aufgaben.forEach((a,i)=>a.checkliste.forEach((c,j)=>{ if(!SM.hak[i+'_'+j]) out.push(`Step ${a.nr}: ${c.t} (${c.p} P)`) })); return out }
+function evalMC(silent){ SM.mcDone=true; SM.W=wrongList(SM.qs,SM.sel); if(!silent){ simDraw(); window.scrollTo(0,0) } }
+function evalPrax(silent){ SM.praxDone=true; saveSim(); if(!silent){ SM.phase=SM.mode==='voll'?'gesamt':'prax'; simDraw(); window.scrollTo(0,0) } }
+function saveSim(){ const P=praxPts(), S=store.get(SIM_KEY,{}), o=S[SM.id]||{};
+  if(SM.mode==='voll'){ const sum=mcPts()+P.p, max=15+P.max; S[SM.id]={...o,pct:Math.round(100*sum/max),sum,max,t:Date.now()} }
+  else S[SM.id]={...o,prax:P.p,praxMax:P.max,praxPct:Math.round(100*P.p/P.max),t:Date.now()};
+  store.set(SIM_KEY,S) }
+function simDraw(){
+  const s=DATA.sims.find(x=>x.id===SM.id), voll=SM.mode==='voll', ende=SM.zeitUm||(SM.praxDone&&(!voll||SM.mcDone));
+  const tabs=(voll?[['mc','Teil 1 · MC'+(SM.mcDone?' ✓':'')]]:[]).concat([['prax','Teil 2 · Praxis'+(SM.praxDone?' ✓':'')]]).concat(ende||(voll&&SM.mcDone)?[['gesamt','Gesamt']]:[]);
+  let h=crumb([['⌂ Hauptmenü',home],['Klausursimulationen',home],[s.name.replace(/ — .*/,'')+(voll?'':' · nur Praxis')]])+
+   `<div class="vh"><h2><small>Klausursimulation${voll?'':' · nur Teil 2'}</small>${esc(s.name)}</h2>
+    <div class="seg">${tabs.map(t=>`<button data-p="${t[0]}" aria-selected="${SM.phase===t[0]}">${t[1]}</button>`).join('')}</div>
+    ${ende?'':`<span class="clock" id="clk" title="läuft über ${voll?'beide Teile':'Teil 2'}">…</span>`}<button class="btn sm" id="bk">⌂ Hauptmenü</button></div>`;
+  let inner='';
+  if(SM.phase==='mc'){
+    if(SM.mcDone){ const m=mcPts();
+      inner+=`<div class="result"><h3 class="c-${band(Math.round(100*m/15))}">Teil 1: ${m.toFixed(2)} von 15 Punkten</h3>
+        <div class="sub">${SM.qs.filter((q,i)=>score(q,SM.sel[i])===1).length} von 15 Fragen ganz richtig · ${SM.W.length} Optionen falsch</div>
+        <p class="sub" style="margin:8px 0 0">An jeder Frage öffnet <b>✓</b> links die Korrektur und <b>?</b> rechts die Varianten.${ende?'':' Die Uhr läuft weiter.'}</p>
+        <div class="ergbtns">${SM.praxDone?'<button class="btn p" id="toG">Zur Gesamtansicht</button>':'<button class="btn p" id="toP">Weiter zu Teil 2 →</button>'}</div></div>`;
+    } else inner+=`<div class="note"><b>Teil 1:</b> 15 Fragen, je 4 Optionen, 1–4 richtig. 0,25 Punkte pro Option, kein Abzug — nie eine Option leer lassen. Korrektur und Varianten öffnen sich nach „Teil 1 auswerten“.</div>`;
+    inner+=SM.qs.map((q,i)=>qCard(q,i,SM.sel[i],SM.mcDone,!SM.mcDone)).join('');
+    inner+=`<div class="foot">${SM.mcDone?(SM.praxDone?'<button class="btn p" id="toG2">Zur Gesamtansicht</button>':'<button class="btn p" id="toP2">Weiter zu Teil 2 →</button>'):'<button class="btn p" id="evM">Teil 1 auswerten</button>'}</div>`;
+    h+=qLayout(inner);
+  } else if(SM.phase==='prax'){
+    const P=praxPts();
+    if(SM.praxDone){ const miss=praxMiss();
+      h+=`<div class="result"><h3 class="c-${band(Math.round(100*P.p/P.max))}">Teil 2: ${P.p} von ${P.max} Punkten</h3>
+        <div class="sub">${P.je.map(x=>`Step ${x.nr}: ${x.p}/${x.max}`).join(' · ')}</div>
+        <p style="margin:10px 0 0"><b>Fehlerliste</b> — nicht abgehakt</p>${miss.length?`<ol class="wrong">${miss.map(m=>`<li>${esc(m)}</li>`).join('')}</ol>`:'<p class="sub">Alles abgehakt.</p>'}
+        <div class="ergbtns">${voll?(SM.mcDone?'<button class="btn p" id="toG">Zur Gesamtansicht</button>':'<button class="btn" id="toM">Zurück zu Teil 1</button>'):'<button class="btn" id="exp">Exportieren</button><button class="btn p" id="againP">Nochmal nur Teil 2</button>'}</div><div id="expbox"></div></div>`;
+    }
+    h+=`<div class="note"><b>Teil 2:</b> Die Aufgabe praktisch lösen, mit den Prüfschritten unten testen, hier selbst abhaken. ${s.hinweis?esc(s.hinweis):''}</div>`;
+    s.aufgaben.forEach((a,i)=>{
+      h+=`<div class="task"><h3>Step ${a.nr}: ${esc(a.titel)} <span class="sub">(${a.punkte} Punkte)</span></h3><div>${a.text}</div><div class="lbl">Punkte-Checkliste</div>`;
+      a.checkliste.forEach((c,j)=>{ const on=!!SM.hak[i+'_'+j];
+        h+=`<label class="chk${SM.praxDone&&!on?' miss':''}"><input type="checkbox" data-a="${i}" data-c="${j}"${on?' checked':''}${SM.praxDone?' disabled':''}><span>${esc(c.t)}</span><span class="p">${c.p} P</span></label>` });
+      h+=`<div class="lbl">Testen — zum Kopieren</div><div class="cmd"><pre>${a.test.map(esc).join('\n')}</pre><button data-copy="${i}">kopieren</button></div>`;
+      if(a.loesung) h+=SM.praxDone?`<details class="lsg"><summary>Musterlösung Step ${a.nr} aufklappen</summary><pre>${esc(a.loesung)}</pre></details>`:`<div class="sub" style="margin-top:10px">Musterlösung: nach „Teil 2 auswerten“ aufklappbar.</div>`;
+      h+=`</div>`;
+    });
+    h+=`<div class="foot" style="max-width:860px">${SM.praxDone?'':'<button class="btn p" id="evP">Teil 2 auswerten</button>'}</div>`;
+  } else {  /* Gesamtansicht */
+    const P=praxPts(), m=mcPts(), miss=praxMiss();
+    const mcTxt=voll?(SM.mcDone?m.toFixed(2)+' / 15':'nicht ausgewertet'):'—';
+    const sum=(voll?m:0)+P.p, max=(voll?15:0)+P.max, pct=Math.round(100*sum/max);
+    h+=`<div class="result"><h3 class="c-${band(pct)}">${sum.toFixed(2)} von ${max} Punkten · ${pct} %</h3>
+      ${SM.zeitUm?'<div class="sub"><b>Zeit abgelaufen</b> — ausgewertet wurde der Stand bei Ablauf.</div>':''}
+      <table style="margin:10px 0;font-size:14px;border-collapse:collapse"><tr><td style="padding:3px 16px 3px 0">Teil 1 · MC</td><td><b>${mcTxt}</b></td></tr>
+        <tr><td style="padding:3px 16px 3px 0">Teil 2 · Praxis</td><td><b>${P.p} / ${P.max}</b> <span class="sub">(${P.je.map(x=>`Step ${x.nr}: ${x.p}/${x.max}`).join(' · ')})</span></td></tr>
+        <tr><td style="padding:3px 16px 3px 0;border-top:1px solid var(--line)">Summe</td><td style="border-top:1px solid var(--line)"><b>${sum.toFixed(2)} / ${max}</b></td></tr></table>
+      <p style="margin:6px 0 0"><b>Fehlerliste</b></p><ol class="wrong">${miss.map(x=>`<li>${esc(x)}</li>`).join('')}${voll&&SM.mcDone?(SM.W||[]).map(w=>`<li>MC Frage ${w.n+1} — ${esc(w.text)} <span class="sub">(${esc(w.quelle)})</span></li>`).join(''):''}</ol>
+      <div class="ergbtns"><button class="btn p" id="exp">Exportieren</button><button class="btn" id="again">Neu starten</button></div><div id="expbox"></div></div>`;
+  }
+  $('#app').innerHTML=h; window._simEnd=ende;
+  $('#bk').onclick=home; bindCrumb();
+  document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{SM.phase=b.dataset.p;simDraw();window.scrollTo(0,0)});
+  const goP=()=>{SM.phase='prax';simDraw();window.scrollTo(0,0)}, goG=()=>{SM.phase='gesamt';simDraw();window.scrollTo(0,0)};
+  ['toP','toP2'].forEach(x=>{ if($('#'+x)) $('#'+x).onclick=goP }); ['toG','toG2'].forEach(x=>{ if($('#'+x)) $('#'+x).onclick=goG });
+  if($('#toM')) $('#toM').onclick=()=>{SM.phase='mc';simDraw();window.scrollTo(0,0)};
+  document.body.classList.remove('lay3');
+  if(SM.phase==='mc'){ bindPanels({qs:SM.qs,sel:SM.sel,done:SM.mcDone,lock:!SM.mcDone}); if(!SM.mcDone) bindChecks(SM.sel) }
+  if(SM.phase==='prax'&&!SM.praxDone) document.querySelectorAll('input[data-a]').forEach(x=>x.onchange=()=>{SM.hak[x.dataset.a+'_'+x.dataset.c]=x.checked});
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>{ const t=s.aufgaben[+b.dataset.copy].test.join('\n');
+    try{const p=navigator.clipboard&&navigator.clipboard.writeText(t); if(p&&p.then)p.then(()=>b.textContent='kopiert',()=>{})}catch(e){} });
+  if($('#evM')) $('#evM').onclick=()=>evalMC(false);
+  if($('#evP')) $('#evP').onclick=()=>{ evalPrax(false); if(SM.mode==='voll'&&SM.mcDone) stopTimer() };
+  if($('#exp')) $('#exp').onclick=simExport;
+  if($('#again')) $('#again').onclick=()=>simStart(s.id);
+  if($('#againP')) $('#againP').onclick=()=>sim(s.id,'praxis');
+  if(ende) stopTimer();
+}
+function simExport(){
+  const P=praxPts(), voll=SM.mode==='voll', m=mcPts(), miss=praxMiss();
+  const sum=(voll?m:0)+P.p, max=(voll?15:0)+P.max;
+  const t=[P.s.name+(voll?'':' — nur Teil 2'),new Date().toLocaleString('de-DE'),'',
+    ...(voll?[`Teil 1 MC: ${SM.mcDone?m.toFixed(2)+' / 15':'nicht ausgewertet'}`]:[]),
+    `Teil 2 Praxis: ${P.p} / ${P.max}`,...P.je.map(x=>`  Step ${x.nr} ${x.titel}: ${x.p}/${x.max}`),
+    `Summe: ${sum.toFixed(2)} / ${max} (${Math.round(100*sum/max)} %)`,'','Fehlerliste:',...miss.map(x=>'- '+x),
+    ...(voll&&SM.mcDone?(SM.W||[]).map(w=>`- MC ${w.n+1}: ${w.text} [${w.quelle}]`):[])].join('\n');
+  const box=$('#expbox'); if(!box) return; box.innerHTML=''; const ta=document.createElement('textarea'); ta.className='export'; ta.value=t; ta.readOnly=true;
+  box.appendChild(ta); ta.focus(); ta.select();
+  try{const p=navigator.clipboard&&navigator.clipboard.writeText(t); if(p&&p.catch)p.catch(()=>{})}catch(e){}
+}
+
+/* ══ Kopfzeile: Spickzettel, Dunkel, EN ══ */
+function mark(t){ return esc(t).replace(/«(.*?)»/gs,'<u class="fr">$1</u>').replace(/‹(.*?)›/gs,'<span class="op">[$1]</span>') }
+function spickBauen(f){
+  f=(f||'').toLowerCase().trim();
+  const out=(DATA.spick||[]).filter(b=>!f||(b.title+' '+b.blocks.flat().join('\n')).toLowerCase().replace(/[«»‹›]/g,'').includes(f))
+    .map(b=>`<div class="sp"><h4>${b.title}${b.label?` <span>· ${b.label}</span>`:''}</h4>${b.blocks.map(x=>`<pre>${mark(x.join('\n'))}</pre>`).join('')}${b.html?`<p class="sub">${b.html}</p>`:''}</div>`).join('');
+  $('#spickbody').innerHTML=out||'<p class="sub">Nichts gefunden.</p>';
+}
+$('#spickbtn').onclick=()=>{ $('#spickwrap').classList.remove('hide'); spickBauen($('#spicksuche').value); $('#spicksuche').focus() };
+$('#spickzu').onclick=$('#spickbg').onclick=()=>$('#spickwrap').classList.add('hide');
+$('#spicksuche').oninput=e=>spickBauen(e.target.value);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('#spickwrap').classList.add('hide') });
+function themeLabel(){ const t=document.documentElement.getAttribute('data-t');
+  const dark=t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches);
+  $('#themebtn').textContent=dark?'☀️ Hell':'🌙 Dunkel' }
+$('#themebtn').onclick=()=>{ const t=document.documentElement.getAttribute('data-t');
+  const dark=t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches);
+  const n=dark?'light':'dark'; document.documentElement.setAttribute('data-t',n); try{localStorage.setItem('kl-theme',n)}catch(e){} themeLabel() };
+function enLabel(){ $('#enbtn').classList.toggle('on',EN) }
+$('#enbtn').onclick=()=>{ EN=!EN; store.set(EN_KEY,EN); enLabel();
+  panelsRender() };
+$('#ttl').onclick=home; $('#homebtn').onclick=home;
+themeLabel(); enLabel(); home();
+</script>
+</body>
+</html>

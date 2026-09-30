@@ -1,0 +1,11 @@
+# Text files are stored and checked out with LF, as they were written.
+* text=auto eol=lf
+
+# Never touch binaries (some PDFs look like text to git's heuristic).
+*.pdf  binary
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.xls  binary
+*.zip  binary
+*.pyc  binary

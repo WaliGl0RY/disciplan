@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="de"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KAF-Trainer — Demo: Begriffe, Aufgaben, Probeklausur</title>
+<style>
+/* ══════════════════════════════════════════════════════════════
+   Trainer-Oberfläche — Gestaltung aus dem Bewerbungs-Cockpit
+   übernommen: Indigo-Akzent, weiche Karten, runde Ecken, Tiefe
+   durch Schatten statt durch Linien.
+   ══════════════════════════════════════════════════════════════ */
+:root{
+  --bg:#f6f6fb; --card:#ffffff; --card2:#eef0f8; --ink:#181a26; --mut:#6e6f87;
+  --line:#e4e5f0; --acc:#5757d9; --acc2:#4338ca; --acc-w:#ecebfb; --on-acc:#ffffff;
+  --good:#1f9d62; --good-w:#e2f5ec; --bad:#c75454; --bad-w:#fbe9e9;
+  --warn:#b7791f; --warn-w:#faf1de;
+  --g-violet:linear-gradient(135deg,#7c5ce0,#b16cea);
+  --g-blue:linear-gradient(135deg,#4c7df0,#6fb2fe);
+  --shadow:0 12px 32px rgba(52,54,110,.12);
+  --shadow-sm:0 4px 14px rgba(52,54,110,.08);
+  --r:16px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-t="light"]){
+  --bg:#13141c; --card:#1c1d29; --card2:#252636; --ink:#e6e6f0; --mut:#9a9bb4;
+  --line:#2d2e40; --acc:#8b8bf0; --acc2:#a5a5f5; --acc-w:#26264a; --on-acc:#13141c;
+  --good:#5fce9b; --good-w:#15382a; --bad:#e58c8c; --bad-w:#3b1d1b;
+  --warn:#e0a94f; --warn-w:#38300f;
+  --shadow:0 12px 32px rgba(0,0,0,.5); --shadow-sm:0 4px 14px rgba(0,0,0,.35);
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.6 "Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif;text-wrap:balance}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:8px}
+code{font:13.5px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  background:var(--card2);color:var(--ink);padding:1.5px 6px;border-radius:6px}
+b{font-weight:660}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px 70px}
+.layout{display:block}
+.side{display:contents}
+@media(min-width:1240px){
+  .wrap:has(.layout){max-width:none}
+  .layout{display:grid;gap:0 24px;align-items:start;max-width:1660px;margin:0 auto;
+    grid-template-columns:minmax(0,1fr) minmax(0,740px) minmax(0,1fr)}
+  .layout.leer{grid-template-columns:minmax(0,740px);justify-content:center}
+  .layout.leer .side{display:none}
+  .layout.leer .qcard{grid-column:1}
+  .side{display:block;min-width:0}
+  .side.li{grid-column:1;grid-row:1}
+  .qcard{grid-column:2;grid-row:1}
+  .side.re{grid-column:3;grid-row:1}
+  .side .box{margin:0 0 14px}
+  .side.li{padding-top:84px;padding-right:4px}
+  .side.re{padding-top:172px;padding-left:4px}
+  .side.li .box{max-width:470px;margin-left:auto}
+  .side.re .box{max-width:470px}
+}
+@media(min-width:1700px){.side.li .box,.side.re .box{max-width:540px}}
+/* ---- schmale Fenster ---- */
+@media(max-width:980px){.hd h1 span{display:none}}
+@media(max-width:620px){
+  .qcard{padding:17px 16px}
+  .wrap{padding:0 14px 60px}
+  .numrow{flex-direction:column;align-items:stretch}
+  .numrow label{min-width:0}
+  #home>h2:first-child{font-size:23px}
+}
+
+/* ---- Kopfzeile ---- */
+header{position:sticky;top:0;z-index:20;background:var(--bg);
+  background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hd{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;gap:9px;align-items:center}
+.hd h1{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hd h1{font-size:15px;margin:0;font-weight:750;letter-spacing:-.015em;white-space:nowrap}
+.hd h1 span{color:var(--mut);font-weight:500}
+.spacer{flex:1}
+.pill{font-size:12px;font-weight:640;padding:5px 12px;border-radius:999px;
+  background:var(--acc-w);color:var(--acc);white-space:nowrap;flex:0 0 auto}
+#modepill{flex:0 1 auto;min-width:7ch;max-width:36ch;overflow:hidden;text-overflow:ellipsis}
+.bar{height:3px;background:var(--card2)}
+.bar i{display:block;height:100%;background:var(--g-blue);width:0;
+  transition:width .5s cubic-bezier(.2,.7,.3,1)}
+
+/* ---- Knöpfe ---- */
+.btn{border:1.5px solid var(--line);border-radius:11px;padding:9px 15px;font-size:13.5px;
+  font-weight:640;background:var(--card);color:var(--ink);
+  transition:border-color .16s,color .16s,transform .16s,filter .16s}
+.btn:hover{border-color:var(--acc);color:var(--acc)}
+.btn.p{background:var(--acc);border-color:var(--acc);color:var(--on-acc);box-shadow:var(--shadow-sm)}
+.btn.p:hover{transform:translateY(-1px);filter:brightness(1.07);color:var(--on-acc)}
+.btn.sm{padding:6px 11px;font-size:12.5px;white-space:nowrap;border-radius:9px}
+.btn.on{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+.btn.warn{background:var(--bad-w);border-color:transparent;color:var(--bad)}
+.wieder{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+
+/* ---- Startseite ---- */
+h2{font-size:18px;margin:34px 0 3px;letter-spacing:-.025em}
+#home>h2:first-child{font-size:27px;margin:30px 0 6px}
+#home>h2:first-child+.sub{font-size:15px;max-width:68ch}
+.sub{color:var(--mut);font-size:13.5px;margin:0 0 16px;max-width:78ch}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(252px,1fr))}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:15px 16px;
+  cursor:pointer;text-align:left;font:inherit;color:inherit;box-shadow:var(--shadow-sm);
+  display:flex;flex-direction:column;gap:4px;
+  transition:transform .18s cubic-bezier(.2,.7,.3,1),box-shadow .18s,border-color .18s}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--acc)}
+.tile .t{font-weight:670;font-size:14.5px;letter-spacing:-.01em}
+.tile .d{color:var(--mut);font-size:12.5px}
+.tile .m{font-size:11.5px;color:var(--mut);display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.tile{min-height:118px}
+.tag{background:var(--acc-w);color:var(--acc);padding:3px 9px;border-radius:999px;
+  font-weight:640;font-size:11.5px}
+.tag.g{background:var(--good-w);color:var(--good)}
+.tag.r{background:var(--bad-w);color:var(--bad)}
+.tag.n{background:var(--card2);color:var(--mut)}
+.tag.v{background:var(--warn-w);color:var(--warn)}
+.seg{display:inline-flex;border:1.5px solid var(--line);border-radius:11px;overflow:hidden;background:var(--card)}
+.seg button{font-size:13px;font-weight:640;padding:8px 15px;border:0;background:transparent;color:var(--mut)}
+.seg button[aria-selected=true]{background:var(--acc);color:var(--on-acc)}
+
+/* ---- Fragekarte ---- */
+.qcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:22px 24px;box-shadow:var(--shadow-sm);margin-top:20px;
+  animation:rise .38s cubic-bezier(.2,.7,.3,1) backwards}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.qmeta{display:flex;gap:7px;align-items:center;font-size:11.5px;color:var(--mut);
+  margin-bottom:12px;flex-wrap:wrap}
+.qmeta>span:not(.qtitle):not(.tag){background:var(--card2);padding:3px 9px;border-radius:999px}
+.qtitle{font-weight:700;color:var(--acc);font-size:11px;text-transform:uppercase;
+  letter-spacing:.08em;margin-right:2px}
+.qtext{font-size:17px;line-height:1.5;margin:0;letter-spacing:-.01em}
+.qhint{font-size:12.5px;color:var(--mut);margin:8px 0 0;
+  border-left:2px solid var(--line);padding-left:10px}
+.opts{display:flex;flex-direction:column;gap:8px;margin:16px 0 0}
+.opt{display:flex;gap:11px;align-items:flex-start;padding:12px 14px;border-radius:12px;
+  border:1.5px solid var(--line);background:var(--card);cursor:pointer;text-align:left;
+  font:inherit;color:inherit;line-height:1.45;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--acc);background:var(--acc-w)}
+.opt .bx{flex:0 0 20px;height:20px;border:1.5px solid var(--line);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+  color:transparent;margin-top:1px}
+.opt.rad .bx{border-radius:50%}
+.opt[aria-pressed=true]{border-color:var(--acc);background:var(--acc-w)}
+.opt[aria-pressed=true] .bx{background:var(--acc);border-color:var(--acc);color:var(--on-acc)}
+.opt.ok{border-color:var(--good);background:var(--good-w)}
+.opt.ok .bx{background:var(--good);border-color:var(--good);color:var(--card)}
+.opt.no{border-color:var(--bad);background:var(--bad-w)}
+.opt.no .bx{background:var(--bad);border-color:var(--bad);color:var(--card)}
+.opt .on{display:block;font-size:12.5px;color:var(--mut);margin-top:4px}
+.opt .wahl{display:block;width:fit-content;margin:7px 0 0;font-size:10.5px;font-weight:750;
+  letter-spacing:.07em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.opt.ok .wahl{background:var(--good);color:var(--card)}
+.opt.no .wahl{background:var(--bad);color:var(--card)}
+.opt.mine{box-shadow:inset 4px 0 0 0 currentColor}
+.opt.ok.mine{color:var(--good)} .opt.no.mine{color:var(--bad)}
+.opt.mine>span:last-child{color:var(--ink)}
+.done .opt{cursor:default}
+.done .opt:hover{border-color:var(--line);background:var(--card)}
+.done .opt.ok:hover{border-color:var(--good);background:var(--good-w)}
+.done .opt.no:hover{border-color:var(--bad);background:var(--bad-w)}
+input[type=text],textarea{width:100%;font:inherit;padding:10px 13px;border-radius:11px;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--ink);resize:vertical}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--acc);
+  box-shadow:0 0 0 3px var(--acc-w)}
+.numrow{display:flex;gap:10px;align-items:center;margin:9px 0}
+.numrow label{font-size:13.5px;color:var(--mut);min-width:130px}
+.numrow input{max-width:220px}
+.ordrow{display:flex;gap:10px;align-items:center;margin:8px 0;padding:10px 12px;
+  border:1.5px solid var(--line);border-radius:11px}
+.ordrow input{width:56px;text-align:center;font-weight:650}
+.ordrow span{flex:1;line-height:1.45}
+.ordrow.ok{border-color:var(--good);background:var(--good-w)}
+.ordrow.no{border-color:var(--bad);background:var(--bad-w)}
+
+/* ---- Aktionsleiste: sitzt IN der Karte, direkt unter den Antworten ---- */
+.nav{margin:18px 0 0;background:var(--card2);border-radius:12px;padding:10px 12px}
+.navin{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.navin #act{order:-1;min-width:132px}
+.kbd{font:11px/1 ui-monospace,monospace;border:1px solid var(--line);border-radius:6px;
+  padding:3px 6px;color:var(--mut);background:var(--card)}
+.stuck{margin-left:auto}
+@media(max-width:520px){.navin #act{width:100%}.stuck{margin-left:0}}
+
+/* ---- Auflösung ---- */
+.res{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}
+.verd{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
+  padding:5px 13px;border-radius:999px;margin-bottom:8px}
+.res>.nav{margin-top:8px}
+.verd.ok{background:var(--good-w);color:var(--good)}
+.verd.no{background:var(--bad-w);color:var(--bad)}
+.verd.nt{background:var(--warn-w);color:var(--warn)}
+.box{border-radius:13px;padding:14px 16px;margin:11px 0;font-size:14.5px;line-height:1.6;
+  background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.box h4{margin:0 0 7px;font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;font-weight:700}
+.box.ex{background:var(--acc-w);border-color:transparent} .box.ex h4{color:var(--acc)}
+.box.mu{background:var(--good-w);border-color:transparent} .box.mu h4{color:var(--good)}
+.box.va{background:var(--warn-w);border-color:transparent} .box.va h4{color:var(--warn)}
+.box.wy h4{color:var(--mut)}
+.src{font-size:12px;color:var(--mut);margin-top:12px}
+.src a{color:var(--acc)}
+.selfrow{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 0;align-items:center}
+.selfrow .lb{font-size:12.5px;color:var(--mut);margin-right:4px}
+
+/* ---- Auswertung und Listen ---- */
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 17px;min-width:104px;box-shadow:var(--shadow-sm)}
+.stat .n{font-size:27px;font-weight:770;line-height:1.1;letter-spacing:-.02em}
+.stat .l{font-size:12px;color:var(--mut);margin-top:2px}
+.list{display:flex;flex-direction:column;gap:7px;margin-top:12px}
+/* nur die Zeilen der Auswertungsliste — .side.li traegt dieselbe Klasse */
+.list .li{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;
+  display:flex;gap:11px;align-items:flex-start;cursor:pointer;font:inherit;color:inherit;
+  text-align:left;transition:border-color .15s,transform .15s}
+.list .li:hover{border-color:var(--acc);transform:translateX(2px)}
+.list .li .ix{font-size:12px;color:var(--mut);min-width:34px;font-weight:650}
+
+/* ---- Zuordnung, Lücken ---- */
+.zuord{background:var(--card2);border-radius:12px;padding:11px 13px;margin:0 0 12px}
+.zrow{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:14px}
+.zn{flex:0 0 22px;height:22px;border-radius:7px;background:var(--acc);color:var(--on-acc);
+  font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center}
+.gaptext{line-height:2.5;font-size:15px}
+.gaptext select{font:inherit;font-size:14px;padding:4px 8px;border-radius:9px;
+  border:1.5px solid var(--line);background:var(--card);color:var(--ink);margin:0 3px;max-width:100%}
+.gaptext select.gok{border-color:var(--good);background:var(--good-w)}
+.gaptext select.gno{border-color:var(--bad);background:var(--bad-w)}
+
+/* ---- Spickzettel ---- */
+.spickwrap{position:fixed;inset:0;z-index:70}
+.spickbg{position:absolute;inset:0;background:rgba(18,16,40,.42);backdrop-filter:blur(3px)}
+.spick{position:absolute;right:0;top:0;bottom:0;width:min(580px,94vw);background:var(--bg);
+  border-left:1px solid var(--line);box-shadow:-24px 0 60px rgba(20,20,60,.25);
+  display:flex;flex-direction:column}
+.spickhd{display:flex;gap:9px;align-items:center;padding:14px 16px;
+  border-bottom:1px solid var(--line);flex:0 0 auto;background:var(--card)}
+.spickhd b{font-size:15px;white-space:nowrap}
+.spickhd input{flex:1;font:inherit;font-size:13.5px;padding:8px 12px;border-radius:11px;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--ink);min-width:0}
+.spickhd input:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-w)}
+.spickbody{overflow:auto;padding:16px 18px 50px;font-size:14px;line-height:1.62}
+.spickbody h3{font-size:12px;margin:22px 0 8px;color:var(--acc);text-transform:uppercase;
+  letter-spacing:.09em;font-weight:750}
+.spickbody h3:first-child{margin-top:0}
+.spickbody table{border-collapse:separate;border-spacing:0;width:100%;margin:9px 0;font-size:13.2px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.spickbody th,.spickbody td{border-bottom:1px solid var(--line);padding:7px 10px;
+  text-align:left;vertical-align:top}
+.spickbody tr:last-child th,.spickbody tr:last-child td{border-bottom:0}
+.spickbody th{background:var(--card2);font-weight:660}
+.spickbody .wf{margin:9px 0;padding:11px 13px;border-radius:12px;background:var(--card);
+  border:1px solid var(--line);box-shadow:var(--shadow-sm)}
+.spickbody .wf b{color:var(--acc)}
+.spickbody mark{background:var(--warn-w);color:var(--ink);border-radius:4px;padding:0 3px}
+.spickbody .none{color:var(--mut);font-style:italic}
+
+/* ---- Karteikarten (Begriffe) ---- */
+.en{display:block;margin-top:8px;padding:9px 12px;border-radius:11px;background:var(--acc-w);
+  color:var(--ink);font-size:13.2px}
+.en::before{content:"EN  ";font-weight:750;font-size:10.5px;letter-spacing:.09em;color:var(--acc)}
+.fam{display:block;margin-top:8px;padding:9px 12px;border-radius:11px;background:var(--warn-w);
+  font-size:13.2px}
+.fam::before{content:"WORTFAMILIE  ";font-weight:750;font-size:10.5px;letter-spacing:.07em;color:var(--warn)}
+.bkarte{font-size:23px;font-weight:700;text-align:center;padding:26px 10px 20px;line-height:1.3;
+  letter-spacing:-.02em}
+.bkarte .ri{display:block;font-size:10.5px;font-weight:750;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+
+/* ---- Klausurbaukasten ---- */
+.genbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 17px;margin:12px 0;box-shadow:var(--shadow-sm)}
+.genrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.genrow .lb{font-size:11px;font-weight:640;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--mut);min-width:96px}
+.genrow label{font-size:13.5px}
+.chk{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;
+  border:1.5px solid var(--line);cursor:pointer;font-size:12.5px;color:var(--mut);
+  user-select:none;background:var(--card);transition:all .16s}
+.chk:hover{border-color:var(--acc);color:var(--acc)}
+.chk.on{border-color:var(--acc);background:var(--acc);color:var(--on-acc);font-weight:640}
+.warnbox{background:var(--warn-w);border:1px solid transparent;color:var(--ink);
+  border-radius:12px;padding:11px 14px;margin:0 0 12px;font-size:14px}
+.hide{display:none!important}
+
+/* ══════════════════════════════════════════════════════════════
+   Cockpit-Kopf — der Teil, der zum Weitermachen bewegen soll:
+   ein Ring, der sich füllt, harte Zahlen und ein Knopf, der
+   direkt in die offenen Fragen springt.
+   ══════════════════════════════════════════════════════════════ */
+.hero{background:var(--g-violet);color:#fff;border-radius:20px;padding:24px 26px;
+  margin:22px 0 4px;box-shadow:var(--shadow);display:flex;gap:26px;align-items:center;
+  flex-wrap:wrap;position:relative;overflow:hidden;
+  animation:rise .5s cubic-bezier(.2,.7,.3,1) backwards}
+.hero::after{content:"";position:absolute;right:-70px;top:-90px;width:260px;height:260px;
+  border-radius:50%;background:rgba(255,255,255,.12)}
+.hero-l{flex:1 1 320px;min-width:0;position:relative;z-index:1}
+.hero .kick{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:.82}
+.hero h1{margin:5px 0 5px;font-size:26px;letter-spacing:-.03em;line-height:1.15}
+.hero p{margin:0;font-size:13.5px;opacity:.93;max-width:58ch}
+.hero-btns{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.hb{border:0;border-radius:11px;padding:10px 17px;font-size:13.5px;font-weight:680;
+  background:rgba(255,255,255,.2);color:#fff;transition:background .16s,transform .16s}
+.hb:hover{background:rgba(255,255,255,.34);transform:translateY(-1px)}
+.hb.p{background:#fff;color:#4338ca}
+.hb.p:hover{background:#fff;filter:brightness(.97)}
+.hb:disabled{opacity:.5;cursor:default;transform:none}
+.hero-r{display:flex;align-items:center;gap:22px;position:relative;z-index:1;flex-wrap:wrap}
+.ring{width:94px;height:94px;position:relative;flex:none}
+.ring svg{transform:rotate(-90deg);display:block}
+.ring .bgc{stroke:rgba(255,255,255,.25)}
+.ring .fgc{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset 1.1s cubic-bezier(.2,.7,.3,1)}
+.ring .v{position:absolute;inset:0;display:grid;place-items:center;font-size:19px;
+  font-weight:760;letter-spacing:-.02em}
+.hnums{display:flex;gap:20px;flex-wrap:wrap}
+.hnums div{min-width:62px}
+.hnums b{display:block;font-size:23px;font-weight:770;line-height:1.15;letter-spacing:-.02em}
+.hnums span{font-size:11.5px;opacity:.86}
+@media(max-width:700px){.hero{padding:20px}.hero h1{font-size:22px}.hero-r{gap:16px}}
+
+/* ---- Fortschrittsbalken auf den Kacheln ---- */
+.tile .m{flex-direction:column;align-items:stretch;gap:7px;margin-top:auto;padding-top:10px}
+.mtr{height:7px;border-radius:99px;background:var(--card2);overflow:hidden;display:block}
+.mtr i{display:block;height:100%;border-radius:99px;background:var(--g-blue);
+  transition:width .9s cubic-bezier(.2,.7,.3,1)}
+.mtl{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--mut)}
+.mtl b{color:var(--ink)}
+.mo{color:var(--warn);font-weight:640}
+.mpc{margin-left:auto;font-weight:750;color:var(--acc);font-variant-numeric:tabular-nums}
+.tile:has(.mpc.voll){border-color:var(--good)}
+.tile:has(.mpc.voll) .mtr i{background:linear-gradient(90deg,#1f9d62,#5fce9b)}
+.mpc.voll{color:var(--good)}
+.tile:has(.mpc.voll) .t::after{content:" ✓";color:var(--good)}
+.hero+h2{margin-top:28px}
+
+/* ---- kurzes Aufleuchten bei richtiger Antwort ---- */
+.qcard:has(.verd.ok){animation:rise .38s cubic-bezier(.2,.7,.3,1) backwards, okpuls 1.2s ease-out}
+@keyframes okpuls{0%{box-shadow:0 0 0 0 rgba(31,157,98,.42)}100%{box-shadow:0 0 0 18px rgba(31,157,98,0)}}
+
+/* ---- Blattmodus: alle Fragen untereinander ---- */
+.blatt{max-width:820px;margin:0 auto}
+.blkopf{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 20px;margin:20px 0 4px;box-shadow:var(--shadow-sm);
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;position:sticky;top:54px;z-index:15}
+.blk-l{flex:1 1 250px;min-width:0}
+.blkopf .kick{font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--acc)}
+.blkopf h2{margin:3px 0 4px;font-size:19px}
+.blkopf .sub{margin:0;font-size:12.5px}
+.blk-r{display:flex;gap:8px;flex-wrap:wrap}
+.blq{margin-top:14px}
+.blnr{background:var(--acc)!important;color:var(--on-acc)!important;font-weight:750;
+  min-width:22px;text-align:center}
+.bln{margin-top:14px}
+.blfuss{display:flex;gap:9px;flex-wrap:wrap;margin:24px 0 0;justify-content:center}
+.blteil{margin:30px 0 2px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.blteil h3{margin:0;font-size:20px;letter-spacing:-.02em}
+.blteil p{flex:1 1 100%;margin:2px 0 0;color:var(--mut);font-size:13px}
+.blfrei textarea{margin-top:14px;min-height:150px;font:13px/1.6 ui-monospace,Menlo,Consolas,monospace}
+.selflb{font-size:12.5px;color:var(--mut);margin-left:auto}
+.bluhr{align-self:center;font:700 15px/1 ui-monospace,Menlo,monospace;color:var(--acc);
+  background:var(--acc-w);padding:8px 12px;border-radius:10px;font-variant-numeric:tabular-nums}
+.bluhr.aus{color:var(--bad);background:var(--bad-w)}
+.bstd{color:var(--good);font-weight:700}
+.nbstd{color:var(--warn);font-weight:700}
+
+/* ---- Seitenleiste ---- */
+#rail{position:fixed;top:0;left:0;bottom:0;width:238px;z-index:40;background:var(--card);
+  border-right:1px solid var(--line);overflow-y:auto;padding:16px 12px 40px;
+  transform:translateX(-100%);transition:transform .25s cubic-bezier(.32,.72,.24,1)}
+body.railauf #rail{transform:none;box-shadow:8px 0 32px rgba(20,20,60,.18)}
+#railbg{position:fixed;inset:0;background:rgba(18,16,40,.42);z-index:35;display:none}
+body.railauf #railbg{display:block}
+#rail .brand{font-weight:750;font-size:14.5px;padding:4px 10px 1px;letter-spacing:-.01em}
+#rail .bsub{font-size:11.5px;color:var(--mut);padding:0 10px 10px}
+#rail h5{font:700 10px/1 sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--mut);margin:16px 0 5px 10px}
+.rl{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:0;background:none;
+  padding:7px 10px;border-radius:9px;font-size:13.2px;color:var(--ink);cursor:pointer;
+  transition:background .14s,color .14s}
+.rl:hover{background:var(--card2)}
+.rl.on{background:var(--acc-w);color:var(--acc);font-weight:650}
+.rl .kk{font:700 10.5px sans-serif;min-width:26px;color:var(--mut);flex:none}
+.rl .rt{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rl .dd{flex:none;font-size:11px;color:var(--mut);font-variant-numeric:tabular-nums}
+@media(min-width:1100px){
+  #rail{transform:none;box-shadow:none}
+  #railbg{display:none!important}
+  #railtog{display:none}
+  body{padding-left:238px}
+}
+.blseg{margin:10px 0 0}
+.blseiten{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center;margin:22px 0 0}
+
+/* ---- Seitenleiste ein- und ausklappen ---- */
+#railzu{display:none;margin-left:auto;border:0;background:none;color:var(--mut);
+  font-size:17px;line-height:1;padding:4px 8px;border-radius:8px;cursor:pointer}
+#railzu:hover{background:var(--card2);color:var(--ink)}
+#rail .brand{display:flex;align-items:center;gap:8px}
+@media(min-width:1100px){
+  #railzu{display:block}
+  body.railzu #rail{transform:translateX(-100%);box-shadow:none}
+  body.railzu{padding-left:0}
+  body.railzu #railtog{display:block}
+  #rail,body{transition:transform .25s cubic-bezier(.32,.72,.24,1),padding-left .25s cubic-bezier(.32,.72,.24,1)}
+}
+
+/* ---- Bildlaufleisten im Stil der App ---- */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:11px;height:11px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:99px;
+  border:3px solid var(--bg);background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background:var(--mut);border:3px solid var(--bg);background-clip:padding-box}
+*::-webkit-scrollbar-corner{background:transparent}
+#rail::-webkit-scrollbar-thumb,.spickbody::-webkit-scrollbar-thumb{border-color:var(--card)}
+pre::-webkit-scrollbar-thumb,table::-webkit-scrollbar-thumb{border-color:var(--card2)}
+
+
+/* ---- Akzentfarbe dieses Moduls ---- */
+:root{--acc:#c05a1e;--acc2:#96430f;--acc-w:#fbeee2;
+  --g-violet:linear-gradient(135deg,#cf6425,#e8a35b);--g-blue:linear-gradient(135deg,#c9622a,#efa96b)}
+@media (prefers-color-scheme:dark){:root:not([data-t="light"]){
+  --acc:#e9975f;--acc2:#e9975f;--acc-w:#33210e}}
+</style></head><body>
+<aside id="rail"><div id="railin"></div></aside>
+<div id="railbg"></div>
+<header><div class="hd">
+  <button class="btn sm" id="railtog" title="Menü">☰</button>
+  <h1>KAF-Trainer <span>· Kaffee-Handwerk (Demo)</span></h1>
+  <span class="pill hide" id="modepill"></span>
+  <span class="spacer"></span>
+  <span class="pill hide" id="cnt"></span>
+  <button class="btn sm" id="spickbtn" title="Spickzettel öffnen">📋 Spickzettel</button>
+  <button class="btn sm" id="enbtn" title="Englische Erklärungen mitzeigen">EN</button>
+  <button class="btn sm hide" id="lernbtn" title="Antworten sofort mitzeigen">💡 Lernmodus</button>
+  <button class="btn hide" id="quit">Übersicht</button>
+</div><div class="bar"><i id="prog"></i></div></header>
+
+<div class="wrap">
+  <div id="home"></div>
+  <div id="run" class="hide"></div>
+  <div id="end" class="hide"></div>
+</div>
+
+<div class="spickwrap hide" id="spickwrap">
+  <div class="spickbg" id="spickbg"></div>
+  <aside class="spick" id="spick">
+    <div class="spickhd">
+      <b>Spickzettel</b>
+      <input id="spicksuche" type="search" placeholder="suchen — z. B. Mahlgrad, Verhältnis, Crema">
+      <button class="btn sm" id="spickzu">✕</button>
+    </div>
+    <div class="spickbody" id="spickbody"></div>
+  </aside>
+</div>
+
+<div class="nav hide" id="nav"><div class="navin">
+  <button class="btn" id="prev">Zurück</button>
+  <button class="btn sm stuck" id="stuck">💡 Ich hänge fest</button>
+  <span class="spacer"></span>
+  <span class="kbd hide" id="khint">1…9 wählen · Enter auflösen</span>
+  <button class="btn p" id="act">Auflösen</button>
+</div></div>
+<script>
+const DATA = /*__DATA__*/{};
+
+/* ══════════ Hilfen ══════════ */
+const $=s=>document.querySelector(s), el=(t,c,h)=>{const e=document.createElement(t);
+  if(c)e.className=c; if(h!=null)e.innerHTML=h; return e};
+const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]]}return a};
+const ggt=(a,b)=>b?ggt(b,a%b):a;
+const fmt=n=>n.toLocaleString('de-DE');
+const r2=n=>n.toFixed(2).replace('.',',');
+const eur=n=>n.toLocaleString('de-DE',{minimumFractionDigits:0,maximumFractionDigits:2})+' €';
+
+/* ══════════ Generatoren — bewusst kleine Zahlen ══════════ */
+const GEN={};
+Object.assign(GEN, /*__GEN2__*/{});
+
+
+/* ══════════ Zustand ══════════ */
+const KEY='kaf-trainer-demo';
+let ST={status:{},self:{}};
+try{ST=Object.assign(ST,JSON.parse(localStorage.getItem(KEY)||'{}'))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(ST))}catch(e){}};
+
+let S=null;                      // laufende Runde
+if(!ST.stuck) ST.stuck={};
+let LERN=false, ENAN=false;
+try{ENAN=localStorage.getItem(KEY+'-en')==='1'}catch(e){}
+const sets=()=>DATA.klausuren.concat(DATA.quizzes).concat(DATA.begriffe||[]);
+const setById=id=>sets().find(s=>s.id===id);
+
+/* Aufgabe auflösen: Generator anwenden oder statische Fassung nehmen */
+function build(q,seed){
+  if(q.typ==='begriff'){
+    const rueck = q.richtung ? q.richtung==='rueck' : Math.random()<0.5;
+    return Object.assign({},q,{rueck});
+  }
+  if(q.typ!=='gen') return Object.assign({},q);
+  const g=GEN[q.gen]; if(!g) return Object.assign({},q,{frage:'(Generator fehlt: '+q.gen+')'});
+  const r=g();
+  const typ = r.optionen ? (r.multi||(r.richtig&&r.richtig.length>1)?'multi':'single')
+            : r.felder ? 'num' : 'text';
+  return Object.assign({},q,r,{typ,istGen:true});
+}
+
+/* ══════════ Prüfen ══════════ */
+const norm=s=>(s||'').toString().trim().toLowerCase().replace(/\s+/g,'').replace(',','.');
+function pruefFeld(art,eing,soll){
+  const e=norm(eing), s=norm(soll);
+  if(!e) return false;
+  if(art==='set'){
+    const A=e.replace(/[{}()\[\]]/g,'').split(/[,;]+/).filter(Boolean).sort().join(',');
+    const B=s.replace(/[{}()\[\]]/g,'').split(/[,;]+/).filter(Boolean).sort().join(',');
+    return A===B;
+  }
+  if(art==='seq'){
+    const A=e.replace(/[{}()\[\]]/g,'').split(/[,;]+/).filter(Boolean).join(',');
+    const B=s.replace(/[{}()\[\]]/g,'').split(/[,;]+/).filter(Boolean).join(',');
+    return A===B;
+  }
+  if(art==='bits') return e.replace(/[^01]/g,'')===s.replace(/[^01]/g,'');
+  if(art==='num2'){const a=parseFloat(e),b=parseFloat(s);return isFinite(a)&&Math.abs(a-b)<=0.015}
+  if(art==='numround'){const a=parseFloat(e),b=parseFloat(s);
+    return isFinite(a)&&Math.abs(a-b)<=Math.max(1,Math.abs(b)*0.02)}
+  if(art==='num'){const a=parseFloat(e),b=parseFloat(s);return isFinite(a)&&a===b}
+  if(art==='eur'){
+    const z=t=>parseFloat((t||'').toString().replace(/[€\s.]/g,'').replace(',','.').replace(/[^0-9.\-]/g,''));
+    const a=z(eing),b=z(soll);
+    return isFinite(a)&&Math.abs(a-b)<=Math.max(0.01,Math.abs(b)*0.005);
+  }
+  /* mehrere zulaessige Schreibweisen mit | trennen */
+  if(s.includes('|')) return s.split('|').some(x=>x.trim()===e);
+  return e===s;
+}
+function pruefen(q,ans){
+  if(q.typ==='single'||q.typ==='multi'){
+    const g=(ans.sel||[]).slice().sort().join(','), r=(q.richtig||[]).slice().sort().join(',');
+    if(g===r) return 'ok';
+    if(!ans.sel||!ans.sel.length) return 'no';
+    const tr=(ans.sel||[]).filter(i=>q.richtig.includes(i)).length;
+    return tr>0 ? 'part' : 'no';
+  }
+  if(q.typ==='num'){
+    let ok=0; const f=q.felder||[];
+    f.forEach(fd=>{if(pruefFeld((q.pruef||{})[fd.k]||'text',(ans.felder||{})[fd.k],(q.loesung||{})[fd.k]))ok++});
+    return ok===f.length?'ok':ok>0?'part':'no';
+  }
+  if(q.typ==='order'||q.typ==='match'){
+    const a=ans.ord||{}; let ok=0;
+    q.items.forEach((it,i)=>{if(parseInt(a[i],10)===q.richtig[i])ok++});
+    return ok===q.items.length?'ok':ok>0?'part':'no';
+  }
+  if(q.typ==='gap'){
+    const g=ans.gap||{}; let ok=0;
+    q.luecken.forEach((l,i)=>{if(String(g[i])===String(l.a))ok++});
+    return ok===q.luecken.length?'ok':ok>0?'part':'no';
+  }
+  return 'text';   // Freitext: Selbstbewertung
+}
+
+/* ══════════ Klausur zusammenstellen ══════════ */
+const GENWAHL={vl:{},umfang:38,begriffe:false};
+function baueGenerator(){
+  const box=el('div','genbox');
+  const quellen=(DATA.quizzes||[]).concat(DATA.klausuren||[]);
+  const r1=el('div','genrow');
+  r1.appendChild(el('span','lb','Woraus:'));
+  quellen.forEach(s=>{
+    if(GENWAHL.vl[s.id]===undefined) GENWAHL.vl[s.id]=true;
+    const c=el('button','chk'+(GENWAHL.vl[s.id]?' on':''), (s.klausur?s.name:'VL '+s.nr));
+    c.onclick=()=>{GENWAHL.vl[s.id]=!GENWAHL.vl[s.id]; c.classList.toggle('on',GENWAHL.vl[s.id])};
+    r1.appendChild(c)});
+  box.appendChild(r1);
+
+  if((DATA.begriffe||[]).length){
+    const r2=el('div','genrow');
+    r2.appendChild(el('span','lb','Begriffskarten:'));
+    const c=el('button','chk'+(GENWAHL.begriffe?' on':''),'mit einstreuen');
+    c.onclick=()=>{GENWAHL.begriffe=!GENWAHL.begriffe; c.classList.toggle('on',GENWAHL.begriffe)};
+    r2.appendChild(c); box.appendChild(r2);
+  }
+
+  const r3=el('div','genrow');
+  r3.appendChild(el('span','lb','Umfang:'));
+  [['20','kurz'],['38','Klausurlänge'],['60','lang'],['0','alles']].forEach(([n,t])=>{
+    const c=el('button','chk'+(GENWAHL.umfang==+n?' on':''),`${t}${+n?' · '+n:''}`);
+    c.onclick=()=>{GENWAHL.umfang=+n;
+      [...r3.querySelectorAll('.chk')].forEach(x=>x.classList.remove('on')); c.classList.add('on')};
+    r3.appendChild(c)});
+  box.appendChild(r3);
+
+  const go=el('button','btn p','Klausur starten');
+  go.style.marginTop='6px';
+  go.onclick=()=>{
+    let pool=[];
+    quellen.forEach(s=>{ if(GENWAHL.vl[s.id]) pool=pool.concat(s.fragen) });
+    if(GENWAHL.begriffe) (DATA.begriffe||[]).forEach(s=>{
+      const nr=s.nr, passend=quellen.some(x=>GENWAHL.vl[x.id]&&x.nr===nr);
+      if(passend||!quellen.some(x=>GENWAHL.vl[x.id])) pool=pool.concat(s.fragen);
+    });
+    if(!pool.length){ meldung('Keine Quelle ausgewählt.'); return }
+    pool=shuf(pool);
+    if(GENWAHL.umfang) pool=pool.slice(0,GENWAHL.umfang);
+    S={titel:'Zusammengestellte Klausur · '+pool.length+' Aufgaben',
+       fragen:pool, i:0, ans:{}, res:{}, cur:{}};
+    runde();
+  };
+  box.appendChild(go);
+  return box;
+}
+function meldung(t){
+  const m=el('div','warnbox',t);
+  const h=$('#home'); h.insertBefore(m,h.firstChild);
+  setTimeout(()=>m.remove(),3500);
+}
+
+/* ══════════ Startseite ══════════ */
+
+/* ══════════ Cockpit-Kopf ══════════
+   Zeigt oben auf der Startseite, wie weit du bist, und bringt einen Knopf
+   mit, der ohne Umweg in die noch offenen Aufgaben springt. */
+function heuteKey(){const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function cockpitKopf(){
+  let ok=0,no=0,tot=0,fertig=0,setsN=0;
+  sets().forEach(s=>{let o=0;setsN++;
+    s.fragen.forEach(q=>{tot++;const v=ST.status[q.id];
+      if(v==='ok'){ok++;o++}else if(v){no++}});
+    if(s.fragen.length&&o===s.fragen.length)fertig++});
+  const pct=tot?Math.round(100*ok/tot):0;
+  const heute=(ST.tage||{})[heuteKey()]||0;
+  const kopf=document.querySelector('.hd h1');
+  const name=((kopf&&kopf.textContent)||'Trainer').split('·')[0].trim();
+  const gruss = (tot&&ok===tot) ? 'Alles sitzt.' : pct>=60 ? 'Das läuft.'
+              : heute ? 'Weiter so.' : 'Fangen wir an.';
+  const R=40,U=2*Math.PI*R;
+  const box=el('div','hero');
+  box.innerHTML=
+   '<div class="hero-l">'+
+     '<span class="kick">'+name+'</span>'+
+     '<h1>'+gruss+'</h1>'+
+     '<p><b>'+tot+'</b> Aufgaben in '+setsN+' Sets. '+
+       (heute?'Heute schon <b>'+heute+'</b> beantwortet.':'Heute noch keine beantwortet.')+
+       ' Der Stand bleibt im Browser gespeichert.</p>'+
+     '<div class="hero-btns">'+
+       '<button class="hb p" id="hbGo">'+(ok<tot?'Weitermachen':'Nochmal von vorn')+'</button>'+
+       '<button class="hb" id="hbMix">Alles gemischt</button>'+
+     '</div>'+
+   '</div>'+
+   '<div class="hero-r">'+
+     '<div class="ring"><svg width="94" height="94" viewBox="0 0 94 94">'+
+       '<circle class="bgc" cx="47" cy="47" r="'+R+'" fill="none" stroke-width="9"></circle>'+
+       '<circle class="fgc" cx="47" cy="47" r="'+R+'" fill="none" stroke-width="9" '+
+         'stroke-dasharray="'+U.toFixed(1)+'" stroke-dashoffset="'+U.toFixed(1)+'"></circle>'+
+     '</svg><span class="v">'+pct+'%</span></div>'+
+     '<div class="hnums">'+
+       '<div><b>'+ok+'</b><span>sicher</span></div>'+
+       '<div><b>'+no+'</b><span>offen oder falsch</span></div>'+
+       '<div><b>'+(tot-ok-no)+'</b><span>noch nie dran</span></div>'+
+       '<div><b>'+fertig+'</b><span>Sets fertig</span></div>'+
+     '</div>'+
+   '</div>';
+  setTimeout(function(){const c=box.querySelector('.fgc');
+    if(c)c.setAttribute('stroke-dashoffset',(U*(1-pct/100)).toFixed(1))},60);
+  box.querySelector('#hbGo').onclick=()=>ok<tot
+    ? startFilter('off',q=>ST.status[q.id]!=='ok','Offen und noch nicht sicher')
+    : startFilter('alle',()=>true,'Alles gemischt',true);
+  box.querySelector('#hbMix').onclick=()=>startFilter('alle',()=>true,'Alles gemischt',true);
+  return box;
+}
+
+
+
+
+
+/*__ADDON_START__*/
+
+/* ══════════ Blattmodus ══════════
+   Alle Fragen eines Kapitels untereinander auf einer Seite, zum Scrollen.
+   Jede Frage lässt sich einzeln auflösen, oder am Stück über „Alles auswerten“.
+   Derselbe Bau trägt den Klausurbogen: gezogene Fragen aus allen Kapiteln,
+   im Zuschnitt einer typischen Klausuraufgabe 1 (4 Ankreuz- + 4 Wahr/Falsch-Fragen). */
+let BLATT = true;           /* Kapitel öffnen standardmäßig als Blatt */
+let BL = null;              /* laufendes Blatt */
+let PROSEITE = 10;          /* 0 = alle auf einmal, sonst 5 oder 10 je Seite */
+try{ const v = localStorage.getItem(KEY+'-pro'); if(v !== null) PROSEITE = +v }catch(e){}
+
+/* Blatt über eine gefilterte Auswahl, z. B. nur wahr/falsch */
+function blattFilter(fn, titel){
+  const l = alleFragen().filter(q => BLTYP(q) && fn(q));
+  if(!l.length){ meldung('Nichts gefunden.'); return }
+  blattStart(titel, shuf(l), null);
+}
+
+const alleFragen = () => sets().reduce((a, s) => a.concat(s.fragen), []);
+/* Ankreuzformate trägt das Blatt; Rechnen, Zuordnen, Lücken und Karteikarten
+   bleiben dem Einzelmodus vorbehalten. */
+const BLTYP = q => !q.typ || q.typ === 'single' || q.typ === 'multi';
+const pktVon = q => q.kopf ? 0 : (q.frei ? q.pkt : (q.wf ? 1.5 : 1));
+
+/* ══ Antworten mischen ══
+   Sonst steht die richtige Antwort immer an derselben Stelle und man lernt
+   die Position statt die Sache. Wahr/falsch bleibt in seiner festen Ordnung,
+   ebenso alles, was ein Generator gerade frisch gewürfelt hat. */
+function mische(q){
+  if(!q || !q.optionen || q.optionen.length < 2) return q;
+  if(q.wf || q.gen || q.istGen || q.nichtMischen) return q;
+  if(!(!q.typ || q.typ === 'single' || q.typ === 'multi')) return q;
+  const idx = shuf(q.optionen.map((_, i) => i));
+  const neu = {optionen: idx.map(i => q.optionen[i]),
+               richtig: (q.richtig || []).map(i => idx.indexOf(i)).sort((a, b) => a - b)};
+  if(q.optionNotiz){
+    const n = {};
+    Object.keys(q.optionNotiz).forEach(k => { n[idx.indexOf(+k)] = q.optionNotiz[k] });
+    neu.optionNotiz = n;
+  }
+  return Object.assign({}, q, neu);
+}
+
+/* ══ Ganze Klausur: Aufgabe 1 gezogen, Aufgaben 2-4 aus data/boegen.js ══ */
+function blattVollklausur(bogenId){
+  const bg = (DATA.boegen||[]).find(b => b.id === bogenId) || pick(DATA.boegen||[]);
+  if(!bg){ meldung('Kein Bogen hinterlegt.'); return }
+  const alle = alleFragen();
+  const items = [{kopf:true, text:'Aufgabe 1 · Verständnisfragen', pkt:10,
+                  intro:'Vier zum Ankreuzen (je 1 Punkt), vier wahr oder falsch mit kurzer Begründung (je 1,5 Punkte). Die Begründung gehört aufs Papier — hier wird nur das Kreuz gezählt.'}]
+    .concat(ziehen(alle.filter(q=>!q.wf),4), ziehen(alle.filter(q=>q.wf),4));
+  bg.teile.forEach(t => {
+    items.push({kopf:true, text:'Aufgabe ' + t.nr + ' · ' + t.titel, pkt:t.pkt, intro:t.intro});
+    t.teil.forEach(x => items.push(Object.assign({frei:true}, x)));
+  });
+  blattStart(bg.name, items, {voll:true, bogen:bg.id, mc:4, wf:4});
+}
+
+function blattSet(id){
+  const s = setById(id);
+  const l = s.fragen.filter(BLTYP), weg = s.fragen.length - l.length;
+  if(!l.length){ start(id, false); return }
+  blattStart((s.klausur ? s.name : (s.begriffe ? 'Begriffe ' : '') + (s.nr ? 'Kap. ' + s.nr + ' · ' : '') + s.name),
+             l, null, weg ? {set:id, weg:weg} : null);
+}
+
+/* zieht n Fragen, bevorzugt die, die noch nicht sicher sind */
+function ziehen(pool, n){
+  const offen = shuf(pool.filter(q => ST.status[q.id] !== 'ok'));
+  const rest  = shuf(pool.filter(q => ST.status[q.id] === 'ok'));
+  return offen.concat(rest).slice(0, n);
+}
+
+function blattKlausur(mc, wf, titel){
+  const alle = alleFragen();
+  const a = ziehen(alle.filter(q => !q.wf), mc);
+  const b = ziehen(alle.filter(q =>  q.wf), wf);
+  if(a.length + b.length === 0){ meldung('Keine Fragen gefunden.'); return }
+  blattStart(titel, a.concat(b), {mc:a.length, wf:b.length});
+}
+
+function blattStart(titel, fragen, klausur, rest){
+  if(BL && BL.uhr) clearInterval(BL.uhr);
+  fragen = fragen.map(mische);
+  BL = {titel, fragen, klausur, sel:{}, res:{}, txt:{}, self:{}, zeig:{},
+        pro: (klausur ? 0 : PROSEITE), seite: 0,
+        rest: rest||null,
+        start: (klausur && klausur.voll) ? Date.now() : null, uhr:null};
+  /* Nicht jede Trainer-Fassung hat alle Kopfknöpfe — deshalb geduldig zugreifen. */
+  const zu = (s,k,an) => { const e = $(s); if(e) e.classList[an?'add':'remove'](k) };
+  zu('#home','hide',1); zu('#end','hide',1); zu('#run','hide',0);
+  zu('#nav','hide',1); zu('#quit','hide',0); zu('#lernbtn','hide',1); zu('#cnt','hide',1);
+  zu('#modepill','hide',0);
+  const mp = $('#modepill'); if(mp) mp.textContent = titel;
+  blattZeichnen(); window.scrollTo({top:0});
+}
+
+function blattZeichnen(){
+  const r = $('#run'); r.innerHTML = '';
+  const wrap = el('div','blatt');
+
+  const kopf = el('div','blkopf');
+  kopf.innerHTML =
+    '<div class="blk-l"><span class="kick">' +
+      (BL.klausur ? 'Übungsklausur · Aufgabe 1' : 'Blattmodus') + '</span>' +
+    '<h2>' + BL.titel + '</h2><p class="sub" id="blstand"></p></div>' +
+    '<div class="blk-r">' +
+      (BL.pro ? '<button class="btn p" id="blSeite">Diese Seite auswerten</button>' : '') +
+      '<button class="btn' + (BL.pro?'':' p') + '" id="blAlle">' +
+        (BL.klausur ? 'Alles auswerten' : 'Ganzes Kapitel auswerten') + '</button>' +
+      '<button class="btn" id="blReset">Zurücksetzen</button>' +
+      (BL.klausur ? '<button class="btn" id="blNeu">Neuer Bogen</button>' : '') +
+      (BL.start ? '<span class="bluhr" id="bluhr">75:00</span>' : '') +
+    '</div>';
+  wrap.appendChild(kopf);
+
+  if(!BL.klausur){
+    const seg = el('div','seg blseg');
+    [['Alle',0],['10 je Seite',10],['5 je Seite',5]].forEach(pa => {
+      const sb = el('button',null,pa[0]);
+      sb.setAttribute('aria-selected', BL.pro === pa[1]);
+      sb.onclick = () => { BL.pro = pa[1]; BL.seite = 0; PROSEITE = pa[1];
+        try{ localStorage.setItem(KEY+'-pro', pa[1]) }catch(e){}
+        blattZeichnen(); window.scrollTo({top:0}) };
+      seg.appendChild(sb) });
+    kopf.querySelector('.blk-l').appendChild(seg);
+  }
+
+  const von = BL.pro ? BL.seite*BL.pro : 0;
+  const bis = BL.pro ? Math.min(BL.fragen.length, von+BL.pro) : BL.fragen.length;
+  for(let i = von; i < bis; i++) wrap.appendChild(blattFrage(BL.fragen[i], i));
+
+  if(BL.pro && BL.fragen.length > BL.pro){
+    const seiten = Math.ceil(BL.fragen.length/BL.pro);
+    const nav = el('div','blseiten');
+    const zu = (s) => { BL.seite = s; blattZeichnen(); window.scrollTo({top:0}) };
+    const zb = el('button','btn','‹ zurück'); zb.disabled = BL.seite === 0;
+    zb.onclick = () => zu(BL.seite-1); nav.appendChild(zb);
+    for(let s = 0; s < seiten; s++){
+      const b = el('button','btn sm' + (s===BL.seite?' on':''), String(s+1));
+      b.onclick = () => zu(s); nav.appendChild(b);
+    }
+    const vb = el('button','btn','weiter ›'); vb.disabled = BL.seite === seiten-1;
+    vb.onclick = () => zu(BL.seite+1); nav.appendChild(vb);
+    wrap.appendChild(nav);
+  }
+
+  const fuss = el('div','blfuss');
+  fuss.innerHTML = '<button class="btn p" id="blAlle2">Alles auswerten</button>' +
+                   '<button class="btn" id="blHome">Zur Übersicht</button>';
+  wrap.appendChild(fuss);
+  r.appendChild(wrap);
+
+  const A = (a,b) => { for(let i=(a||0); i<(b===undefined?BL.fragen.length:b); i++)
+      if(!BL.res[i]) blattLoesen(i,true);
+    blattZeichnen(); window.scrollTo({top:0,behavior:'smooth'}) };
+  $('#blAlle').onclick = () => A(); $('#blAlle2').onclick = () => A();
+  if(BL.pro) $('#blSeite').onclick = () => A(von, bis);
+  $('#blReset').onclick = () => { BL.sel={}; BL.res={}; blattZeichnen(); window.scrollTo({top:0}) };
+  $('#blHome').onclick = () => home();
+  if(BL.klausur) $('#blNeu').onclick = () => BL.klausur.voll
+    ? blattVollklausur(null) : blattKlausur(BL.klausur.mc, BL.klausur.wf, BL.titel);
+  if(BL.start){
+    const tick = () => { const u = document.getElementById('bluhr'); if(!u) return;
+      let s = 75*60 - Math.floor((Date.now()-BL.start)/1000);
+      const neg = s < 0; if(neg) s = -s;
+      u.textContent = (neg?'+':'') + Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+      u.classList.toggle('aus', neg) };
+    tick(); BL.uhr = setInterval(tick, 1000);
+  }
+  blattStandSchreiben();
+  const rb = document.getElementById('blrest');
+  if(rb) rb.onclick = e => { e.preventDefault(); start(BL.rest.set, false) };
+  if(typeof railBauen==='function') railBauen();
+}
+
+function blattFrage(q,i){
+  if(q.kopf) return blattKopfKarte(q,i);
+  if(q.frei) return blattFrei(q,i);
+  const offen = !BL.res[i], sel = BL.sel[i]||[], multi = q.typ==='multi';
+  const card = el('div','qcard blq' + (offen?'':' done'));
+  card.id = 'blq' + i;
+  const pkt = BL.klausur ? '<span class="tag">' + String(pktVon(q)).replace('.',',') + ' Pkt</span>' : '';
+  card.innerHTML = '<div class="qmeta"><span class="blnr">' + (i+1) + '</span>' +
+    '<span class="qtitle">' + (q.titel||'') + '</span>' +
+    (q.wf ? '<span class="tag">wahr/falsch · mit Begründung</span>' : '') +
+    (q.kap ? '<span>Kap. ' + q.kap + '</span>' : '') + pkt + '</div>' +
+    '<div class="qtext">' + q.frage + '</div>' +
+    (q.hinweis && offen ? '<div class="qhint">' + q.hinweis + '</div>' : '');
+
+  const box = el('div','opts');
+  q.optionen.forEach((o,j) => {
+    const b = el('button','opt' + (multi?'':' rad'));
+    const richtig = q.richtig.includes(j), gewaehlt = sel.indexOf(j) >= 0;
+    b.setAttribute('aria-pressed', gewaehlt);
+    b.innerHTML = '<span class="bx">' + (offen ? (multi?'✓':'●') : (richtig?'✓':'✕')) + '</span><span>' + o + '</span>';
+    if(offen){ b.onclick = () => { BL.sel[i] = multi
+        ? (gewaehlt ? sel.filter(x=>x!==j) : sel.concat(j)) : [j];
+      blattErsetzen(i) }; }
+    else{
+      b.classList.add(richtig ? 'ok' : 'no');
+      const txt = b.querySelector('span:last-child');
+      if(gewaehlt){ b.classList.add('mine');
+        txt.appendChild(el('span','wahl', richtig ? 'deine Wahl · richtig' : 'deine Wahl · falsch')); }
+      const n = (q.optionNotiz||{})[j];
+      if(n) txt.appendChild(el('span','on', n));
+    }
+    box.appendChild(b);
+  });
+  card.appendChild(box);
+
+  const leiste = el('div','nav bln');
+  const inner = el('div','navin');
+  if(offen){
+    const b1 = el('button','btn p','Diese Frage auflösen');
+    b1.onclick = () => { blattLoesen(i); blattErsetzen(i) };
+    inner.appendChild(b1);
+    const b2 = el('button','btn','Lösung zeigen');
+    b2.onclick = () => { ST.stuck[q.id] = (ST.stuck[q.id]||0)+1; save(); blattLoesen(i,true); blattErsetzen(i) };
+    inner.appendChild(b2);
+  } else {
+    const b3 = el('button','btn','Nochmal antworten');
+    b3.onclick = () => { delete BL.res[i]; delete BL.sel[i]; blattErsetzen(i) };
+    inner.appendChild(b3);
+  }
+  leiste.appendChild(inner);
+  if(offen) card.appendChild(leiste);   /* nach dem Auflösen steht sie unter der Erklärung */
+
+  if(!offen){
+    const res = el('div','res');
+    const ok = BL.res[i] === 'ok';
+    const v = el('div','verd ' + (ok?'ok':'no'));
+    v.textContent = ok ? 'Richtig' : (!sel.length ? 'Nicht beantwortet' : 'Nicht richtig');
+    res.appendChild(v);
+    if(q.erklaerung){ const e = el('div','box ex');
+      e.innerHTML = '<h4>Erklärung</h4>' + q.erklaerung; res.appendChild(e) }
+    if(q.variiert){ const w = el('div','box va');
+      w.innerHTML = '<h4>Was sich in anderen Fällen ändert</h4>' + q.variiert; res.appendChild(w) }
+    const src = el('div','src');
+    src.innerHTML = (q.quelle ? 'Quelle: <code>' + q.quelle + '</code>' : '') +
+      (q.anker ? ' · <a href="' + location.pathname.split('/').pop().replace(/-Trainer\.html$/, '.html') + '#' + q.anker + '" target="_blank">↗ im Lerndokument nachlesen</a>' : '');
+    if(q.quelle||q.anker) res.appendChild(src);
+    card.appendChild(res);
+    card.appendChild(leiste);
+  }
+  return card;
+}
+
+/* Zwischenüberschrift für Aufgabe 1 / 2 / 3 / 4 */
+function blattKopfKarte(q,i){
+  const d = el('div','blteil'); d.id = 'blq' + i;
+  d.innerHTML = '<h3>' + q.text + '</h3><span class="tag">' +
+    String(q.pkt).replace('.',',') + ' Punkte</span>' +
+    (q.intro ? '<p>' + q.intro + '</p>' : '');
+  return d;
+}
+
+/* Schriftliche Aufgabe: selbst lösen, Musterlösung aufklappen, Punkte selbst setzen */
+function blattFrei(q,i){
+  const card = el('div','qcard blq blfrei'); card.id = 'blq' + i;
+  const p = BL.self[i];
+  card.innerHTML = '<div class="qmeta"><span class="blnr">' + (q.label||'') + '</span>' +
+    '<span class="qtitle">schriftlich</span>' +
+    '<span class="tag">' + String(q.pkt).replace('.',',') + ' Punkte</span>' +
+    (p !== undefined ? '<span class="tag g">' + String(p).replace('.',',') + ' erreicht</span>' : '') +
+    '</div><div class="qtext">' + q.frage + '</div>';
+
+  const ta = el('textarea');
+  ta.rows = 8; ta.spellcheck = false;
+  ta.placeholder = 'Erst auf Papier lösen — hier nur abtippen, wenn du vergleichen willst.';
+  ta.value = BL.txt[i] || '';
+  ta.oninput = e => BL.txt[i] = e.target.value;
+  card.appendChild(ta);
+
+  const leiste = el('div','nav bln'); const inner = el('div','navin');
+  const b1 = el('button','btn p', BL.zeig[i] ? 'Lösung ausblenden' : 'Musterlösung zeigen');
+  b1.onclick = () => { BL.zeig[i] = !BL.zeig[i]; blattErsetzen(i) };
+  inner.appendChild(b1);
+  inner.appendChild(el('span','selflb','Deine Punkte:'));
+  [['0',0],['die Hälfte',q.pkt/2],['voll',q.pkt]].forEach(pa => {
+    const b = el('button','btn sm' + (p===pa[1]?' on':''), pa[0]);
+    b.onclick = () => { BL.self[i] = pa[1]; BL.res[i] = pa[1]===q.pkt ? 'ok' : 'no';
+      blattErsetzen(i) };
+    inner.appendChild(b);
+  });
+  leiste.appendChild(inner); card.appendChild(leiste);
+
+  if(BL.zeig[i]){
+    const m = el('div','box mu'); m.innerHTML = '<h4>Musterlösung</h4>' + q.loesung;
+    card.appendChild(m);
+  }
+  return card;
+}
+
+function blattLoesen(i, auchOhneWahl){
+  if(BL.fragen[i].kopf || BL.fragen[i].frei) return;
+  const q = BL.fragen[i], sel = BL.sel[i]||[];
+  if(!sel.length && !auchOhneWahl) return;
+  const a = sel.slice().sort().join(','), b = (q.richtig||[]).slice().sort().join(',');
+  BL.res[i] = (sel.length && a === b) ? 'ok' : 'no';
+  ST.status[q.id] = BL.res[i] === 'ok' ? 'ok' : 'no';
+  ST.tage = ST.tage||{}; const hk = heuteKey(); ST.tage[hk] = (ST.tage[hk]||0)+1;
+  save();
+}
+
+function blattErsetzen(i){
+  const alt = document.getElementById('blq' + i);
+  if(!alt) return blattZeichnen();
+  alt.replaceWith(blattFrage(BL.fragen[i], i));
+  blattStandSchreiben();
+}
+
+function blattStandSchreiben(){
+  const n = BL.fragen.length;
+  let fertig = 0, ok = 0, pMax = 0, pIst = 0;
+  let p2 = 0;
+  BL.fragen.forEach((q,i) => { if(q.kopf) return; pMax += pktVon(q);
+    const istA2 = q.frei && String(q.id||'').indexOf('-2') > 0;
+    if(q.frei){ if(BL.self[i] !== undefined){ fertig++; pIst += BL.self[i];
+        if(istA2) p2 += BL.self[i]; if(BL.self[i]===q.pkt) ok++ } }
+    else if(BL.res[i]){ fertig++; if(BL.res[i]==='ok'){ ok++; pIst += pktVon(q) } } });
+  const el2 = document.getElementById('blstand'); if(!el2) return;
+  const kom = x => String(x).replace('.', ',');
+  const kom2 = x => String(Math.round(x*10)/10).replace('.', ',');
+  if(BL.klausur && BL.klausur.voll){
+    const best = pIst >= 30 && p2 >= 15;
+    el2.innerHTML = '<b>60 Punkte</b> · 75 Minuten · bestanden ab <b>30</b> gesamt und <b>15</b> in Aufgabe 2' +
+      (fertig ? ' — erreicht: <b>' + kom2(pIst) + ' von 60</b>, davon <b>' + kom2(p2) +
+        '</b> in Aufgabe 2 · <span class="' + (best?'bstd':'nbstd') + '">' +
+        (best ? 'bestanden' : 'noch nicht bestanden') + '</span>' : '');
+    return;
+  }
+  el2.innerHTML = BL.klausur
+    ? '<b>' + n + '</b> Aufgaben · ' + BL.klausur.mc + ' zum Ankreuzen, ' + BL.klausur.wf +
+      ' wahr/falsch · <b>' + kom(pMax) + ' Punkte</b>' +
+      (fertig ? ' — ausgewertet: <b>' + kom(pIst) + ' von ' + kom(pMax) + '</b> Punkten (' +
+        Math.round(100*pIst/pMax) + ' %)' : '')
+    : '<b>' + n + '</b> Fragen auf einem Blatt' +
+      (BL.rest ? ' · <a href="#" id="blrest">' + BL.rest.weg +
+        ' weitere brauchen den Einzelmodus</a>' : '') +
+      (BL.pro ? ' · Seite <b>' + (BL.seite+1) + ' von ' +
+        Math.ceil(n/BL.pro) + '</b>' : '') +
+      (fertig ? ' — ' + fertig + ' ausgewertet, <b>' + ok + '</b> richtig' : '') +
+      '. Jede Frage einzeln auflösen oder oben alles auf einmal.';
+}
+
+/* ══════════ Seitenleiste ══════════
+   Ein fester Wegweiser links, aus DATA gebaut: Übersicht, die Übungsarten,
+   alle Sets mit Stand, die Klausurbögen und die Werkzeuge. Ein Klick, kein
+   Suchen. Über ✕ klappt sie weg, über ☰ kommt sie zurück; die Entscheidung
+   wird gemerkt. Auf schmalen Fenstern legt sie sich über den Inhalt. */
+const breit = () => matchMedia('(min-width:1100px)').matches;
+function railUm(){
+  if(breit()){
+    const zu = document.body.classList.toggle('railzu');
+    try{ localStorage.setItem(KEY + '-railzu', zu ? '1' : '0') }catch(e){}
+  } else document.body.classList.toggle('railauf');
+}
+
+function railBauen(){
+  const r = document.querySelector('#railin'); if(!r) return;
+  r.innerHTML = '';
+  const h5 = t => r.appendChild(el('h5', null, t));
+  const add = (kk, t, dd, fn) => {
+    const b = el('button','rl');
+    b.innerHTML = '<span class="kk">' + kk + '</span><span class="rt">' + t + '</span>' +
+                  (dd ? '<span class="dd">' + dd + '</span>' : '');
+    b.onclick = () => { document.body.classList.remove('railauf'); fn() };
+    r.appendChild(b);
+  };
+  const st = s => { let ok = 0; s.fragen.forEach(q => { if(ST.status[q.id]==='ok') ok++ }); return ok };
+  const kurz = n => n.replace(/^(OOP|Ein-\/Ausgabe|Dynamische Datenstrukturen)\s*[—–-]\s*/,'');
+  const alle = alleFragen();
+  const offen = alle.filter(q => ST.status[q.id] !== 'ok').length;
+  const hatWF = alle.some(q => q.wf);
+  const kopf = document.querySelector('.hd h1');
+  const name = ((kopf && kopf.textContent) || 'Trainer').split('·')[0].trim();
+  const modul = name.replace('-Trainer','').trim();
+
+  const br = el('div','brand'); br.innerHTML = '<span>' + name + '</span>';
+  const zu = el('button', null, '✕'); zu.id = 'railzu'; zu.title = 'Menü ausblenden';
+  zu.onclick = railUm; br.appendChild(zu); r.appendChild(br);
+  const sub = ((kopf && kopf.textContent) || '').split('·')[1];
+  if(sub) r.appendChild(el('div','bsub', sub.trim()));
+  add('▦','Übersicht','', () => home());
+
+  h5('Üben');
+  add('▸','Weitermachen', offen ? String(offen) : '',
+      () => startFilter('off', q => ST.status[q.id] !== 'ok', 'Offen und noch nicht sicher'));
+  add('≡','Alles gemischt','', () => blattFilter(() => true, 'Alles gemischt'));
+  if(hatWF) add('✓','Nur wahr/falsch','', () => blattFilter(q => q.wf, 'Wahr oder falsch'));
+  add('↺','Festgehangen','', () => blattFilter(q => (ST.stuck||{})[q.id], 'Wo ich festgehangen habe'));
+
+  if((DATA.begriffe||[]).length){
+    h5('Begriffe');
+    DATA.begriffe.forEach(s => add(String(s.nr), kurz(s.name),
+      st(s) + '/' + s.fragen.length, () => start(s.id, true)));
+  }
+
+  if((DATA.quizzes||[]).length){
+    h5(DATA.begriffe && DATA.begriffe.length ? 'Aufgaben' : 'Kapitel');
+    DATA.quizzes.forEach(s => add(String(s.nr), kurz(s.name),
+      st(s) + '/' + s.fragen.length, () => blattSet(s.id)));
+  }
+
+  if((DATA.klausuren||[]).length){
+    h5('Klausuren');
+    DATA.klausuren.forEach(s => add('★', s.name.split('·')[0].trim(),
+      st(s) + '/' + s.fragen.length, () => blattSet(s.id)));
+  }
+
+  if(hatWF || (DATA.boegen||[]).length){
+    h5('Klausur üben');
+    if(hatWF){
+      add('A1','Aufgabe 1 ziehen','10 P', () => blattKlausur(4,4,'Übungsklausur · Aufgabe 1'));
+      add('WF','Acht Aussagen','12 P', () => blattKlausur(0,8,'Acht Aussagen wahr oder falsch'));
+    }
+    (DATA.boegen||[]).forEach((bg,i) =>
+      add('K'+(i+1), (bg.name.split('·')[1]||bg.name).trim(), '60 P', () => blattVollklausur(bg.id)));
+    if((DATA.boegen||[]).length)
+      add('⟳','Zufälliger Bogen','60 P', () => blattVollklausur(null));
+  }
+
+  h5('Werkzeuge');
+  if((DATA.spick||[]).length) add('📋','Spickzettel','', () => spickAuf());
+  add('↗','Lerndokument','', () => window.open(modul + '.html','_blank'));
+}
+/*__ADDON_END__*/
+
+function home(){
+  S=null;
+  $('#run').classList.add('hide'); $('#end').classList.add('hide');
+  $('#home').classList.remove('hide'); $('#nav').classList.add('hide');
+  $('#quit').classList.add('hide'); $('#cnt').classList.add('hide');
+  $('#lernbtn').classList.add('hide');
+  $('#modepill').classList.add('hide'); $('#prog').style.width='0';
+  const h=$('#home'); h.innerHTML=''; railBauen();
+  h.appendChild(cockpitKopf());
+
+  const stat=(s)=>{let ok=0,no=0,off=0;
+    s.fragen.forEach(q=>{const v=ST.status[q.id]; if(v==='ok')ok++; else if(v)no++; else off++});
+    return{ok,no,off}};
+
+  /* Fortschrittsbalken statt drei Zahlen-Pillen — man sieht die Kachel volllaufen. */
+  const g=setId=>{const s=setById(setId), t=stat(s), n=s.fragen.length,
+    pct=n?Math.round(100*t.ok/n):0;
+    return `<span class="mtr"><i style="width:${pct}%"></i></span>`+
+           `<span class="mtl"><b>${t.ok}</b> von ${n} sicher`+
+           (t.no?` · <span class="mo">${t.no} offen</span>`:'')+
+           `<span class="mpc${pct===100?' voll':''}">${pct} %</span></span>`};
+
+  h.appendChild(el('h2',null,'Was üben wir?'));
+  h.appendChild(el('p','sub','Drei Ebenen durch denselben Stoff: <b>Begriffe</b> als Karteikarten in beide Richtungen, <b>Aufgaben</b> in den vier echten Klausurformaten, und eine <b>Klausur</b>, die du dir selbst zusammenstellst. Nach jeder Antwort kommt die Erklärung — richtig oder falsch, das ändert nichts daran.'));
+
+  /* ── Begriffe ── */
+  if((DATA.begriffe||[]).length){
+    h.appendChild(el('h2',null,'Begriffe'));
+    h.appendChild(el('p','sub','Karteikarten in <b>beiden Richtungen</b>: mal steht der Begriff da und du sagst, was er heißt — mal steht die Bedeutung da und du suchst das Wort. Die Rückrichtung ist die, die in der Klausur verlangt wird. Zu jeder Karte gibt es die <b>englische Erklärung</b> und, wo es darauf ankommt, die <b>Wortfamilie</b>.'));
+    const gb=el('div','grid');
+    DATA.begriffe.forEach(s=>{
+      const b=el('button','tile');
+      b.innerHTML=`<span class="t">VL ${s.nr} · ${s.name}</span><span class="d">${s.fragen.length} Begriffe</span><span class="m">${g(s.id)}</span>`;
+      b.onclick=()=>start(s.id,true); gb.appendChild(b)});
+    const alle=el('button','tile');
+    alle.innerHTML=`<span class="t">Alle Begriffe gemischt</span><span class="d">Quer über alle Vorlesungen, zufällige Reihenfolge</span>`;
+    alle.onclick=()=>startFilter('balle',q=>q.typ==='begriff','Alle Begriffe');
+    gb.appendChild(alle);
+    h.appendChild(gb);
+  }
+
+  /* ── Aufgaben nach Vorlesung ── */
+  if((DATA.quizzes||[]).length){
+    h.appendChild(el('h2',null,'Aufgaben nach Vorlesung'));
+    h.appendChild(el('p','sub','In den vier Formaten, die in der Klausur vorkommen: eine Antwort, mehrere Antworten, Zuordnung und Lückentext.'));
+    const gq=el('div','grid');
+    DATA.quizzes.forEach(s=>{
+      const b=el('button','tile');
+      b.innerHTML=`<span class="t">VL ${s.nr} · ${s.name}</span><span class="d">${s.fragen.length} Aufgaben</span><span class="m">${g(s.id)}</span>`;
+      b.onclick=()=>blattSet(s.id); gq.appendChild(b)});
+    h.appendChild(gq);
+  }
+
+  /* ── Übungsklausuren ── */
+  h.appendChild(el('h2',null,'Übungsklausuren'));
+  h.appendChild(el('p','sub','Am Stück, in der Originalreihenfolge — die Aufgaben aus dem Lerndokument, zusammengestellt als Probeklausur für das Demo-Modul.'));
+  const gk=el('div','grid');
+  DATA.klausuren.forEach(s=>{
+    const b=el('button','tile');
+    b.innerHTML=`<span class="t">${s.name}</span><span class="d">${s.datum} · ${s.fragen.length} Aufgaben</span><span class="m">${g(s.id)}</span>`;
+    b.onclick=()=>blattSet(s.id); gk.appendChild(b)});
+  h.appendChild(gk);
+
+  /* ── Klausur zusammenstellen ── */
+  h.appendChild(el('h2',null,'Klausur zusammenstellen'));
+  h.appendChild(el('p','sub','Vorlesungen ankreuzen, Umfang wählen — die App zieht daraus eine gemischte Klausur.'));
+  h.appendChild(baueGenerator());
+
+  /* ── Gezielt ── */
+  h.appendChild(el('h2',null,'Gezielt'));
+  const gs=el('div','grid');
+  const mk=(t,d,fn)=>{const b=el('button','tile');
+    b.innerHTML=`<span class="t">${t}</span><span class="d">${d}</span>`; b.onclick=fn; gs.appendChild(b)};
+  mk('Nur was noch offen oder falsch ist','Alles, was du noch nicht sicher hattest — quer über Begriffe, Aufgaben und Übungsklausur.',
+     ()=>startFilter('off',q=>ST.status[q.id]!=='ok','Offene und falsche'));
+  mk('Wo ich festgehangen habe','Genau die Karten und Aufgaben, bei denen du dir die Lösung zeigen lassen musstest. Diese Liste soll schrumpfen.',
+     ()=>startFilter('stuck',q=>(ST.stuck||{})[q.id],'Festgehangen'));
+  mk('Nur Zuordnung und Lückentext','Die beiden Formate, die die meisten Punkte bringen und am längsten dauern.',
+     ()=>startFilter('zl',q=>q.typ==='match'||q.typ==='gap','Zuordnung und Lückentext'));
+  mk('Alles gemischt','Jede Karte und jede Aufgabe, zufällige Reihenfolge.',
+     ()=>startFilter('alle',()=>true,'Alles gemischt',true));
+  h.appendChild(gs);
+
+  let ok=0,tot=0; sets().forEach(s=>s.fragen.forEach(q=>{tot++;if(ST.status[q.id]==='ok')ok++}));
+  const f=el('div','stats');
+  f.innerHTML=`<div class="stat"><div class="n">${ok}<span style="font-size:14px;color:var(--mut)"> / ${tot}</span></div><div class="l">sicher gehabt</div></div>`;
+  const rb=el('button','btn','Fortschritt zurücksetzen');
+  rb.style.marginTop='14px';
+  rb.onclick=()=>{
+    if(rb.dataset.armed){ST={status:{},self:{}};save();home();return}
+    rb.dataset.armed='1'; rb.textContent='Wirklich? Nochmal klicken zum Löschen'; rb.classList.add('warn');
+    setTimeout(()=>{if(rb.isConnected){delete rb.dataset.armed;rb.textContent='Fortschritt zurücksetzen';rb.classList.remove('warn')}},4000);
+  };
+  h.appendChild(f); h.appendChild(rb);
+  h.appendChild(el('p','src','Demo-Inhalt: alle Fragen sind erfunden und gehören zum Demo-Lerndokument. <a href="KAF.html">↗ KAF-Lerndokument</a> · <a href="../../klausuren.html">↩ zurück zur Klausurenphase</a>'));
+}
+
+function start(setId,misch){
+  const s=setById(setId);
+  S={titel:s.klausur?s.name:'VL '+s.nr+' · '+s.name,
+     fragen:misch?shuf(s.fragen):s.fragen.slice(), i:0, ans:{}, res:{}, cur:{}};
+  runde();
+}
+function startFilter(id,fn,titel,misch){
+  const list=[]; sets().forEach(s=>s.fragen.forEach(q=>{if(fn(q))list.push(q)}));
+  if(!list.length){alert('Nichts gefunden — alles erledigt.');return}
+  S={titel:titel, fragen:misch===false?list:shuf(list), i:0, ans:{}, res:{}, cur:{}};
+  runde();
+}
+
+/* ══════════ Runde ══════════ */
+function runde(){
+  $('#home').classList.add('hide'); $('#end').classList.add('hide');
+  $('#run').classList.remove('hide'); $('#nav').classList.remove('hide');
+  $('#quit').classList.remove('hide'); $('#cnt').classList.remove('hide');
+  $('#lernbtn').classList.remove('hide');
+  $('#modepill').classList.remove('hide'); $('#modepill').textContent=S.titel;
+  zeige();
+}
+function zeige(){
+  const q0=S.fragen[S.i];
+  if(!S.cur[S.i]) S.cur[S.i]=mische(build(q0));
+  const q=S.cur[S.i];
+  if(!S.ans[S.i]) S.ans[S.i]={sel:[],felder:{},ord:{},gap:{},txt:''};
+  if(LERN&&!S.res[S.i]){ S.res[S.i]='hint'; S.hint=S.hint||{}; S.hint[S.i]=true; }
+  const a=S.ans[S.i], offen=!S.res[S.i];
+
+  $('#cnt').textContent=`${S.i+1} / ${S.fragen.length}`;
+  $('#prog').style.width=(100*(S.i+(offen?0:1))/S.fragen.length)+'%';
+
+  /* Die Aktionsleiste haengt in der alten Karte — vor dem Leeren retten. */
+  const NAVEL=$('#nav'); if(NAVEL&&NAVEL.parentNode!==document.body) document.body.appendChild(NAVEL);
+  const r=$('#run'); r.innerHTML='';
+  const lay=el('div','layout');
+  const links=el('div','side li'), rechts=el('div','side re');
+  const card=el('div','qcard'+(offen?'':' done'));
+
+  const meta=el('div','qmeta');
+  meta.innerHTML=`<span class="qtitle">${q.titel||''}</span>`+
+    (q.nr?`<span>Aufgabe ${q.nr}</span>`:'')+
+    (q.istGen?'<span class="tag">neue Zahlen</span>':'')+
+    (((S.vers||{})[S.i]||0)>1?`<span class="tag v">${(S.vers||{})[S.i]}. Versuch</span>`:'')+
+    (((S.hint||{})[S.i])?'<span class="tag v">Lösung gezeigt</span>':'')+
+    (q.typ==='text'?'<span class="tag">Freitext</span>':'');
+  card.appendChild(meta);
+  card.appendChild(el('div','qtext',q.frage));
+  if(q.hinweis) card.appendChild(el('div','qhint',q.hinweis));
+
+  /* --- Eingabe --- */
+  if(q.typ==='single'||q.typ==='multi'){
+    const box=el('div','opts');
+    q.optionen.forEach((o,i)=>{
+      const b=el('button','opt'+(q.typ==='single'?' rad':''));
+      b.setAttribute('aria-pressed',a.sel.includes(i));
+      const richtig=q.richtig.includes(i), gewaehlt=a.sel.includes(i);
+      const glyph = offen ? (q.typ==='single'?'●':'✓') : (richtig?'✓':'✕');
+      b.innerHTML=`<span class="bx">${glyph}</span><span>${o}</span>`;
+      if(!offen){
+        /* jede falsche Option wird rot, auch die nicht gewaehlten */
+        b.classList.add(richtig?'ok':'no');
+        if(gewaehlt) b.classList.add('mine');
+        const txt=b.querySelector('span:last-child');
+        if(gewaehlt) txt.appendChild(el('span','wahl',richtig?'deine Wahl · richtig':'deine Wahl · falsch'));
+        const n=(q.optionNotiz||{})[i];
+        if(n) txt.appendChild(el('span','on',n));
+      } else b.onclick=()=>{
+        if(q.typ==='single') a.sel=[i];
+        else a.sel=a.sel.includes(i)?a.sel.filter(x=>x!==i):a.sel.concat(i);
+        zeige()};
+      box.appendChild(b)});
+    card.appendChild(box);
+  }
+  else if(q.typ==='num'){
+    (q.felder||[]).forEach(fd=>{
+      const row=el('div','numrow');
+      row.appendChild(el('label',null,fd.label));
+      const inp=el('input'); inp.type='text'; inp.placeholder=fd.ph||'';
+      inp.value=a.felder[fd.k]||''; inp.disabled=!offen;
+      if(!offen){
+        const good=pruefFeld((q.pruef||{})[fd.k]||'text',a.felder[fd.k],(q.loesung||{})[fd.k]);
+        inp.style.borderColor=good?'var(--good)':'var(--bad)';
+        inp.style.background=good?'var(--good-w)':'var(--bad-w)';
+      }
+      inp.oninput=e=>a.felder[fd.k]=e.target.value;
+      row.appendChild(inp);
+      if(!offen) row.appendChild(el('span','tag g','richtig: '+(q.loesung||{})[fd.k]));
+      card.appendChild(row)});
+  }
+  else if(q.typ==='order'||q.typ==='match'){
+    if(q.zuordnung){
+      const zl=el('div','zuord');
+      q.zuordnung.forEach((z,i)=>{const r=el('div','zrow');
+        r.appendChild(el('span','zn',String(i+1)));
+        r.appendChild(el('span',null,z)); zl.appendChild(r)});
+      card.appendChild(zl);
+    }
+    q.items.forEach((it,i)=>{
+      const row=el('div','ordrow');
+      const inp=el('input'); inp.type='text'; inp.value=a.ord[i]||''; inp.disabled=!offen;
+      inp.oninput=e=>a.ord[i]=e.target.value;
+      row.appendChild(inp); row.appendChild(el('span',null,it));
+      if(!offen){
+        const good=parseInt(a.ord[i],10)===q.richtig[i];
+        row.classList.add(good?'ok':'no');
+        row.appendChild(el('span','tag g','richtig: '+q.richtig[i]));
+      }
+      card.appendChild(row)});
+  }
+  else if(q.typ==='gap'){
+    const wrap=el('div','gaptext');
+    const teile=q.text.split(/\[(\d+)\]/);
+    teile.forEach((t,k)=>{
+      if(k%2===0){ if(t) wrap.appendChild(document.createTextNode(t)); return }
+      const gi=+t, g=q.luecken[gi];
+      const sel=el('select'); sel.disabled=!offen;
+      sel.appendChild(el('option',null,'— wählen —'));
+      g.o.forEach((opt,oi)=>{const op=el('option',null,opt); op.value=oi;
+        if(String(a.gap&&a.gap[gi])===String(oi)) op.selected=true; sel.appendChild(op)});
+      sel.onchange=e=>{a.gap=a.gap||{}; a.gap[gi]=e.target.value};
+      if(!offen){
+        const good=String((a.gap||{})[gi])===String(g.a);
+        sel.classList.add(good?'gok':'gno');
+        if(!good){ wrap.appendChild(sel);
+          wrap.appendChild(el('span','tag g',' richtig: '+g.o[g.a])); return }
+      }
+      wrap.appendChild(sel);
+    });
+    card.appendChild(wrap);
+  }
+  else if(q.typ==='begriff'){
+    const k=el('div','bkarte');
+    k.innerHTML = q.rueck
+      ? `<span class="ri">Welcher Begriff ist gemeint?</span>${q.de}`
+      : `<span class="ri">Was bedeutet …</span>${q.begriff}`;
+    card.appendChild(k);
+    const ta=el('textarea'); ta.rows=3;
+    ta.placeholder = q.rueck ? 'Den Begriff eintippen — oder im Kopf sagen und auflösen.'
+                             : 'In einem Satz erklären — oder im Kopf sagen und auflösen.';
+    ta.value=a.txt||''; ta.disabled=!offen;
+    ta.oninput=e=>a.txt=e.target.value;
+    card.appendChild(ta);
+  }
+  else{ /* text */
+    const ta=el('textarea'); ta.rows=q.zeilen||5;
+    ta.placeholder='In drei bis fünf Zeilen antworten — so, wie du es in die Klausur schreiben würdest.';
+    ta.value=a.txt||''; ta.disabled=!offen;
+    ta.oninput=e=>a.txt=e.target.value;
+    card.appendChild(ta);
+  }
+
+  /* Aktionsleiste sitzt IN der Karte: solange offen direkt unter den Antworten,
+     nach dem Aufloesen direkt hinter dem Urteil. Nie am Seitenende. */
+  if(offen && NAVEL) card.appendChild(NAVEL);
+
+  /* --- Auflösung --- */
+  if(!offen){
+    const res=el('div','res'), st=S.res[S.i];
+    const v=el('div','verd '+(st==='ok'?'ok':st==='part'?'nt':st==='text'?'nt':'no'));
+    v.textContent = st==='ok'?'Richtig':st==='part'?'Teilweise richtig'
+                  : st==='text'?'Vergleiche mit der Musterantwort':'Nicht richtig';
+    res.appendChild(v);
+    if(NAVEL) res.appendChild(NAVEL);
+
+    if(q.typ==='text'&&q.muster){
+      const m=el('div','box mu'); m.innerHTML='<h4>Musterantwort</h4>'+q.muster; res.appendChild(m);
+    }
+    if(q.erklaerung){
+      const e=el('div','box ex'); e.innerHTML='<h4>'+(q.typ==='text'?'Worauf es ankommt':'Erklärung')+'</h4>'+q.erklaerung;
+      links.appendChild(e);
+    }
+    if(q.warum){
+      const w=el('div','box wy'); w.innerHTML='<h4>Warum die anderen falsch sind</h4>'+q.warum; links.appendChild(w);
+    }
+    if(q.variiert){
+      const w=el('div','box va'); w.innerHTML='<h4>Was sich in anderen Fällen ändert</h4>'+q.variiert;
+      rechts.appendChild(w);
+    }
+
+    if(q.typ==='text'||q.typ==='begriff'){
+      const sr=el('div','selfrow'); sr.appendChild(el('span','lb','Wie war deine Antwort?'));
+      [['ok','Hatte ich'],['part','Teilweise'],['no','Nicht gewusst']].forEach(([k,t])=>{
+        const b=el('button','btn'+(ST.self[q.id]===k?' p':''),t);
+        b.onclick=()=>{ST.self[q.id]=k; ST.status[q.id]=k; save(); zeige()};
+        sr.appendChild(b)});
+      res.appendChild(sr);
+    }
+    if(q.typ==='begriff'){
+      const lo=el('div','muster');
+      lo.innerHTML = (q.rueck?`<b>${q.begriff}</b><br>`:'')+q.de;
+      res.insertBefore(lo,res.firstChild);
+    }
+    if(q.en){ const e=el('div','en'); e.innerHTML=q.en;
+      if(ENAN||q.typ==='begriff') res.appendChild(e); }
+    if(q.fam){ const f=el('div','fam'); f.innerHTML=q.fam; res.appendChild(f); }
+    const wieder=el('div','wieder');
+    const b1=el('button','btn','↺ Nochmal antworten');
+    b1.onclick=()=>nochmal(false); wieder.appendChild(b1);
+    if(q.istGen||q.gen){
+      const b2=el('button','btn', q.istGen?'↻ Nochmal mit neuen Zahlen':'↻ Mit neuen Zahlen üben');
+      b2.onclick=()=>nochmal(true); wieder.appendChild(b2);
+    }
+    res.appendChild(wieder);
+    const src=el('div','src');
+    src.innerHTML=(q.quelle?`Quelle: <code>${q.quelle}</code> · `:'')+
+      (q.anker?`<a href="KAF.html#${q.anker}" target="_blank">↗ im Lerndokument nachlesen</a>`:'');
+    if(q.quelle||q.anker) res.appendChild(src);
+    card.appendChild(res);
+  }
+  lay.appendChild(card); lay.appendChild(links); lay.appendChild(rechts);
+  lay.classList.toggle('leer', !links.children.length && !rechts.children.length);
+  r.appendChild(lay);
+
+  $('#prev').disabled=S.i===0;
+  $('#stuck').classList.toggle('hide',!offen);
+  $('#act').textContent = offen ? 'Auflösen'
+    : (S.i+1<S.fragen.length ? 'Weiter' : 'Auswerten');
+  $('#khint').classList.toggle('hide',!(offen&&(q.typ==='single'||q.typ==='multi')));
+  if(!offen) window.scrollTo({top:card.offsetTop-70,behavior:'smooth'});
+}
+
+function festhaengen(){
+  const q=S.cur[S.i];
+  S.res[S.i]='hint'; S.hint=S.hint||{}; S.hint[S.i]=true;
+  ST.stuck[q.id]=(ST.stuck[q.id]||0)+1; save();
+  zeige();
+}
+function aufloesen(){
+  const q=S.cur[S.i], a=S.ans[S.i];
+  const st=pruefen(q,a); S.res[S.i]=st;
+  S.vers=S.vers||{}; S.vers[S.i]=(S.vers[S.i]||0)+1;
+  /* Tageszaehler fuer den Kopf der Startseite. */
+  ST.tage=ST.tage||{}; const hk=heuteKey(); ST.tage[hk]=(ST.tage[hk]||0)+1;
+  if(q.typ!=='text'&&q.typ!=='begriff'){ ST.status[q.id]= st==='ok'?'ok':st; save(); }
+  zeige();
+}
+/* Aufgabe wieder oeffnen — gleiche Aufgabe, gleiche Zahlen, Antwort geloescht */
+function nochmal(neueZahlen){
+  const q=S.cur[S.i];
+  if(neueZahlen) S.cur[S.i]=build(Object.assign({},q,{typ:'gen'}));
+  S.ans[S.i]=null; delete S.res[S.i];
+  zeige(); window.scrollTo({top:0,behavior:'smooth'});
+}
+function weiter(){
+  if(S.i+1<S.fragen.length){S.i++; zeige(); window.scrollTo({top:0})}
+  else ende();
+}
+function ende(){
+  $('#run').classList.add('hide'); $('#nav').classList.add('hide');
+  $('#end').classList.remove('hide'); $('#prog').style.width='100%';
+  const e=$('#end'); e.innerHTML='';
+  let ok=0,part=0,no=0,txt=0;
+  S.fragen.forEach((q,i)=>{const r=S.res[i];
+    if(r==='ok')ok++; else if(r==='part')part++; else if(r==='text')txt++; else if(r)no++});
+  e.appendChild(el('h2',null,'Durchgang beendet — '+S.titel));
+  const st=el('div','stats');
+  st.innerHTML=`<div class="stat"><div class="n">${ok}</div><div class="l">richtig</div></div>
+    <div class="stat"><div class="n">${part}</div><div class="l">teilweise</div></div>
+    <div class="stat"><div class="n">${no}</div><div class="l">falsch</div></div>
+    <div class="stat"><div class="n">${txt}</div><div class="l">Freitext</div></div>`;
+  e.appendChild(st);
+
+  const schwach=S.fragen.map((q,i)=>({q,i,r:S.res[i]})).filter(x=>x.r&&x.r!=='ok');
+  if(schwach.length){
+    e.appendChild(el('h2',null,'Das nochmal'));
+    e.appendChild(el('p','sub','Klicken springt direkt zur Aufgabe.'));
+    const l=el('div','list');
+    schwach.forEach(x=>{const b=el('button','li');
+      const txt=(x.q.frage||x.q.begriff||x.q.de||'').replace(/<[^>]+>/g,' ').slice(0,150);
+      b.innerHTML=`<span class="ix">${x.i+1}</span><span>${(x.q.titel?'<b>'+x.q.titel+'</b> — ':'')+txt}</span>`;
+      b.onclick=()=>{S.i=x.i; runde()}; l.appendChild(b)});
+    e.appendChild(l);
+    const again=el('button','btn p','Nur diese ' + schwach.length + ' nochmal');
+    again.style.margin='16px 10px 0 0';
+    again.onclick=()=>{S={titel:S.titel+' (Nachlese)',fragen:schwach.map(x=>x.q),i:0,ans:{},res:{},cur:{}};runde()};
+    e.appendChild(again);
+  }
+  const zurueck=el('button','btn','← Aufgaben nochmal durchblättern');
+  zurueck.style.margin='16px 10px 0 0';
+  zurueck.onclick=()=>{S.i=0; runde()}; e.appendChild(zurueck);
+  const back=el('button','btn','Zur Übersicht'); back.style.marginTop='16px';
+  back.onclick=home; e.appendChild(back);
+  window.scrollTo({top:0});
+}
+
+/* ══════════ Steuerung ══════════ */
+$('#act').onclick=()=>{ S.res[S.i] ? weiter() : aufloesen() };
+$('#prev').onclick=()=>{ if(S.i>0){S.i--; zeige(); window.scrollTo({top:0})} };
+$('#quit').onclick=()=>home();
+
+/* ── Spickzettel ── */
+function spickBauen(filter){
+  const b=$('#spickbody'); b.innerHTML='';
+  const f=(filter||'').trim().toLowerCase();
+  let treffer=0;
+  (DATA.spick||[]).forEach(sec=>{
+    const roh=sec.html.replace(/<[^>]+>/g,' ').toLowerCase();
+    if(f && !roh.includes(f) && !sec.titel.toLowerCase().includes(f)) return;
+    treffer++;
+    b.appendChild(el('h3',null,sec.titel));
+    const d=el('div',null,sec.html);
+    if(f){
+      const re=new RegExp('('+f.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+      d.innerHTML=d.innerHTML.replace(/>([^<]+)</g,(m,t)=>'>'+t.replace(re,'<mark>$1</mark>')+'<');
+    }
+    b.appendChild(d);
+  });
+  if(!treffer) b.appendChild(el('p','none','Nichts gefunden. Versuch ein kürzeres Wort — „mahl" statt „Mahlgrad".'));
+}
+function spickAuf(){ $('#spickwrap').classList.remove('hide'); spickBauen($('#spicksuche').value); $('#spicksuche').focus() }
+function spickZu(){ $('#spickwrap').classList.add('hide') }
+document.querySelector('#railtog').onclick=railUm;
+document.querySelector('#railbg').onclick=()=>document.body.classList.remove('railauf');
+try{ if(localStorage.getItem(KEY+'-railzu')==='1') document.body.classList.add('railzu') }catch(e){}
+$('#spickbtn').onclick=spickAuf;
+$('#spickzu').onclick=spickZu;
+$('#spickbg').onclick=spickZu;
+$('#spicksuche').oninput=e=>spickBauen(e.target.value);
+
+/* ── EN-Schalter ── */
+function enSetzen(){ $('#enbtn').classList.toggle('on',ENAN);
+  try{localStorage.setItem(KEY+'-en',ENAN?'1':'0')}catch(e){}
+  if(S) zeige(); }
+$('#enbtn').onclick=()=>{ ENAN=!ENAN; enSetzen() };
+enSetzen();
+
+/* ── Lernmodus ── */
+$('#lernbtn').onclick=()=>{ LERN=!LERN; $('#lernbtn').classList.toggle('on',LERN); if(S) zeige() };
+$('#stuck').onclick=()=>festhaengen();
+document.addEventListener('keydown',ev=>{
+  if(ev.key==='Escape'&&!$('#spickwrap').classList.contains('hide')){spickZu();return}
+  if(!S||$('#run').classList.contains('hide')) return;
+  const t=ev.target.tagName;
+  if(t==='INPUT'||t==='TEXTAREA'){ if(ev.key==='Enter'&&ev.ctrlKey){ev.preventDefault();$('#act').click()} return }
+  if(ev.key==='Enter'){ev.preventDefault();$('#act').click();return}
+  if(/^[1-9]$/.test(ev.key)){
+    const q=S.cur[S.i]; if(S.res[S.i]||!q||!(q.typ==='single'||q.typ==='multi'))return;
+    const i=+ev.key-1; if(i>=q.optionen.length)return;
+    const a=S.ans[S.i];
+    if(q.typ==='single') a.sel=[i]; else a.sel=a.sel.includes(i)?a.sel.filter(x=>x!==i):a.sel.concat(i);
+    zeige();
+  }
+});
+home();
+</script><!-- ══ Darstellung: Auto / Hell / Dunkel ══ -->
+<script>
+/* Umschalter fuer die Darstellung. Setzt html[data-t] und biegt die
+   Dark-Media-Regeln um. Laeuft nicht in klausuren.html — die Datei bringt
+   ihren eigenen Schalter mit und traegt data-t schon im html-Tag. */
+(function(){
+  if(window.__klTheme) return;
+  if(document.documentElement.hasAttribute("data-t")) return;
+  window.__klTheme = 1;
+
+  var KEY = "kl-theme", stand = "auto";
+  try{ var v = localStorage.getItem(KEY); if(v === "dark" || v === "light") stand = v; }catch(e){}
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  var regeln = null, orig = [];
+
+  function sammeln(){
+    regeln = []; orig = [];
+    for(var i = 0; i < document.styleSheets.length; i++){
+      var rs;
+      try{ rs = document.styleSheets[i].cssRules; }catch(e){ continue }
+      if(!rs) continue;
+      for(var j = 0; j < rs.length; j++){
+        var r = rs[j];
+        if(!r || !r.media) continue;
+        var t = r.media.mediaText || "";
+        if(/prefers-color-scheme/i.test(t) && /dark/i.test(t)){ regeln.push(r); orig.push(t); }
+      }
+    }
+  }
+
+  function anwenden(){
+    if(regeln === null) sammeln();
+    var wirkt = stand === "auto" ? (mq.matches ? "dark" : "light") : stand;
+    document.documentElement.setAttribute("data-t", wirkt);
+    for(var i = 0; i < regeln.length; i++){
+      try{
+        regeln[i].media.mediaText =
+          stand === "dark" ? "all" : stand === "light" ? "not all" : orig[i];
+      }catch(e){}
+    }
+    var b = document.querySelector("#klTheme");
+    if(b){
+      b.textContent = stand === "auto" ? "Auto" : stand === "light" ? "Hell" : "Dunkel";
+      b.title = "Darstellung: " + b.textContent + " (klicken wechselt Auto, Hell, Dunkel)";
+    }
+  }
+
+  function weiter(){
+    stand = stand === "auto" ? "light" : stand === "light" ? "dark" : "auto";
+    try{ stand === "auto" ? localStorage.removeItem(KEY) : localStorage.setItem(KEY, stand); }catch(e){}
+    anwenden();
+  }
+
+  function knopf(){
+    var b = document.createElement("button");
+    b.id = "klTheme"; b.type = "button";
+    var kopf = document.querySelector("header .hd");
+    if(kopf){
+      /* Trainer-App: in die Kopfzeile, im Stil der übrigen Knöpfe */
+      b.className = "btn sm";
+      var vor = kopf.querySelector("#enbtn") || kopf.querySelector("#quit");
+      vor ? kopf.insertBefore(b, vor) : kopf.appendChild(b);
+    } else {
+      /* Lerndokumente und Übersicht: klein oben rechts, druckt nicht mit */
+      b.setAttribute("style",
+        "position:fixed;top:10px;right:14px;z-index:9999;" +
+        "font:600 11.5px/1 system-ui,sans-serif;letter-spacing:.03em;" +
+        "padding:6px 11px;border-radius:999px;cursor:pointer;" +
+        "border:1px solid rgba(128,128,128,.45);background:rgba(128,128,128,.14);" +
+        "color:inherit;opacity:.5;transition:opacity .15s");
+      b.onmouseenter = function(){ b.style.opacity = "1" };
+      b.onmouseleave = function(){ b.style.opacity = ".5" };
+      var s = document.createElement("style");
+      s.textContent = "@media print{#klTheme{display:none}}";
+      (document.head || document.documentElement).appendChild(s);
+      (document.body || document.documentElement).appendChild(b);
+    }
+    b.onclick = weiter;
+    anwenden();
+  }
+
+  anwenden();
+  if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", knopf);
+  else knopf();
+  if(mq.addEventListener) mq.addEventListener("change", function(){ if(stand === "auto") anwenden() });
+})();
+</script>
+<!-- ══ Ende Darstellung ══ -->
+</body></html>

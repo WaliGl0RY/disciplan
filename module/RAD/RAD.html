@@ -1,0 +1,63 @@
+<!doctype html><html lang="de"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RAD — Fahrrad-Werkstatt (Demo-Lerndokument)</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f5f7;color:#1d2530;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.rd-wrap{max-width:880px;margin:0 auto;padding:30px 28px 80px}
+h1{font-size:27px;margin:0 0 4px}
+.rd-lead{color:#5a6675;margin:0 0 18px}
+.rd-demo{background:#e4eefb;color:#1d3e66;border:1px solid #c3d6ef;border-radius:8px;padding:9px 13px;font-size:13.5px}
+.rd-nav{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
+.rd-nav a{background:#fff;border:1px solid #d7dee6;border-radius:999px;padding:3px 11px;color:#1d3e66;text-decoration:none;font-size:13.5px}
+h2.rd-h{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid #d7dee6}
+.rd-box{background:#fff;border:1px solid #d7dee6;border-radius:10px;padding:13px 17px;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border:1px solid #d7dee6;padding:6px 9px;text-align:left}
+th{background:#eaf0f6}
+details{background:#fafcfe;border:1px solid #d7dee6;border-radius:8px;padding:8px 12px;margin:10px 0}
+summary{cursor:pointer;font-weight:600;color:#1d4f8a}
+code{background:#eaf0f6;color:#1d2530;border-radius:4px;padding:1px 5px;font:13px ui-monospace,Consolas,monospace}
+@media (prefers-color-scheme: dark){
+ body{background:#161b21;color:#e2e8ef}
+ .rd-lead{color:#9aa7b6}
+ .rd-demo{background:#1d2f47;color:#cfe0f6;border-color:#2c4666}
+ .rd-nav a{background:#1f2630;color:#cfe0f6;border-color:#2e3845}
+ h2.rd-h{border-color:#2e3845}
+ .rd-box{background:#1f2630;color:#e2e8ef;border-color:#2e3845}
+ th{background:#253040;color:#e2e8ef}
+ th,td{border-color:#2e3845}
+ details{background:#1b222b;color:#e2e8ef;border-color:#2e3845}
+ summary{color:#8dbbf0}
+ code{background:#253040;color:#cfe0f6}
+}
+</style>
+<div class="rd-wrap">
+<h1>Fahrrad-Werkstatt</h1>
+<p class="rd-lead">Demo-Lerndokument (kurz) · Modul RAD</p>
+<div class="rd-demo"><b>Demo-Inhalt.</b> Erfundenes Modul. Die Übungen laufen vor allem im <a href="RAD-Trainer.html">RAD-Trainer</a>
+(Vorlesungen mit Skript, Summary-Fragen, Werkstatt-Simulation).</div>
+<div class="rd-nav"><a href="#orient">Orientierung</a><a href="#antrieb">Antrieb</a><a href="#bremsen">Bremsen</a><a href="#reifen">Reifen</a><a href="#praxis">Praxis</a><a href="#trainer">Trainer</a></div>
+
+<h2 class="rd-h" id="orient">1 · Orientierung</h2>
+<div class="rd-box"><b>Die eine große Idee:</b> Ein Fahrrad ist eine Kette von Übertragungen — Kraft vom Bein zum Rad,
+Reibung von der Bremse zum Boden. Jeder Fehler sitzt an genau einer Stelle dieser Kette.</div>
+
+<h2 class="rd-h" id="antrieb">2 · Antrieb und Schaltung</h2>
+<div class="rd-box"><p>Übersetzung = Zähne vorne / Zähne hinten. Größeres Ritzel hinten → leichter.</p>
+<details><summary>Selbsttest: Vorne 36, hinten 12 — Übersetzung?</summary><code>36 / 12 = 3</code></details></div>
+
+<h2 class="rd-h" id="bremsen">3 · Bremsen</h2>
+<table><tr><th>Bauart</th><th>Reibung an</th><th>bei Nässe</th></tr>
+<tr><td>Felgenbremse</td><td>Felge</td><td>deutlich schwächer</td></tr>
+<tr><td>Scheibenbremse</td><td>Scheibe an der Nabe</td><td>kaum schwächer</td></tr></table>
+
+<h2 class="rd-h" id="reifen">4 · Reifen</h2>
+<div class="rd-box">Der erlaubte Druck steht auf der Reifenflanke. Zu wenig Druck → Durchschlag („Snakebite").</div>
+
+<h2 class="rd-h" id="praxis">5 · Praxis und Taktik</h2>
+<div class="rd-box">In der Werkstatt-Simulation: <b>immer nur eine Stellschraube</b> drehen, dann testen. Checkliste abhaken, erst dann die Musterlösung öffnen.</div>
+
+<h2 class="rd-h" id="trainer">6 · Trainer</h2>
+<p>Zum Üben: <a href="RAD-Trainer.html">RAD-Trainer öffnen</a>.</p>
+</div>
+</html>

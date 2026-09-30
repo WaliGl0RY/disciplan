@@ -1,0 +1,14 @@
+[
+{"lec": 1, "fragen": [
+  {"id": "s1-1", "frage": "Übersetzung = …", "optionen": ["Zähne vorne / Zähne hinten", "Zähne hinten / Zähne vorne", "Zähne vorne · Zähne hinten", "Raddurchmesser / Zähne"], "richtig": [0],
+   "quelle": "Zusammenfassung 1", "erklaerung": "Vorne geteilt durch hinten.", "erklaerung_en": "Front divided by rear.",
+   "optnotiz": ["Richtig.", "Umgedreht.", "Nicht multiplizieren.", "Der Durchmesser spielt hier keine Rolle."], "optnotiz_en": ["Correct.", "Reversed.", "Do not multiply.", "Diameter does not matter here."], "varianten": []}]},
+{"lec": 2, "fragen": [
+  {"id": "s2-1", "frage": "Wo entsteht die Reibung bei der Scheibenbremse?", "optionen": ["An der Scheibe an der Nabe", "An der Felge", "Am Reifen", "An der Kette"], "richtig": [0],
+   "quelle": "Zusammenfassung 2", "erklaerung": "An der Scheibe.", "erklaerung_en": "At the disc.",
+   "optnotiz": ["Richtig.", "Das ist die Felgenbremse.", "Nein.", "Nein."], "optnotiz_en": ["Correct.", "That is the rim brake.", "No.", "No."], "varianten": []}]},
+{"lec": 3, "fragen": [
+  {"id": "s3-1", "frage": "Häufigste Ursache für einen Snakebite?", "optionen": ["Zu wenig Reifendruck", "Zu viel Reifendruck", "Nasse Straße", "Alte Kette"], "richtig": [0],
+   "quelle": "Zusammenfassung 3", "erklaerung": "Zu wenig Druck lässt den Reifen bis auf die Felge durchschlagen.", "erklaerung_en": "Low pressure lets the tyre bottom out on the rim.",
+   "optnotiz": ["Richtig.", "Eher das Gegenteil.", "Nein.", "Nein."], "optnotiz_en": ["Correct.", "Rather the opposite.", "No.", "No."], "varianten": []}]}
+]

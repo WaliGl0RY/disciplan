@@ -1,0 +1,1570 @@
+<!doctype html><html lang="de" data-t="light"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>disciplan — Demo</title>
+<style>
+
+/* ---- Der laufende Plan (Ansicht ab 28.08.) ---- */
+.lauf{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--acc);
+ border-radius:10px;padding:16px 18px 18px;margin:0 0 20px}
+.lauf .lh{display:flex;align-items:flex-start;gap:14px;margin-bottom:11px}
+.lauf .lh h3{margin:0 0 2px;font:700 17px sans-serif;letter-spacing:-.01em}
+.lauf .ls{font-size:12.5px;color:var(--mut)}
+.lauf .sp{flex:1}
+.lauf .lring{font:700 22px sans-serif;color:var(--acc);white-space:nowrap;line-height:1.15;text-align:right}
+.lauf .lring small{display:block;font:500 11px sans-serif;color:var(--mut);letter-spacing:.03em}
+.lprog{height:5px;background:var(--soft);border-radius:3px;overflow:hidden;margin-bottom:15px}
+.lprog i{display:block;height:100%;background:var(--acc);border-radius:3px;transition:width .25s}
+.lhd{font:600 10.5px/1 sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);
+ margin:0 0 8px}
+.ltoday{border:1px solid var(--line);border-radius:9px;padding:12px 13px;background:var(--soft);margin-bottom:16px}
+.ltoday .th{display:flex;align-items:baseline;gap:9px;margin-bottom:9px}
+.ltoday .th b{font:700 15px sans-serif}
+.ltoday .th span{font-size:12px;color:var(--mut)}
+.lt{display:flex;align-items:flex-start;gap:9px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.lt:first-of-type{border-top:0}
+.lt input{margin:4px 0 0;width:16px;height:16px;flex:0 0 auto;accent-color:var(--acc);cursor:pointer}
+.lt .mk4{font:700 10.5px sans-serif;background:var(--card);border:1px solid var(--line);
+ border-radius:4px;padding:2px 5px;flex:0 0 auto;margin-top:2px}
+.lt .m4{font-size:11px;color:var(--mut);flex:0 0 auto;margin-top:3px}
+.lt label{flex:1;cursor:pointer;line-height:1.5}
+.lt .ltx{flex:1;cursor:pointer;line-height:1.45;min-width:0}
+.lt .ltx b{font-weight:650}
+.lt .ltx:hover b{text-decoration:underline;text-underline-offset:2px}
+.lt .lsub{display:block;font-size:11.5px;color:var(--mut);margin-top:2px}
+.lt .chev{flex:0 0 auto;border:0;background:none;color:var(--mut);cursor:pointer;font-size:15px;padding:0 2px}
+.lt .chev:hover{color:var(--acc)}
+#pov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:120;overflow:auto;padding:5vh 14px 40px}
+#pov.on{display:block}
+#pbox{max-width:640px;margin:0 auto;background:var(--card);border:1px solid var(--line);
+ border-radius:13px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+.ph{padding:16px 20px 14px;border-bottom:1px solid var(--line);background:var(--soft)}
+.ph .pmeta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.ph h3{margin:0;font:700 19px sans-serif;letter-spacing:-.01em;line-height:1.28}
+.ph .pcl{margin-left:auto;border:0;background:none;font-size:21px;color:var(--mut);cursor:pointer;line-height:1}
+.pmk{font:700 10.5px sans-serif;background:var(--card);border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+.pty{font-size:11.5px;color:var(--mut)}
+.pb{padding:6px 20px 18px}
+.plab{font:600 10.5px/1 sans-serif;letter-spacing:.13em;text-transform:uppercase;color:var(--mut);margin:16px 0 9px}
+.stp{display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
+.stp:first-of-type{border-top:0}
+.stp input{margin:3px 0 0;width:17px;height:17px;flex:0 0 auto;accent-color:var(--acc);cursor:pointer}
+.stp .sn{flex:0 0 auto;width:21px;height:21px;border-radius:50%;background:var(--soft);border:1px solid var(--line);
+ font:700 11px/20px sans-serif;text-align:center;color:var(--mut)}
+.stp.sdone .sn{background:var(--acc);border-color:var(--acc);color:#fff}
+.stp .sc{flex:1;min-width:0}
+.stp.sdone .st1{opacity:.45;text-decoration:line-through}
+.st1{font:600 14.5px sans-serif;line-height:1.4}
+.st2{font-size:12.5px;color:var(--mut);margin-top:3px;line-height:1.5}
+.sgo{margin-top:7px;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sgo button{font:600 12.5px sans-serif;border:1px solid var(--line);background:var(--card);color:var(--fg);
+ border-radius:6px;padding:3px 10px;cursor:pointer}
+.sgo button:hover{background:var(--acc);border-color:var(--acc);color:#fff}
+.sgo .qlab{font-size:12px;color:var(--mut);margin-right:1px}
+.sgo button.qb{padding:3px 8px;min-width:30px}
+.pmk2{margin:8px 0 4px;padding:0;list-style:none}
+.pmk2 li{position:relative;margin:7px 0;padding:9px 13px 9px 34px;font-size:13.6px;line-height:1.6;
+ background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--acc);
+ border-radius:0 9px 9px 0;color:var(--fg)}
+.pmk2 li:before{content:"\2691";position:absolute;left:12px;top:9px;color:var(--acc);font-size:13px}
+.pprog{margin-top:14px;padding:9px 12px;border-radius:8px;background:var(--soft);border:1px solid var(--line);
+ font-size:12.5px;color:var(--mut)}
+.pprog b{color:var(--fg)}
+.pprog.ok{background:#1b7a4b14;border-color:#1b7a4b66;color:#1b7a4b}
+.pprog.ok b{color:#1b7a4b}
+.ptxt{font-size:13.5px;line-height:1.62;color:var(--mut);margin-top:9px}
+.ptxt b{color:var(--fg)}
+.lt.done label{opacity:.4;text-decoration:line-through}
+.lt.kur{opacity:.72}
+.lt.kur .mk4{border-style:dashed}
+.feier{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:13px 0 4px;padding:8px 11px;
+ border-radius:7px;background:var(--soft);border:1px dashed var(--line);font-size:12.5px;color:var(--mut)}
+.feier b{color:var(--fg);font-weight:700}
+.feier.ok{background:#1b7a4b14;border-color:#1b7a4b66;color:#1b7a4b}
+.feier.ok b{color:#1b7a4b}
+.lt .jp2{flex:0 0 auto;border:0;background:none;color:var(--acc);cursor:pointer;font-size:15px;padding:0 2px}
+.lnx{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);
+ border-radius:7px;margin-bottom:6px;cursor:pointer;background:var(--card);font-size:13.5px}
+.lnx:hover{border-color:var(--acc)}
+.lnx.kl{border-left:3px solid #c2703f}
+.lnx .d1{font:700 13px sans-serif;min-width:62px}
+.lnx .c1{font-size:11.5px;color:var(--mut);min-width:74px}
+.lnx .m1{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.lnx .m1 span{font:600 10px sans-serif;background:var(--soft);border-radius:4px;padding:2px 5px}
+.lnx .a1{color:var(--acc);font-size:14px}
+.lnx .kb{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.lnx.gestern{opacity:.72;border-style:dashed}
+.lmore{width:100%;margin-top:4px;padding:7px;border:1px dashed var(--line);border-radius:7px;
+ background:none;color:var(--mut);font:600 12px sans-serif;cursor:pointer;font-family:inherit}
+.lmore:hover{border-color:var(--acc);color:var(--acc)}
+.lcal{margin:0 0 16px;border-radius:12px}
+.lfil{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 15px}
+.lchip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border:1px solid var(--line);
+ border-radius:20px;background:var(--card);font:600 12.5px sans-serif;color:var(--fg);cursor:pointer;
+ font-family:inherit}
+.lchip:hover{border-color:var(--acc);color:var(--acc)}
+.lchip.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.lchip i{font-style:normal;font-size:11px;opacity:.7}
+.lchip.on i{opacity:.85}
+.lchip.fertig{opacity:.45}
+.ldh{display:flex;align-items:baseline;gap:9px;margin:15px 0 4px;padding-top:11px;border-top:1px solid var(--line)}
+.ldh:first-child{border-top:0;padding-top:0;margin-top:0}
+.ldh b{font:700 13.5px sans-serif}
+.ldh span{font-size:11.5px;color:var(--mut)}
+.ldh .kl{font:700 9.5px sans-serif;background:#c2703f;color:#fff;border-radius:3px;padding:2px 5px;letter-spacing:.04em}
+.ldh a{margin-left:auto;font-size:11.5px;color:var(--acc);text-decoration:none}
+.lauf .fin{font-size:12.5px;color:var(--mut);margin-top:10px;line-height:1.6}
+*{box-sizing:border-box}
+:root{--bg:#f4f4f1;--fg:#1b1b19;--mut:#6d6d66;--line:#e3e3dc;--card:#fff;--acc:#b0522c;--soft:#efeee8}
+html[data-t=dark]{--bg:#16161a;--fg:#e9e8e3;--mut:#9a9a92;--line:#2c2c33;--card:#1e1e24;--acc:#e08858;--soft:#25252c}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);
+ font:15.5px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+ transition:background .18s,color .18s}
+#app{display:flex;align-items:flex-start;min-height:100vh}
+#side{position:sticky;top:0;flex:0 0 218px;height:100vh;overflow-y:auto;
+ padding:16px 11px 30px 16px;border-right:1px solid var(--line);background:var(--card)}
+#side .brand{font:700 15px sans-serif;letter-spacing:-.01em;margin:2px 0 3px}
+#side .bsub{font-size:11.5px;color:var(--mut);margin-bottom:13px}
+#side h5{font:600 10px/1 sans-serif;letter-spacing:.14em;text-transform:uppercase;
+ color:var(--mut);margin:17px 0 6px;opacity:.8}
+.nl{display:flex;align-items:center;gap:7px;padding:6px 9px;margin:1px 0;border-radius:6px;
+ font-size:13.3px;color:var(--fg);text-decoration:none;cursor:pointer;border:0;background:none;
+ width:100%;text-align:left;font-family:inherit}
+.nl:hover{background:var(--soft)}
+.nl.on{background:var(--acc);color:#fff}
+.nl .kk{font:700 11px sans-serif;min-width:34px}
+.nl .dd{margin-left:auto;font-size:11px;opacity:.65}
+.nl.dis{opacity:.4;cursor:default}
+#side .tt{margin-top:20px;display:flex;gap:6px}
+.mini{flex:1;padding:6px;border:1px solid var(--line);border-radius:6px;background:var(--card);
+ color:var(--mut);cursor:pointer;font:600 11.5px sans-serif}
+.mini:hover{border-color:var(--acc);color:var(--acc)}
+#wrap{flex:1 1 auto;min-width:0}
+.view{display:none}.view.on{display:block}
+#hub{max-width:1120px;margin:0 auto;padding:26px 26px 80px}
+.mv{padding:0}
+.topbar{position:sticky;top:0;z-index:9;background:var(--card);border-bottom:1px solid var(--line);
+ padding:9px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar b{font-size:15px}
+.topbar .cd2{font:600 12.5px sans-serif;color:var(--acc)}
+.topbar .sp{flex:1}
+h1{font-size:28px;margin:0 0 2px;letter-spacing:-.024em}
+.sub{color:var(--mut);margin:0 0 6px;font-size:14.3px}
+h2{font-size:20px;margin:28px 0 4px}
+h3{font-size:16.5px;margin:20px 0 6px}
+.fine{font-size:13px;color:var(--mut)}
+a{color:var(--acc)}
+code{background:var(--soft);padding:1.5px 5px;border-radius:4px;font:12.6px ui-monospace,Menlo,Consolas,monospace}
+.cd{display:flex;gap:11px;flex-wrap:wrap;margin:14px 0 6px}
+.cdb{background:var(--fg);color:var(--bg);border-radius:10px;padding:10px 15px;min-width:126px}
+.cdb .n{font:700 24px sans-serif;line-height:1.1}
+.cdb .l{font-size:11.5px;opacity:.72;margin-top:2px}
+.cdb.warn{background:#a3441c;color:#fff}
+.tabs{display:flex;gap:5px;margin:20px 0 0;border-bottom:2px solid var(--fg);flex-wrap:wrap}
+.tab{padding:8px 15px;border-radius:8px 8px 0 0;border:0;font:600 14px sans-serif;
+ cursor:pointer;color:var(--mut);background:none}
+.tab:hover{background:var(--soft);color:var(--fg)}
+.tab.on{background:var(--fg);color:var(--bg)}
+/* .cdb und .tab.on sind im Hellen bewusst invertiert (dunkle Kachel auf hellem Grund).
+   Im Dunkeln waere die Umkehrung ein greller weisser Block — dort stattdessen eine
+   angehobene dunkle Flaeche, die dieselbe Rolle spielt, ohne zu blenden. */
+html[data-t=dark] .cdb:not(.warn){background:#2b2b33;color:var(--fg)}
+html[data-t=dark] .tabs{border-bottom-color:#3a3a44}
+html[data-t=dark] .tab.on{background:#2b2b33;color:var(--fg)}
+html[data-t=dark] .tab:hover{background:#23232a;color:var(--fg)}
+.pane{display:none;padding-top:20px}.pane.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 17px 15px;
+ display:flex;flex-direction:column;position:relative;overflow:hidden;transition:.14s}
+.card:hover{transform:translateY(-1px);box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.card .bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+.card h3{margin:0;font-size:18.5px}
+.card .mn{font-size:12.4px;color:var(--mut);margin:1px 0 8px}
+.row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:8px}
+.tg{font:600 11.2px sans-serif;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.tg.ok{background:#e7f3e1;color:#2c5220}.tg.todo{background:#fbe6dc;color:#8a3a18}
+.tg.pf{background:#e6edf5;color:#2c5580}.tg.wp{background:var(--soft);color:var(--mut)}
+.tg.v3{background:#a3441c;color:#fff}.tg.v2{background:#f5e3c8;color:#7a5410}
+.dt{font:600 13.8px sans-serif}
+.md{font-size:13.2px;color:var(--mut);margin:2px 0 10px;flex:1 1 auto}
+.btn{display:inline-block;padding:6px 13px;border-radius:7px;font:600 13px sans-serif;
+ text-decoration:none;border:1px solid var(--acc);color:var(--acc);background:none;cursor:pointer}
+.btn.pri{background:var(--acc);color:#fff}
+.btn:hover{opacity:.87}
+.key{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
+.warn{background:#fdf4e8;border:1px solid #ecd6b2;color:#4a3a1c;border-radius:9px;padding:11px 15px;margin:12px 0;font-size:14.3px}
+.crit{background:#fbeee8;border:1px solid #e7c4b2;color:#5a2a14;border-radius:9px;padding:12px 16px;margin:12px 0;font-size:14.6px}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.6px;background:var(--card);display:block;overflow-x:auto}
+/* Im hellen Modus haben Modulinhalte helle Kartenflaechen und dunkle Schrift; die
+   table-Regel darueber wuerde sie dunkel einfaerben -> unlesbar. Deshalb hier hell halten.
+   Im Dunkelmodus bringen die Moduldokumente ihre eigenen Farben mit (auf html[data-t=dark]
+   umgeschrieben), also darf diese Notbremse dort nicht greifen. */
+html:not([data-t=dark]) [id^="m-"] table{background:#fff;color:#1b1b19}
+html:not([data-t=dark]) [id^="m-"] th{background:#efeee8;color:#1b1b19}
+html:not([data-t=dark]) [id^="m-"] td{background:#fff;color:#1b1b19}
+html:not([data-t=dark]) [id^="m-"] code{color:#1b1b19}
+th{background:var(--soft);text-align:left;padding:7px 10px;border:1px solid var(--line);font-size:12.6px;white-space:nowrap}
+td{padding:7px 10px;border:1px solid var(--line);vertical-align:top}
+/* ── Wochenkalender ── */
+.cal{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px 18px;
+ margin:16px 0 26px;box-shadow:0 1px 3px rgba(0,0,0,.04);overflow:hidden}
+.calh{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.calh .kw{font:700 17px sans-serif;letter-spacing:-.01em}
+.calh .rg{font-size:13px;color:var(--mut)}
+.calh .sp{flex:1}
+.nav{display:flex;gap:5px;align-items:center}
+.nb{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);background:var(--card);
+ color:var(--fg);cursor:pointer;font:600 15px sans-serif;display:flex;align-items:center;
+ justify-content:center;transition:.14s}
+.nb:hover:not(:disabled){border-color:var(--acc);color:var(--acc);transform:translateY(-1px)}
+.nb:disabled{opacity:.3;cursor:default}
+.nb.tdy{width:auto;padding:0 13px;font-size:12.5px}
+.wgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.wgrid.slideL{animation:sl .26s cubic-bezier(.22,.9,.3,1)}
+.wgrid.slideR{animation:sr .26s cubic-bezier(.22,.9,.3,1)}
+@keyframes sl{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes sr{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+.dc{border:1px solid var(--line);border-radius:12px;padding:8px 8px 9px;min-height:132px;min-width:0;
+ display:flex;flex-direction:column;gap:5px;background:var(--bg);transition:.16s;position:relative;
+ overflow:hidden}
+.dc:hover{border-color:#c9c9be;transform:translateY(-2px);box-shadow:0 4px 14px rgba(0,0,0,.07)}
+.dc.void{opacity:.32;background:none;border-style:dashed;min-height:132px}
+.dc.past{opacity:.5}
+.dc.today{border-color:var(--acc);border-width:2px;padding:7px 7px 8px;
+ box-shadow:0 0 0 4px rgba(176,82,44,.11)}
+.dc.klausur{background:linear-gradient(160deg,#fbeee8,#f7e0d4);border-color:#e0a988}
+html[data-t=dark] .dc.klausur{background:linear-gradient(160deg,#33201a,#291a15);border-color:#6b4029}
+.dc.deadline{background:linear-gradient(160deg,#fdf6ea,#f9edd6);border-color:#e3cc9a}
+html[data-t=dark] .dc.deadline{background:linear-gradient(160deg,#2e2718,#262013);border-color:#5e5127}
+.dch{display:flex;align-items:baseline;gap:6px;padding:1px 3px 5px;border-bottom:1px solid var(--line);margin-bottom:2px}
+.dch .wd{font:700 10.5px sans-serif;letter-spacing:.09em;text-transform:uppercase;color:var(--mut)}
+.dch .dn{font:700 17px sans-serif;line-height:1;letter-spacing:-.02em}
+.dch .mo{font-size:10.5px;color:var(--mut)}
+.dch .dot{margin-left:auto;width:7px;height:7px;border-radius:50%;background:var(--line)}
+.dch .dot.part{background:linear-gradient(90deg,var(--acc) 50%,var(--line) 50%)}
+.dch .dot.full{background:#3d6b2e}
+.tk{display:flex;gap:5px;align-items:flex-start;padding:4px 5px;border-radius:7px;min-width:0;
+ background:var(--card);border:1px solid var(--line);cursor:pointer;transition:.13s}
+.tk code{font-size:10px;padding:0 3px;word-break:break-all}
+.tk:hover{border-color:var(--acc)}
+.tk input{margin:1px 0 0;width:13px;height:13px;accent-color:var(--acc);flex:0 0 auto;cursor:pointer}
+.tk .mk2{font:700 9.5px sans-serif;padding:1px 5px;border-radius:20px;background:var(--soft);
+ color:var(--mut);flex:0 0 auto;letter-spacing:.03em}
+.tk .tx{font-size:11.4px;line-height:1.34;flex:1;min-width:0;
+ display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.tk.done{opacity:.4}.tk.done .tx{text-decoration:line-through}
+.jp{flex:0 0 auto;border:0;background:none;color:var(--mut);cursor:pointer;padding:0 1px;
+ font:600 13px sans-serif;line-height:1;border-radius:5px;align-self:center;opacity:.55;transition:.13s}
+.jp:hover{color:var(--acc);opacity:1;transform:translateX(1px)}
+.obj .jp{font-size:15px;margin-top:1px}
+.tk .tx b{font-weight:700}
+.badge{position:absolute;top:0;right:0;font:700 8.5px sans-serif;letter-spacing:.07em;
+ text-transform:uppercase;padding:2px 7px 3px;border-radius:0 11px 0 10px;color:#fff;z-index:2}
+.badge.k{background:#a3441c}.badge.d{background:#b08a2c}
+/* einklappbare Tagesliste */
+.tglr{display:flex;align-items:center;gap:9px;margin:26px 0 0;cursor:pointer;
+ background:none;border:0;color:var(--fg);font:inherit;padding:0}
+.tglr h3{margin:0}
+.tglr .ar{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);
+ display:flex;align-items:center;justify-content:center;font-size:12px;transition:.18s;color:var(--mut)}
+.tglr:hover .ar{border-color:var(--acc);color:var(--acc)}
+.tglr.open .ar{transform:rotate(90deg)}
+.tglr .hint{font-size:12.5px;color:var(--mut)}
+#dayswrap{display:none;animation:fadeIn .22s ease}
+#arcwrap{display:none;animation:fadeIn .22s ease;margin-top:12px}
+#arcwrap.open{display:block}
+.expo{border-top:1px solid var(--line);margin-top:18px;padding-top:14px}
+.expo .exph{font-size:12.8px;color:var(--mut);margin:0 0 10px;max-width:70ch}
+.expo .exbtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.expo .hint{font-size:12px;color:var(--mut)}
+#expout{display:none;width:100%;min-height:230px;padding:11px 13px;border:1px solid var(--line);
+ border-radius:9px;background:var(--soft);color:var(--fg);resize:vertical;
+ font:12.4px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace}
+#expout.on{display:block}
+#dayswrap.open{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.calf{display:flex;gap:14px;align-items:center;margin-top:13px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+.lg{display:flex;align-items:center;gap:5px}
+.lg i{width:11px;height:11px;border-radius:3px;display:inline-block}
+@media(max-width:900px){.wgrid{grid-template-columns:repeat(7,minmax(122px,1fr));
+ overflow-x:auto;padding-bottom:6px}}
+
+/* Tageskarte kompakt */
+.dc{cursor:pointer}
+.dsum{display:flex;align-items:baseline;gap:6px;margin:2px 0 4px;flex-wrap:wrap}
+.dsum .cnt{font:700 15px sans-serif}
+.dsum .mins{font-size:11px;color:var(--mut)}
+.mods{display:flex;flex-wrap:wrap;gap:3px;margin-top:2px}
+.mods span{font:700 9.5px sans-serif;padding:2px 6px;border-radius:20px;background:var(--soft);color:var(--mut)}
+.mods span.on{background:var(--acc);color:#fff}
+.dbar{height:4px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:auto}
+.dbar i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+.more{font-size:10.5px;color:var(--mut);margin-top:3px;text-align:center;opacity:.75}
+/* Modal */
+#dov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;z-index:120;
+ overflow-y:auto;padding:5vh 16px 40px}
+#dov.on{display:block}
+#dbox{max-width:720px;margin:0 auto;background:var(--card);border-radius:14px;overflow:hidden;
+ box-shadow:0 20px 60px rgba(0,0,0,.32);animation:dpop .2s cubic-bezier(.22,.9,.3,1)}
+@keyframes dpop{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+#dhead{padding:16px 22px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+#dhead .r1{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap}
+#dhead h3{margin:0;font-size:21px;letter-spacing:-.015em}
+#dhead .wd2{font-size:13.5px;color:var(--mut)}
+#dhead .bud{margin-left:auto;font:600 13px sans-serif;color:var(--acc)}
+#dhead .x{background:none;border:0;font-size:22px;line-height:1;color:var(--mut);cursor:pointer;padding:0 4px}
+#dhead .x:hover{color:var(--acc)}
+#dhead .pr{height:5px;background:var(--soft);border-radius:3px;overflow:hidden;margin-top:10px}
+#dhead .pr i{display:block;height:100%;background:#3d6b2e;width:0;transition:.3s}
+#dbody{padding:8px 22px 20px}
+.tsk{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
+.tsk:last-child{border:0}
+.tsk input{margin-top:3px;width:18px;height:18px;accent-color:var(--acc);flex:0 0 auto;cursor:pointer}
+.tsk .meta{flex:0 0 auto;display:flex;flex-direction:column;gap:3px;align-items:flex-start;min-width:78px}
+.tsk .mk3{font:700 10px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);color:var(--mut)}
+.tsk .ty{font:700 9.5px sans-serif;padding:2px 6px;border-radius:4px;letter-spacing:.04em}
+.ty.L{background:#e6edf5;color:#2c5580}.ty.U{background:#eef4ea;color:#3d6b2e}
+.ty.D{background:#f5e9e0;color:#8a4a20}.ty.T{background:#fbe6dc;color:#8a3a18}
+.ty.W{background:#f0efe9;color:#6d6d66}.ty.O{background:#f5f0e0;color:#7a6410}
+.tsk .mn2{font:600 10.5px ui-monospace,monospace;color:var(--mut)}
+.tsk .tt{flex:1;font-size:14.4px;line-height:1.55}
+.tsk.done .tt{opacity:.42;text-decoration:line-through}
+.tsk .go{flex:0 0 auto;border:0;background:none;color:var(--mut);cursor:pointer;font-size:16px;
+ opacity:.5;align-self:center;padding:0 2px}
+.tsk .go:hover{color:var(--acc);opacity:1}
+.dlg{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);
+ padding:11px 0 0;margin-top:6px;border-top:1px solid var(--line)}
+
+/* Tagesplan */
+.wk{margin:22px 0 6px;font:700 12px sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.day{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+ padding:10px 14px;margin:6px 0;align-items:flex-start}
+.day.today{border-color:var(--acc);border-width:2px;box-shadow:0 0 0 3px rgba(176,82,44,.1)}
+.day.past{opacity:.42}
+.day.klausur{background:#fbeee8;border-color:#e7c4b2}
+html[data-t=dark] .day.klausur{background:#2e1d17;border-color:#5a3524}
+.day.deadline{background:#fdf4e8;border-color:#ecd6b2}
+html[data-t=dark] .day.deadline{background:#2c2415;border-color:#5a4a24}
+.day.puffer{opacity:.72}
+.day .dt2{flex:0 0 92px}
+.day .dnum{font:700 15px sans-serif;line-height:1.15}
+.day .dwd{font-size:11.4px;color:var(--mut)}
+.day .obs{flex:1;min-width:0}
+.obj{display:flex;gap:9px;align-items:flex-start;padding:3px 0}
+.obj input{margin-top:3px;width:16px;height:16px;accent-color:var(--acc);flex:0 0 auto;cursor:pointer}
+.obj .mk{font:700 10.5px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);
+ color:var(--mut);flex:0 0 auto;margin-top:1px;min-width:40px;text-align:center}
+.obj label{font-size:14px;cursor:pointer;flex:1}
+.obj.done label{opacity:.42;text-decoration:line-through}
+.prog{height:6px;background:var(--soft);border-radius:4px;overflow:hidden;margin:10px 0 4px}
+.prog i{display:block;height:100%;background:var(--acc);width:0;transition:.3s}
+/* Suche */
+#ov{position:fixed;inset:0;background:rgba(0,0,0,.4);display:none;z-index:99;padding-top:9vh}
+#ov.on{display:block}
+#sbox{max-width:620px;margin:0 auto;background:var(--card);border-radius:12px;overflow:hidden;
+ box-shadow:0 18px 50px rgba(0,0,0,.3)}
+#sin{width:100%;border:0;padding:15px 18px;font:16px inherit;background:var(--card);color:var(--fg);outline:none;
+ border-bottom:1px solid var(--line)}
+#sres{max-height:56vh;overflow-y:auto}
+.sr{padding:9px 18px;cursor:pointer;border-bottom:1px solid var(--line);font-size:13.8px}
+.sr:hover,.sr.sel{background:var(--soft)}
+.sr b{color:var(--acc)}
+.sr .sk{font:700 10.5px sans-serif;padding:2px 7px;border-radius:20px;background:var(--soft);margin-right:7px}
+mark{background:#ffe9a8;color:inherit;padding:0 1px}
+html[data-t=dark] mark{background:#6a5518;color:#fff}
+@media(max-width:820px){#side{position:fixed;left:-230px;z-index:50;transition:.2s}
+ #side.open{left:0}#hub{padding:18px 14px 70px}.grid{grid-template-columns:1fr}}
+
+#m-KAF,#m-KAF *{box-sizing:border-box}#m-KAF{margin:0;background:#f6f4ef;color:#23211c;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}#m-KAF .kf-shell{display:flex;min-height:100vh}#m-KAF .kf-side{position:sticky;top:0;align-self:flex-start;width:230px;flex:0 0 230px;height:100vh;overflow:auto;
+ padding:22px 16px;border-right:1px solid #e2ded3;background:#efebe2}#m-KAF .kf-side h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#8a8373;margin:0 0 10px}#m-KAF .kf-side a{display:block;color:#3b3629;text-decoration:none;padding:4px 8px;border-radius:6px;font-size:14px}#m-KAF .kf-side a:hover{background:#e3ddd0}#m-KAF .kf-side .kf-grp{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#9a927f;margin:14px 0 4px 8px}#m-KAF .kf-main{flex:1;max-width:900px;padding:30px 34px 90px}#m-KAF h1{font-size:28px;letter-spacing:-.02em;margin:0 0 4px}#m-KAF .kf-lead{color:#6a6352;margin:0 0 18px}#m-KAF .kf-demo{background:#fff3d6;color:#5a4410;border:1px solid #efd9a0;border-radius:8px;padding:9px 13px;font-size:13.5px;margin-bottom:22px}#m-KAF h2.kf-h{font-size:21px;margin:42px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2ded3}#m-KAF h3{font-size:17px;margin:26px 0 8px}#m-KAF .kf-idee{background:#23211c;color:#f6f4ef;border-radius:10px;padding:16px 20px;font-size:16.5px}#m-KAF .kf-idee b{color:#f0b77a}#m-KAF table{border-collapse:collapse;width:100%;margin:10px 0;font-size:14.5px}#m-KAF th,#m-KAF td{border:1px solid #e2ded3;padding:6px 9px;text-align:left;vertical-align:top}#m-KAF th{background:#efebe2}#m-KAF .kf-g{background:#fff;border:1px solid #e2ded3;border-radius:10px;padding:14px 18px;margin:14px 0}#m-KAF .kf-g .kf-bild{border-left:3px solid #c98a3c;padding-left:11px;color:#4a4436;margin-bottom:10px}#m-KAF .kf-g dl{display:grid;grid-template-columns:150px 1fr;gap:4px 14px;margin:0}#m-KAF .kf-g dt{font-weight:650;color:#6a6352}#m-KAF .kf-g dd{margin:0}#m-KAF details{background:#fbfaf6;border:1px solid #e2ded3;border-radius:8px;padding:8px 12px;margin:10px 0}#m-KAF summary{cursor:pointer;font-weight:600;color:#6b4b1e}#m-KAF .kf-pfeil{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;font-size:13.5px}#m-KAF .kf-pfeil a{background:#f3e3cf;color:#6b4b1e;border-radius:999px;padding:3px 11px;text-decoration:none}#m-KAF .kf-schritt{counter-reset:s;list-style:none;padding:0}#m-KAF .kf-schritt li{counter-increment:s;position:relative;padding-left:34px;margin:8px 0}#m-KAF .kf-schritt li:before{content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;border-radius:50%;
+ background:#c98a3c;color:#fff;font-size:12.5px;font-weight:700;text-align:center;line-height:23px}#m-KAF .kf-warum{font-size:14px;color:#6a6352;font-style:italic}#m-KAF .kf-ue{background:#fff;border:1px solid #e2ded3;border-radius:10px;padding:12px 16px;margin:14px 0}#m-KAF .kf-ue .kf-kopf{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px;color:#6a6352}#m-KAF .kf-ue .kf-kopf b{color:#23211c;font-size:15px}#m-KAF .kf-badge{background:#efebe2;border-radius:6px;padding:1px 7px}#m-KAF .kf-tri{display:inline-flex;gap:4px;margin-left:auto}#m-KAF .kf-tri button{border:1px solid #d8d2c3;background:#fff;color:#3b3629;border-radius:6px;padding:2px 9px;cursor:pointer;font-size:13px}#m-KAF .kf-tri button.on[data-v="no"]{background:#f6d5cc;color:#7a2a15;border-color:#e5a595}#m-KAF .kf-tri button.on[data-v="mid"]{background:#fbeccd;color:#6e4d0e;border-color:#e9c77e}#m-KAF .kf-tri button.on[data-v="ok"]{background:#d7ecd3;color:#1f5a1a;border-color:#9bc993}#m-KAF .kf-stand{font-size:13.5px;color:#6a6352;margin:6px 0 0}#m-KAF .kf-zurueck{font-size:13px}#m-KAF .kf-zurueck a{color:#6b4b1e}#m-KAF .kf-svg{border-radius:10px;overflow:hidden;margin:12px 0}#m-KAF .kf-svg svg{display:block;width:100%;height:auto}#m-KAF pre{background:#23211c;color:#f6f4ef;border-radius:8px;padding:12px 14px;overflow:auto;font:13px/1.5 ui-monospace,Consolas,monospace}#m-KAF code{background:#efebe2;color:#3b3629;border-radius:4px;padding:1px 5px;font:13px ui-monospace,Consolas,monospace}#m-KAF pre code{background:none;color:inherit;padding:0}html[data-t=dark] #m-KAF{background:#1c1b17;color:#e9e5da}html[data-t=dark] #m-KAF .kf-side{background:#23221d;border-color:#34322a}html[data-t=dark] #m-KAF .kf-side a{color:#d8d2c3}html[data-t=dark] #m-KAF .kf-side a:hover{background:#2f2d26;color:#f2eee4}html[data-t=dark] #m-KAF .kf-lead,html[data-t=dark] #m-KAF .kf-g dt,html[data-t=dark] #m-KAF .kf-warum,html[data-t=dark] #m-KAF .kf-ue .kf-kopf,html[data-t=dark] #m-KAF .kf-stand{color:#b2ab9a}html[data-t=dark] #m-KAF .kf-demo{background:#3a3016;color:#f3dfae;border-color:#5a4a1f}html[data-t=dark] #m-KAF h2.kf-h{border-color:#34322a}html[data-t=dark] #m-KAF th{background:#2a2922;color:#e9e5da}html[data-t=dark] #m-KAF th,html[data-t=dark] #m-KAF td{border-color:#34322a}html[data-t=dark] #m-KAF .kf-g,html[data-t=dark] #m-KAF .kf-ue{background:#25241f;color:#e9e5da;border-color:#34322a}html[data-t=dark] #m-KAF .kf-g .kf-bild{color:#d0c9b8}html[data-t=dark] #m-KAF .kf-ue .kf-kopf b{color:#f2eee4}html[data-t=dark] #m-KAF details{background:#23221d;color:#e9e5da;border-color:#34322a}html[data-t=dark] #m-KAF summary{color:#f0b77a}html[data-t=dark] #m-KAF .kf-pfeil a{background:#3a2e1d;color:#f0c795}html[data-t=dark] #m-KAF .kf-badge{background:#34322a;color:#e9e5da}html[data-t=dark] #m-KAF .kf-tri button{background:#25241f;color:#e9e5da;border-color:#4a473c}html[data-t=dark] #m-KAF .kf-tri button.on[data-v="no"]{background:#5a2a1e;color:#ffd9cc}html[data-t=dark] #m-KAF .kf-tri button.on[data-v="mid"]{background:#57451a;color:#ffe7b3}html[data-t=dark] #m-KAF .kf-tri button.on[data-v="ok"]{background:#27491f;color:#d6f5cf}html[data-t=dark] #m-KAF .kf-zurueck a{color:#f0c795}html[data-t=dark] #m-KAF code{background:#2f2d26;color:#f0c795}
+#m-RAD,#m-RAD *{box-sizing:border-box}#m-RAD{margin:0;background:#f3f5f7;color:#1d2530;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}#m-RAD .rd-wrap{max-width:880px;margin:0 auto;padding:30px 28px 80px}#m-RAD h1{font-size:27px;margin:0 0 4px}#m-RAD .rd-lead{color:#5a6675;margin:0 0 18px}#m-RAD .rd-demo{background:#e4eefb;color:#1d3e66;border:1px solid #c3d6ef;border-radius:8px;padding:9px 13px;font-size:13.5px}#m-RAD .rd-nav{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}#m-RAD .rd-nav a{background:#fff;border:1px solid #d7dee6;border-radius:999px;padding:3px 11px;color:#1d3e66;text-decoration:none;font-size:13.5px}#m-RAD h2.rd-h{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid #d7dee6}#m-RAD .rd-box{background:#fff;border:1px solid #d7dee6;border-radius:10px;padding:13px 17px;margin:12px 0}#m-RAD table{border-collapse:collapse;width:100%;font-size:14.5px}#m-RAD th,#m-RAD td{border:1px solid #d7dee6;padding:6px 9px;text-align:left}#m-RAD th{background:#eaf0f6}#m-RAD details{background:#fafcfe;border:1px solid #d7dee6;border-radius:8px;padding:8px 12px;margin:10px 0}#m-RAD summary{cursor:pointer;font-weight:600;color:#1d4f8a}#m-RAD code{background:#eaf0f6;color:#1d2530;border-radius:4px;padding:1px 5px;font:13px ui-monospace,Consolas,monospace}html[data-t=dark] #m-RAD{background:#161b21;color:#e2e8ef}html[data-t=dark] #m-RAD .rd-lead{color:#9aa7b6}html[data-t=dark] #m-RAD .rd-demo{background:#1d2f47;color:#cfe0f6;border-color:#2c4666}html[data-t=dark] #m-RAD .rd-nav a{background:#1f2630;color:#cfe0f6;border-color:#2e3845}html[data-t=dark] #m-RAD h2.rd-h{border-color:#2e3845}html[data-t=dark] #m-RAD .rd-box{background:#1f2630;color:#e2e8ef;border-color:#2e3845}html[data-t=dark] #m-RAD th{background:#253040;color:#e2e8ef}html[data-t=dark] #m-RAD th,html[data-t=dark] #m-RAD td{border-color:#2e3845}html[data-t=dark] #m-RAD details{background:#1b222b;color:#e2e8ef;border-color:#2e3845}html[data-t=dark] #m-RAD summary{color:#8dbbf0}html[data-t=dark] #m-RAD code{background:#253040;color:#cfe0f6}
+#m-GAR,#m-GAR *{box-sizing:border-box}#m-GAR{margin:0;background:#f2f6ef;color:#1f2a1c;font:15.5px/1.62 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}#m-GAR .ga-wrap{max-width:880px;margin:0 auto;padding:30px 28px 80px}#m-GAR h1{font-size:27px;margin:0 0 4px}#m-GAR .ga-lead{color:#586a52;margin:0 0 18px}#m-GAR .ga-demo{background:#e3f0da;color:#2d4a1f;border:1px solid #c5ddb4;border-radius:8px;padding:9px 13px;font-size:13.5px}#m-GAR h2.ga-h{font-size:20px;margin:36px 0 10px;padding-bottom:6px;border-bottom:2px solid #d5e2cc}#m-GAR .ga-box{background:#fff;border:1px solid #d5e2cc;border-radius:10px;padding:13px 17px;margin:12px 0}#m-GAR .ga-beet{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:10px 0}#m-GAR .ga-beet div{border-radius:6px;padding:10px 6px;text-align:center;font-size:13px;background:#dcebd0;color:#2d4a1f}#m-GAR .ga-beet .ga-s{background:#fbe7b8;color:#5c4210}#m-GAR details{background:#f9fcf7;border:1px solid #d5e2cc;border-radius:8px;padding:8px 12px;margin:10px 0}#m-GAR summary{cursor:pointer;font-weight:600;color:#3d6b2e}html[data-t=dark] #m-GAR{background:#151a13;color:#e2eadc}html[data-t=dark] #m-GAR .ga-lead{color:#9eb095}html[data-t=dark] #m-GAR .ga-demo{background:#23361b;color:#d3e8c4;border-color:#35502a}html[data-t=dark] #m-GAR h2.ga-h{border-color:#2d3a28}html[data-t=dark] #m-GAR .ga-box{background:#1d241a;color:#e2eadc;border-color:#2d3a28}html[data-t=dark] #m-GAR .ga-beet div{background:#2a3d22;color:#d3e8c4}html[data-t=dark] #m-GAR .ga-beet .ga-s{background:#4a3a14;color:#ffe3a3}html[data-t=dark] #m-GAR details{background:#1a2017;color:#e2eadc;border-color:#2d3a28}html[data-t=dark] #m-GAR summary{color:#a8d48f}</style>
+<div id="app">
+<aside id="side">
+  <div class="brand">disciplan</div>
+  <div class="bsub">Demo &middot; 3 Module</div>
+  <button class="nl" data-go="hub"><span class="kk">&#9632;</span>Übersicht</button>
+  <h5>Module</h5>
+  <div id="navmod"></div>
+  <h5>Trainer</h5>
+  <div id="navtr"></div>
+  <h5>Werkzeuge</h5>
+  <button class="nl" data-go="hub" data-tab="plan"><span class="kk">&#9634;</span>Tagesplan</button>
+  <button class="nl" id="osearch"><span class="kk">&#9906;</span>Suche <span class="dd">Ctrl K</span></button>
+  <div class="tt">
+    <button class="mini" id="theme">Dark</button>
+    <button class="mini" onclick="window.print()">Drucken</button>
+  </div>
+  <div class="bsub" style="margin-top:14px">gebaut 30.09.2026 13:15</div>
+</aside>
+
+<div id="wrap">
+<div class="view on" id="v-hub"><div id="hub">
+  <h1>disciplan — Demo</h1>
+  <p class="sub">3 Demo-Klausuren in 6 Tagen &middot; <span id="today"></span></p>
+  <div class="cd" id="cd"></div>
+  <div class="tabs">
+    <button class="tab on" data-p="mod">Module</button>
+    <button class="tab" data-p="plan">Tagesplan</button>
+    <button class="tab" data-p="tl">Zeitachse</button>
+    <button class="tab" data-p="reg">Strategie</button>
+  </div>
+  <div class="pane on" id="p-mod"><div class="grid" id="grid"></div></div>
+  <div class="pane" id="p-plan">
+    <div class="crit"><b>Demo.</b> Drei erfundene Module, drei Klausuren in sechs Tagen.
+    Die Daten zeigen nur, wie das Cockpit aussieht, wenn es gefüllt ist.</div>
+    <div class="key"><b>Objektive statt Stunden.</b> Jeder Punkt ist ein <b>überprüfbarer
+    Zustand</b>, kein Zeitbudget.<br><br>
+    Der Pfeil <b>&#8599;</b> an einer Aufgabe springt direkt an die Stelle im Lerndokument.</div>
+    <div class="lauf" id="laufbox">
+      <div class="lh"><div><h3>Der laufende Plan</h3><div class="ls" id="laufs"></div></div>
+        <div class="sp"></div><div class="lring" id="laufring"></div></div>
+      <div class="lprog"><i id="laufbar"></i></div>
+      <div class="cal lcal">
+        <div class="calh">
+          <div><div class="kw" id="lkwlab"></div><div class="rg" id="lkwrg"></div></div>
+          <div class="sp"></div>
+          <div class="nav">
+            <button class="nb" id="lwprev" title="Woche zurück">&#8249;</button>
+            <button class="nb tdy" id="lwtoday">Heute</button>
+            <button class="nb" id="lwnext" title="Woche vor">&#8250;</button>
+          </div>
+        </div>
+        <div class="wgrid" id="lwgrid"></div>
+        <div class="calf">
+          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
+          <span class="lg"><i style="background:var(--acc)"></i>heute</span>
+          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="sp"></span><span id="lwsum"></span>
+        </div>
+      </div>
+      <div class="lhd">Was möchtest du sehen?</div>
+      <div class="lfil" id="lauffil"></div>
+      <div class="lhd" id="laufheuteh">Heute im Detail</div>
+      <div id="laufheute"></div>
+      <div class="fin">Alles vor dem 28.08. steht unten im vollständigen Kalender &mdash; als Archiv, nicht als offene Rechnung.</div>
+    </div>
+    <button class="tglr" id="tgla"><span class="ar">&#9656;</span>
+      <h3>Der alte Plan bis 27.08. &mdash; zum Abhaken</h3>
+      <span class="hint" id="tglah"></span></button>
+    <div id="arcwrap"><div class="lauf" id="arcbox">
+      <div class="lh"><div><h3>Was vor dem Neuschnitt lief</h3><div class="ls" id="arcs"></div></div>
+        <div class="sp"></div><div class="lring" id="arcring"></div></div>
+      <div class="lprog"><i id="arcbar"></i></div>
+      <div class="cal lcal">
+        <div class="calh">
+          <div><div class="kw" id="akwlab"></div><div class="rg" id="akwrg"></div></div>
+          <div class="sp"></div>
+          <div class="nav">
+            <button class="nb" id="awprev" title="Woche zurück">&#8249;</button>
+            <button class="nb tdy" id="awlast">Letzte Woche</button>
+            <button class="nb" id="awnext" title="Woche vor">&#8250;</button>
+          </div>
+        </div>
+        <div class="wgrid" id="awgrid"></div>
+        <div class="calf">
+          <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
+          <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+          <span class="sp"></span><span id="awsum"></span>
+        </div>
+      </div>
+      <div class="lhd">Was möchtest du sehen?</div>
+      <div class="lfil" id="arcfil"></div>
+      <div class="lhd" id="archeuteh">Tag im Detail</div>
+      <div id="archeute"></div>
+      <div class="expo">
+        <div class="lhd" style="margin-top:0">Stand weitergeben</div>
+        <p class="exph">Erzeugt eine kurze Textfassung deines Stands &mdash; Archiv und laufender
+        Plan, je Modul erledigt/offen. Kopieren und mir in den Chat kleben; dann plane ich mit
+        Zahlen statt mit Vermutungen.</p>
+        <div class="exbtns"><button class="nb" id="expbtn">Stand erzeugen</button>
+          <button class="nb" id="expcopy">In die Zwischenablage</button>
+          <span class="hint" id="expmsg"></span></div>
+        <textarea id="expout" readonly spellcheck="false" placeholder="&hellip;"></textarea>
+      </div>
+      <div class="fin">Häkchen hier ändern nichts am laufenden Plan &mdash; sie sind nur die
+      Bestandsaufnahme dessen, was vorher schon lief.</div>
+    </div></div>
+    <div class="lhd">Vollständiger Kalender &middot; Archiv</div>
+    <div class="cal">
+      <div class="calh">
+        <div><div class="kw" id="kwlab"></div><div class="rg" id="kwrg"></div></div>
+        <div class="sp"></div>
+        <div class="nav">
+          <button class="nb" id="wprev" title="Woche zurück">&#8249;</button>
+          <button class="nb tdy" id="wtoday">Heute</button>
+          <button class="nb" id="wnext" title="Woche vor">&#8250;</button>
+        </div>
+      </div>
+      <div class="wgrid" id="wgrid"></div>
+      <div class="calf">
+        <span class="lg"><i style="background:#e0a988"></i>Klausur</span>
+        <span class="lg"><i style="background:#e3cc9a"></i>Deadline</span>
+        <span class="lg"><i style="background:var(--acc)"></i>heute</span>
+        <span class="lg"><i style="background:#3d6b2e;border-radius:50%"></i>Tag komplett</span>
+        <span class="sp"></span>
+        <span id="wsum"></span>
+      </div>
+    </div>
+    <div class="prog"><i id="pall"></i></div>
+    <div class="fine" id="pinfo"></div>
+    <button class="tglr" id="tglr"><span class="ar">&#9656;</span>
+      <h3>Alle Tage als Liste</h3><span class="hint" id="tglrh"></span></button>
+    <div id="dayswrap"><div id="days"></div></div>
+  </div>
+  <div class="pane" id="p-tl"><div id="tlbox"></div></div>
+  <div class="pane" id="p-reg">
+    <h3>Warum diese Reihenfolge</h3>
+    <table>
+    <tr><th>Entscheidung</th><th>Begründung</th></tr>
+    <tr><td><b>KAF zuerst</b></td><td>Früheste Klausur, altklausur-getrieben, also planbar.</td></tr>
+    <tr><td><b>RAD parallel</b></td><td>Praxisteil — Fertigkeit verfällt langsamer als Faktenwissen.</td></tr>
+    <tr><td><b>GAR zuletzt</b></td><td>Wahlpflicht und die meiste Zeit nach den anderen Klausuren.</td></tr>
+    </table>
+    <h3>Arbeitsregeln</h3>
+    <div class="key"><b>Modus vor Material.</b> Kein Modul wird gelernt, bevor sein Modus feststeht.</div>
+    <div class="key"><b>Der Fehler-Log ist das eigentliche Lernmittel.</b></div>
+  </div>
+</div></div>
+<div class="view mv" id="v-KAF"><div id="m-KAF">KAF — Kaffee-Handwerk (Demo-Lerndokument)</title>
+
+<div class="kf-shell">
+<nav class="kf-side">
+ <h2>KAF · Demo</h2>
+ <div class="kf-grp">1 · Orientierung</div>
+ <a href="#KAF-orient">Die eine große Idee</a>
+ <div class="kf-grp">2 · Grundlagen</div>
+ <a href="#KAF-g1">G1 Die Bohne</a><a href="#KAF-g2">G2 Röstung</a><a href="#KAF-g3">G3 Mahlgrad</a>
+ <a href="#KAF-g4">G4 Brühverhältnis</a><a href="#KAF-g5">G5 Extraktion</a><a href="#KAF-zustand">G6 Die Maschine</a>
+ <div class="kf-grp">3 · Verfahren</div>
+ <a href="#KAF-v1">V1 Rezept rechnen</a><a href="#KAF-v2">V2 Fehlersuche</a>
+ <div class="kf-grp">4 · Übungen</div>
+ <a href="#KAF-ue">Ü1 – Ü4</a>
+ <div class="kf-grp">5 · 6</div>
+ <a href="#KAF-taktik">Klausurtaktik</a><a href="#KAF-quellen">Quellen zum Üben</a>
+ <a href="#KAF-trainer">↗ Trainer</a>
+</nav>
+<main class="kf-main">
+<h1>Kaffee-Handwerk</h1>
+<p class="kf-lead">Demo-Lerndokument im Sechs-Teile-Format · Modul KAF</p>
+<div class="kf-demo"><b>Demo-Inhalt.</b> Das Modul, die Klausur und alle Zahlen sind erfunden. Das Dokument zeigt nur das Format:
+Orientierung → Grundlagen → Verfahren → Übungen mit verdeckter Lösung → Taktik → Quellen.</div>
+
+<!-- ══ 1 · Orientierung ══ -->
+<h2 class="kf-h" id="KAF-orient">1 · Orientierung</h2>
+<div class="kf-idee"><b>Die eine große Idee:</b> Kaffee kochen heißt <b>lösen</b>. Wasser holt Stoffe aus dem Kaffeemehl,
+und jede Stellschraube — Mahlgrad, Menge, Zeit, Temperatur — verschiebt nur, <b>wie viel</b> sich löst.</div>
+<p>Wer diese Idee hat, muss keine Rezepte auswendig lernen: sauer heißt „zu wenig gelöst", bitter heißt „zu viel".
+Alles Weitere in diesem Dokument führt darauf zurück.</p>
+<h3>Klausur-Steckbrief (Demo)</h3>
+<table><tr><th>Dauer</th><td>60 Minuten, 40 Punkte</td></tr>
+<tr><th>Formate</th><td>Ankreuzen, Zuordnen, Lückentext, Rechnen mit Rezepten, ein kurzer Freitext</td></tr>
+<tr><th>Was verlangt wird</th><td>Rezepte rechnen (V1) und Fehler begründet beheben (V2). Definitionen allein bringen wenig Punkte.</td></tr></table>
+
+<!-- ══ 2 · Grundlagen ══ -->
+<h2 class="kf-h">2 · Grundlagen</h2>
+
+<div class="kf-g" id="KAF-g1"><h3>G1 · Die Bohne</h3>
+<div class="kf-bild">Stell dir die Bohne als kleinen Vorratsschrank vor: alles, was später in der Tasse schmeckt, liegt schon darin.</div>
+<dl><dt>Was ist es</dt><dd>Der Samen der Kaffeekirsche, getrocknet und noch ungeröstet („grün").</dd>
+<dt>Wozu</dt><dd>Sie bestimmt, <i>welche</i> Stoffe überhaupt zur Verfügung stehen.</dd>
+<dt>Woran erkennt man es</dt><dd>Sorte und Herkunft stehen auf der Packung; zwei Sorten sind verbreitet (Arabica, Robusta).</dd>
+<dt>Zusammenhang</dt><dd>Die Röstung (G2) entscheidet, welche dieser Stoffe löslich werden.</dd></dl>
+<div class="kf-pfeil"><a href="#KAF-u1">↗ Jetzt lösen: Ü1</a></div></div>
+
+<div class="kf-g" id="KAF-g2"><h3>G2 · Röstung</h3>
+<div class="kf-bild">Rösten ist wie Brot backen: hell bleibt es weich und fruchtig, dunkel wird es kräftig und bitter.</div>
+<dl><dt>Was ist es</dt><dd>Erhitzen der grünen Bohne, bis sie aufplatzt („First Crack") und Aromen bildet.</dd>
+<dt>Wozu</dt><dd>Erst die Röstung macht die Stoffe der Bohne aromatisch und löslich.</dd>
+<dt>Woran erkennt man es</dt><dd>An der Farbe und am Geschmack: hell = Säure und Frucht, dunkel = Körper und Bitterkeit.</dd>
+<dt>Zusammenhang</dt><dd>Dunkle Bohnen sind poröser, sie lösen sich schneller → gröber mahlen (G3).</dd></dl>
+<details><summary>Bevor du weiterliest: Warum löst sich eine dunkle Röstung schneller?</summary>
+Weil sie poröser ist: das Wasser dringt leichter ein. Deshalb braucht sie einen etwas gröberen Mahlgrad.</details>
+<div class="kf-pfeil"><a href="#KAF-u1">↗ Jetzt lösen: Ü1</a></div></div>
+
+<div class="kf-g" id="KAF-g3"><h3>G3 · Mahlgrad</h3>
+<div class="kf-bild">Ein Zuckerwürfel löst sich langsam, Puderzucker sofort. Beim Kaffee ist es genauso.</div>
+<dl><dt>Was ist es</dt><dd>Wie fein der Kaffee gemahlen ist.</dd>
+<dt>Wozu</dt><dd>Er steuert die Oberfläche und die Durchlaufzeit, also die Extraktion (G5).</dd>
+<dt>Woran erkennt man es</dt><dd>An der Durchlaufzeit: läuft es zu schnell, ist das Mehl zu grob.</dd>
+<dt>Zusammenhang</dt><dd>Kurze Kontaktzeit (Espresso) braucht feines Mehl, lange (French Press) grobes.</dd></dl>
+<div class="kf-pfeil"><a href="#KAF-u2">↗ Jetzt lösen: Ü2</a></div></div>
+
+<div class="kf-g" id="KAF-g4"><h3>G4 · Brühverhältnis</h3>
+<div class="kf-bild">Wie Saft aus Konzentrat: zu wenig Konzentrat schmeckt dünn, zu viel zu stark.</div>
+<dl><dt>Was ist es</dt><dd>Kaffee zu Wasser in Gramm, zum Beispiel <code>1 : 16</code>.</dd>
+<dt>Wozu</dt><dd>Es bestimmt die <b>Stärke</b> — nicht die Extraktion.</dd>
+<dt>Woran erkennt man es</dt><dd>Dünn, aber sonst ausgewogen → Verhältnis zu weit.</dd>
+<dt>Zusammenhang</dt><dd>Mit V1 rechnet man daraus ein Rezept.</dd></dl>
+<div class="kf-pfeil"><a href="#KAF-u3">↗ Jetzt lösen: Ü3</a></div></div>
+
+<div class="kf-g" id="KAF-g5"><h3>G5 · Extraktion</h3>
+<div class="kf-bild">Ein Teebeutel, der zu kurz im Wasser war, schmeckt nach wenig; zu lange, und er wird herb.</div>
+<dl><dt>Was ist es</dt><dd>Der Anteil des Kaffeemehls, der sich im Wasser löst.</dd>
+<dt>Wozu</dt><dd>Sie entscheidet zwischen sauer (zu wenig) und bitter (zu viel).</dd>
+<dt>Woran erkennt man es</dt><dd>Am Geschmack und an der Durchlaufzeit (siehe V2).</dd>
+<dt>Zusammenhang</dt><dd>Mahlgrad (G3), Zeit und Temperatur verschieben sie; das Verhältnis (G4) kaum.</dd></dl>
+<div class="kf-pfeil"><a href="#KAF-u4">↗ Jetzt lösen: Ü4</a></div></div>
+
+<div class="kf-g" id="KAF-zustand"><h3>G6 · Die Maschine als Zustandsautomat</h3>
+<div class="kf-bild">Eine Siebträgermaschine „weiß" in jedem Moment, was sie gerade tut — genau das zeigt ein Zustandsdiagramm.</div>
+<dl><dt>Was ist es</dt><dd>Ein Modell aus Zuständen (Kästen) und Übergängen (Pfeile) mit ihren Auslösern.</dd>
+<dt>Wozu</dt><dd>Es erklärt, warum die Maschine z. B. erst aufheizt, bevor sie brüht.</dd>
+<dt>Woran erkennt man es</dt><dd>Jeder Pfeil trägt ein Ereignis; die Ausgaben stehen am Zustand (Moore).</dd>
+<dt>Zusammenhang</dt><dd>Die Temperaturgrenzen im Diagramm sind die Brühtemperatur aus V1.</dd></dl>
+<div class="kf-svg"><!--SVG--><svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -70 980 520" font-family="sans-serif" role="img" aria-label="Zustandsdiagramm einer Kaffeemaschine (Demo)">
+<rect x="-20" y="-70" width="980" height="520" fill="#33351f"/>
+<text x="10" y="-38" fill="#f2f0e6" font-size="17" font-weight="bold">Kaffeemaschine — Zustandsdiagramm (Demo)</text>
+<text x="10" y="-16" fill="#8fa6c9" font-size="12">Moore-Automat: die Ausgaben (orange) hängen am Zustand, die Übergänge (blau) an Ereignissen.</text>
+<circle cx="12" cy="210" r="5" fill="#b0522c"/><path d="M18,210 L26,210" stroke="#9a9a8e" stroke-width="2"/><polygon points="28.0,210.0 18.0,205.0 18.0,215.0" fill="#9a9a8e"/>
+<path d="M195,192 C232,152 252,92 286,74" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="286.0,74.0 274.8,74.3 279.5,83.1" fill="#9a9a8e"/>
+<text x="236" y="118" fill="#8fa6c9" font-size="13" text-anchor="middle">Ein-Taste</text>
+<path d="M455,62 L606,62" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="606.0,62.0 596.0,57.0 596.0,67.0" fill="#9a9a8e"/>
+<text x="530" y="52" fill="#8fa6c9" font-size="13" text-anchor="middle">T ≥ 93 °C</text>
+<path d="M606,84 L459,84" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="459.0,84.0 469.0,89.0 469.0,79.0" fill="#9a9a8e"/>
+<text x="530" y="103" fill="#8fa6c9" font-size="13" text-anchor="middle">T &lt; 90 °C</text>
+<path d="M676,102 L676,314" stroke="#e8925c" stroke-width="2" fill="none"/><polygon points="676.0,314.0 681.0,304.0 671.0,304.0" fill="#e8925c"/>
+<text x="632" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Bezug-Taste</text>
+<path d="M716,314 L716,106" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="716.0,106.0 711.0,116.0 721.0,116.0" fill="#9a9a8e"/>
+<text x="772" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Menge erreicht</text>
+<path d="M606,349 L459,349" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="459.0,349.0 469.0,354.0 469.0,344.0" fill="#9a9a8e"/>
+<text x="532" y="339" fill="#8fa6c9" font-size="13" text-anchor="middle">Zähler ≥ 200</text>
+<path d="M372,316 L372,106" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="372.0,106.0 367.0,116.0 377.0,116.0" fill="#9a9a8e"/>
+<text x="322" y="214" fill="#8fa6c9" font-size="13" text-anchor="middle">Programm fertig</text>
+<path d="M290,370 C232,370 150,330 120,245" stroke="#9a9a8e" stroke-width="2" fill="none"/><polygon points="120.0,245.0 118.6,256.1 128.0,252.8" fill="#9a9a8e"/>
+<text x="178" y="372" fill="#8fa6c9" font-size="13" text-anchor="middle">Aus-Taste</text>
+<rect x="30" y="179" width="165" height="62" rx="8" fill="#16160f" stroke="#e8925c" stroke-width="2.5"/>
+<text x="112" y="203" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">AUS</text>
+<text x="112" y="219" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung aus</text>
+<text x="112" y="234" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe aus</text>
+<rect x="290" y="40" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
+<text x="372" y="64" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">AUFHEIZEN</text>
+<text x="372" y="80" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung an</text>
+<text x="372" y="95" fill="#e8925c" font-size="11.5" text-anchor="middle">LED blinkt</text>
+<rect x="610" y="40" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
+<text x="692" y="64" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">BEREIT</text>
+<text x="692" y="80" fill="#e8925c" font-size="11.5" text-anchor="middle">Heizung regelt</text>
+<text x="692" y="95" fill="#e8925c" font-size="11.5" text-anchor="middle">LED an</text>
+<rect x="610" y="318" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
+<text x="692" y="342" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">BRÜHEN</text>
+<text x="692" y="358" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe an</text>
+<text x="692" y="373" fill="#e8925c" font-size="11.5" text-anchor="middle">Zähler + 1</text>
+<rect x="290" y="318" width="165" height="62" rx="8" fill="#16160f" stroke="#5b5b52" stroke-width="2"/>
+<text x="372" y="342" fill="#f2f0e6" font-size="15" font-weight="bold" text-anchor="middle">ENTKALKEN</text>
+<text x="372" y="358" fill="#e8925c" font-size="11.5" text-anchor="middle">Pumpe im Intervall</text>
+<text x="372" y="373" fill="#e8925c" font-size="11.5" text-anchor="middle">LED rot</text>
+<text x="10" y="435" fill="#9a9a8e" font-size="11">Erfundenes Beispiel. Der hervorgehobene Pfeil ist der Normalbetrieb; „Aus-Taste" gilt sinngemäß aus jedem Zustand (nur einmal gezeichnet).</text>
+</svg><!--/SVG--></div>
+</div>
+
+<!-- ══ 3 · Verfahren ══ -->
+<h2 class="kf-h">3 · Verfahren</h2>
+<h3 id="KAF-v1">V1 · Ein Rezept rechnen</h3>
+<ol class="kf-schritt">
+<li>Wassermenge festlegen (1 ml ≈ 1 g).</li>
+<li>Durch die Verhältniszahl teilen → Kaffee in Gramm.</li>
+<li>Erst dann auf Tassen verteilen.</li></ol>
+<p class="kf-warum">Warum es funktioniert: das Verhältnis ist Kaffee : Wasser, also ist Kaffee = Wasser / Verhältniszahl.</p>
+<p><b>Gerechnet:</b> 500 ml bei 1 : 16 → <code>500 / 16 = 31,25 g</code>, gerundet 31 g.</p>
+<pre><code>def kaffee_gramm(wasser_ml, verhaeltnis):
+    """Kaffee in Gramm fuer ein Brühverhältnis 1 : verhaeltnis."""
+    return round(wasser_ml / verhaeltnis)
+
+print(kaffee_gramm(500, 16))   # 31
+</code></pre>
+
+<h3 id="KAF-v2">V2 · Fehlersuche</h3>
+<table><tr><th>Befund</th><th>Ursache</th><th>Eine Stellschraube</th></tr>
+<tr><td>sauer, läuft schnell</td><td>zu wenig gelöst</td><td>feiner mahlen</td></tr>
+<tr><td>bitter, läuft langsam</td><td>zu viel gelöst</td><td>gröber mahlen</td></tr>
+<tr><td>dünn, sonst ausgewogen</td><td>Verhältnis zu weit</td><td>mehr Kaffee</td></tr></table>
+<p class="kf-warum">Warum nur eine Stellschraube: wer zwei gleichzeitig ändert, weiß danach nicht, welche geholfen hat.</p>
+
+<!-- ══ 4 · Übungen ══ -->
+<h2 class="kf-h" id="KAF-ue">4 · Übungen</h2>
+<p class="kf-stand" id="KAF-kfstand"></p>
+
+<div class="kf-ue" id="KAF-u1"><div class="kf-kopf"><b>Ü1 · leicht</b><span class="kf-badge">G1/G2</span><span class="kf-badge">2 Punkte</span>
+<span class="kf-tri" data-id="KAF-u1"><button data-v="no">✗</button><button data-v="mid">~</button><button data-v="ok">✓</button></span></div>
+<p>Eine Packung verspricht „fruchtig, lebendige Säure". Hell oder dunkel geröstet?</p>
+<details><summary>Lösung</summary><b>Hell.</b> Säure und Frucht bleiben bei heller Röstung erhalten (G2).</details>
+<div class="kf-zurueck"><a href="#KAF-g2">↑ zurück zu G2</a></div></div>
+
+<div class="kf-ue" id="KAF-u2"><div class="kf-kopf"><b>Ü2 · mittel</b><span class="kf-badge">G3 · V2</span><span class="kf-badge">4 Punkte</span>
+<span class="kf-tri" data-id="KAF-u2"><button data-v="no">✗</button><button data-v="mid">~</button><button data-v="ok">✓</button></span></div>
+<p>Die French Press schmeckt schlammig und bitter. Nenne Ursache und eine Stellschraube.</p>
+<details><summary>Lösung</summary>Zu fein gemahlen: viel Oberfläche und Feinanteil → überextrahiert. <b>Gröber mahlen.</b></details>
+<div class="kf-zurueck"><a href="#KAF-g3">↑ zurück zu G3</a></div></div>
+
+<div class="kf-ue" id="KAF-u3"><div class="kf-kopf"><b>Ü3 · Klausurniveau</b><span class="kf-badge">V1</span><span class="kf-badge">6 Punkte</span>
+<span class="kf-tri" data-id="KAF-u3"><button data-v="no">✗</button><button data-v="mid">~</button><button data-v="ok">✓</button></span></div>
+<p>Für 4 Tassen à 250 ml bei 1 : 16: wie viel Kaffee gesamt, wie viel pro Tasse?</p>
+<details><summary>Lösung</summary><code>1000 / 16 = 62,5 g</code> gesamt, <code>62,5 / 4 ≈ 15,6 g</code> pro Tasse. Erst gesamt, dann verteilen.</details>
+<div class="kf-zurueck"><a href="#KAF-v1">↑ zurück zu V1</a></div></div>
+
+<div class="kf-ue" id="KAF-u4"><div class="kf-kopf"><b>Ü4 · Klausurniveau</b><span class="kf-badge">G5 · V2</span><span class="kf-badge">8 Punkte</span>
+<span class="kf-tri" data-id="KAF-u4"><button data-v="no">✗</button><button data-v="mid">~</button><button data-v="ok">✓</button></span></div>
+<p>Ein Espresso läuft 45 Sekunden und schmeckt bitter. Begründe die Diagnose und nenne genau eine Änderung.</p>
+<details><summary>Lösung</summary>Langsam + bitter = <b>überextrahiert</b> (G5). Gröber mahlen, dann erneut messen. Nicht gleichzeitig Menge und Mahlgrad ändern.</details>
+<div class="kf-zurueck"><a href="#KAF-g5">↑ zurück zu G5</a></div></div>
+
+<!-- ══ 5 · Klausurtaktik ══ -->
+<h2 class="kf-h" id="KAF-taktik">5 · Klausurtaktik</h2>
+<ol class="kf-schritt">
+<li><b>Rechenaufgaben zuerst</b> (V1) — schnell, eindeutig, viele Punkte.</li>
+<li>Bei jeder Fehlersuche: Befund → Ursache → <b>eine</b> Stellschraube. Drei Sätze reichen.</li>
+<li>Teure Falle: das Verhältnis falsch herum lesen. Immer prüfen: Kaffee ist die kleinere Zahl.</li>
+<li>Rettungsleine: wer nicht weiter weiß, schreibt die Idee aus Abschnitt 1 hin — sauer = zu wenig, bitter = zu viel.</li></ol>
+
+<!-- ══ 6 · Quellen ══ -->
+<h2 class="kf-h" id="KAF-quellen">6 · Quellen zum Üben</h2>
+<p>In einem echten Modul stehen hier kuratierte Links, jeweils mit einem Satz, <i>warum</i> genau diese Quelle passt.
+Für die Demo stehen stattdessen Übungsformen:</p>
+<table><tr><th>Quelle</th><th>Warum sie passt</th></tr>
+<tr><td>Eigenes Brühprotokoll (Zeit, Menge, Geschmack)</td><td>Trainiert genau V2: Befund und Ursache auseinanderhalten.</td></tr>
+<tr><td>Küchenwaage mit 0,1 g</td><td>Macht V1 überprüfbar statt geschätzt.</td></tr>
+<tr><td id="KAF-trainer">Der <a href="module/KAF/KAF-Trainer.html">KAF-Trainer</a></td><td>Alle Klausurformate, mit Generatoren für neue Zahlen.</td></tr></table>
+</main>
+</div></div></div><div class="view mv" id="v-RAD"><div id="m-RAD">RAD — Fahrrad-Werkstatt (Demo-Lerndokument)</title>
+
+<div class="rd-wrap">
+<h1>Fahrrad-Werkstatt</h1>
+<p class="rd-lead">Demo-Lerndokument (kurz) · Modul RAD</p>
+<div class="rd-demo"><b>Demo-Inhalt.</b> Erfundenes Modul. Die Übungen laufen vor allem im <a href="module/RAD/RAD-Trainer.html">RAD-Trainer</a>
+(Vorlesungen mit Skript, Summary-Fragen, Werkstatt-Simulation).</div>
+<div class="rd-nav"><a href="#RAD-orient">Orientierung</a><a href="#RAD-antrieb">Antrieb</a><a href="#RAD-bremsen">Bremsen</a><a href="#RAD-reifen">Reifen</a><a href="#RAD-praxis">Praxis</a><a href="#RAD-trainer">Trainer</a></div>
+
+<h2 class="rd-h" id="RAD-orient">1 · Orientierung</h2>
+<div class="rd-box"><b>Die eine große Idee:</b> Ein Fahrrad ist eine Kette von Übertragungen — Kraft vom Bein zum Rad,
+Reibung von der Bremse zum Boden. Jeder Fehler sitzt an genau einer Stelle dieser Kette.</div>
+
+<h2 class="rd-h" id="RAD-antrieb">2 · Antrieb und Schaltung</h2>
+<div class="rd-box"><p>Übersetzung = Zähne vorne / Zähne hinten. Größeres Ritzel hinten → leichter.</p>
+<details><summary>Selbsttest: Vorne 36, hinten 12 — Übersetzung?</summary><code>36 / 12 = 3</code></details></div>
+
+<h2 class="rd-h" id="RAD-bremsen">3 · Bremsen</h2>
+<table><tr><th>Bauart</th><th>Reibung an</th><th>bei Nässe</th></tr>
+<tr><td>Felgenbremse</td><td>Felge</td><td>deutlich schwächer</td></tr>
+<tr><td>Scheibenbremse</td><td>Scheibe an der Nabe</td><td>kaum schwächer</td></tr></table>
+
+<h2 class="rd-h" id="RAD-reifen">4 · Reifen</h2>
+<div class="rd-box">Der erlaubte Druck steht auf der Reifenflanke. Zu wenig Druck → Durchschlag („Snakebite").</div>
+
+<h2 class="rd-h" id="RAD-praxis">5 · Praxis und Taktik</h2>
+<div class="rd-box">In der Werkstatt-Simulation: <b>immer nur eine Stellschraube</b> drehen, dann testen. Checkliste abhaken, erst dann die Musterlösung öffnen.</div>
+
+<h2 class="rd-h" id="RAD-trainer">6 · Trainer</h2>
+<p>Zum Üben: <a href="module/RAD/RAD-Trainer.html">RAD-Trainer öffnen</a>.</p>
+</div></div></div><div class="view mv" id="v-GAR"><div id="m-GAR">GAR — Gartenplanung (Demo-Lerndokument)</title>
+
+<div class="ga-wrap">
+<h1>Gartenplanung</h1>
+<p class="ga-lead">Demo-Lerndokument (kurz) · Modul GAR · ohne eigenen Trainer</p>
+<div class="ga-demo"><b>Demo-Inhalt.</b> Erfundenes Modul. Es zeigt, dass ein Modul auch nur aus einem Dokument bestehen kann.</div>
+
+<h2 class="ga-h" id="GAR-orient">1 · Orientierung</h2>
+<div class="ga-box"><b>Die eine große Idee:</b> Pflanzen konkurrieren um Licht. Wer die Sonne plant, plant den Garten.</div>
+
+<h2 class="ga-h" id="GAR-licht">2 · Grundlagen: Licht und Beet</h2>
+<div class="ga-box">Hohe Pflanzen nach Norden, niedrige nach Süden — sonst beschatten die großen die kleinen.
+<div class="ga-beet"><div>Bohnen (hoch)</div><div>Tomaten</div><div>Salat</div><div class="ga-s">Kräuter (niedrig, Süden)</div></div>
+<details><summary>Bevor du weiterliest: Warum stehen die Kräuter im Süden?</summary>
+Sie sind am niedrigsten; im Süden wirft nichts einen Schatten auf sie.</details></div>
+
+<h2 class="ga-h" id="GAR-plan">3 · Verfahren: ein Beet in drei Schritten</h2>
+<div class="ga-box"><ol><li>Sonnenstunden messen (Morgen, Mittag, Abend).</li><li>Pflanzen nach Höhe sortieren.</li><li>Von Nord (hoch) nach Süd (niedrig) setzen.</li></ol>
+<p><i>Warum es funktioniert: die Sonne steht mittags im Süden, Schatten fallen nach Norden.</i></p></div>
+
+<h2 class="ga-h" id="GAR-uebung">4 · Übung</h2>
+<div class="ga-box">Ein Beet bekommt nur morgens Sonne. Welche Pflanzen passen eher: Salat oder Tomaten?
+<details><summary>Lösung</summary>Salat — er verträgt Halbschatten; Tomaten brauchen viel Sonne.</details></div>
+
+<h2 class="ga-h" id="GAR-taktik">5 · Taktik</h2>
+<div class="ga-box">Erst Licht, dann Boden, dann Pflanzenwahl — nie umgekehrt.</div>
+
+<h2 class="ga-h" id="GAR-quellen">6 · Quellen zum Üben</h2>
+<div class="ga-box">Demo: eine eigene Skizze des Gartens mit Sonnenstunden je Ecke.</div>
+</div></div></div>
+</div></div>
+
+<div id="dov"><div id="dbox">
+  <div id="dhead">
+    <div class="r1"><h3 id="dtitle"></h3><span class="wd2" id="dwd"></span>
+      <span class="bud" id="dbud"></span>
+      <button class="x" onclick="dClose()">&times;</button></div>
+    <div class="pr"><i id="dpr"></i></div>
+  </div>
+  <div id="dbody"></div>
+</div></div>
+
+<div id="pov"><div id="pbox"></div></div>
+
+<div id="ov"><div id="sbox">
+  <input id="sin" placeholder="Suchen in allen Modulen …" autocomplete="off">
+  <div id="sres"></div>
+</div></div>
+
+<script>
+const D={"mods": [{"k": "KAF", "name": "Kaffeemaschinen-Technik (Demo)", "d": "2026-09-02", "t": "10:00", "v": 1, "typ": "PF", "prof": "Demo", "trainer": {"file": "module/KAF/KAF-Trainer.html", "was": "Demo-Trainer: Begriffe, zwei Kapitel, Probeklausur, Spickzettel"}, "mode": "DEMO · ALTKLAUSUR-DRIVEN", "desc": "<b>Erfundenes Beispielmodul.</b> Zeigt ein Lerndokument mit Zustandsautomat und einen Trainer der ersten Generation.", "has": true}, {"k": "RAD", "name": "Fahrrad-Werkstatt (Demo)", "d": "2026-09-04", "t": "14:00", "v": 2, "typ": "PF", "prof": "Demo", "trainer": {"file": "module/RAD/RAD-Trainer.html", "was": "Demo-Trainer der zweiten Generation: Dashboard, Simulationen, Spickzettel"}, "mode": "DEMO · MIXED", "desc": "Erfundenes Beispielmodul mit Praxisteil. Zeigt den Trainer der zweiten Generation.", "has": true}, {"k": "GAR", "name": "Gartenplanung (Demo)", "d": "2026-09-07", "t": "?", "v": 1, "typ": "WP", "prof": "Demo", "mode": null, "desc": "Erfundenes Beispielmodul ohne Trainer und noch ohne Modus.", "has": true}], "days": [{"d": "2026-08-26", "o": [{"m": "KAF", "min": 50, "ty": "L", "x": "<b>KAF.html Orientierung und G1–G2</b> lesen.", "to": "orient", "st": null, "mk": null}, {"m": "GAR", "min": 25, "ty": "L", "x": "<b>GAR Orientierung</b> überfliegen.", "to": "orient", "st": null, "mk": null}], "t": ""}, {"d": "2026-08-27", "o": [{"m": "KAF", "min": 50, "ty": "L", "x": "<b>G3–G5</b> lesen, zu jedem Begriff zwei Sätze notieren.", "to": "g3", "st": null, "mk": null}, {"m": "RAD", "min": 50, "ty": "L", "x": "<b>Antrieb</b> lesen.", "to": "antrieb", "st": null, "mk": null}], "t": ""}, {"d": "2026-08-28", "o": [{"m": "KAF", "min": 50, "ty": "U", "x": "<b>Zustandsautomat aus dem Kopf</b> zeichnen, dann vergleichen.", "to": "zustand", "st": [{"t": "Automat aus dem Kopf", "d": "Zustände, Übergänge, Bedingungen — ohne Vorlage.", "to": "zustand", "min": 25}, {"t": "Vergleichen", "d": "Mit dem Dokument abgleichen, Abweichungen ins Fehler-Log.", "to": "zustand", "min": 15}, {"t": "Verfahren V1 nachlesen", "d": "Nur die Stelle, an der es gehakt hat.", "to": "v1", "min": 10}], "mk": ["<b>Jeder Übergang braucht eine Bedingung.</b> Ein Pfeil ohne Beschriftung ist null Punkte.", "<b>Startzustand markieren</b>, bevor der erste Pfeil gezogen wird."]}, {"m": "RAD", "min": 50, "ty": "L", "x": "<b>Bremsen</b> lesen.", "to": "bremsen", "st": null, "mk": null}, {"m": "GAR", "min": 25, "ty": "V", "x": "<b>Licht</b> — Kür.", "to": "licht", "st": null, "mk": null}], "t": ""}, {"d": "2026-08-29", "o": [{"m": "KAF", "min": 50, "ty": "U", "x": "<b>Übungen U1–U2</b> mit verdeckter Lösung.", "to": "u1", "st": null, "mk": null}, {"m": "RAD", "min": 50, "ty": "U", "x": "<b>Trainer</b>: eine Runde Antrieb.", "to": "trainer", "st": null, "mk": null}, {"m": "ORGA", "min": 25, "ty": "O", "x": "<b>DEADLINE:</b> fehlendes Material anfragen.", "to": null, "st": null, "mk": null}], "t": "deadline"}, {"d": "2026-08-30", "o": [{"m": "KAF", "min": 50, "ty": "U", "x": "<b>Übungen U3–U4</b>.", "to": "u3", "st": null, "mk": null}, {"m": "KAF", "min": 50, "ty": "U", "x": "<b>Trainer</b>: Kapitel 1 und 2.", "to": "trainer", "st": null, "mk": null}, {"m": "RAD", "min": 50, "ty": "U", "x": "<b>Reifen</b> lesen und üben.", "to": "reifen", "st": null, "mk": null}], "t": ""}, {"d": "2026-08-31", "o": [{"m": "KAF", "min": 60, "ty": "T", "x": "<b>Probeklausur im Trainer, kalt.</b> Punktzahl notieren.", "to": "trainer", "st": null, "mk": null}, {"m": "RAD", "min": 50, "ty": "U", "x": "<b>Praxis</b> einmal komplett.", "to": "praxis", "st": null, "mk": null}], "t": ""}, {"d": "2026-09-01", "o": [{"m": "KAF", "min": 40, "ty": "W", "x": "<b>Nichts Neues.</b> Taktik und Fehler-Log durchgehen.", "to": "taktik", "st": null, "mk": null}, {"m": "RAD", "min": 50, "ty": "U", "x": "<b>Trainer-Simulation</b> 1.", "to": "trainer", "st": null, "mk": null}], "t": ""}, {"d": "2026-09-02", "o": [{"m": "KAF", "min": 40, "ty": "W", "x": "<b>Vormittag:</b> Automat einmal aus dem Kopf.", "to": "zustand", "st": null, "mk": null}, {"m": "KAF", "min": 90, "ty": "T", "x": "<b>KLAUSUR KAF 10:00.</b>", "to": "taktik", "st": null, "mk": null}], "t": "klausur"}, {"d": "2026-09-03", "o": [{"m": "RAD", "min": 50, "ty": "U", "x": "<b>Trainer-Simulation</b> 2.", "to": "trainer", "st": null, "mk": null}, {"m": "GAR", "min": 50, "ty": "L", "x": "<b>Planung</b> lesen.", "to": "plan", "st": null, "mk": null}], "t": ""}, {"d": "2026-09-04", "o": [{"m": "RAD", "min": 40, "ty": "W", "x": "<b>Nichts Neues.</b> Praxis-Checkliste.", "to": "praxis", "st": null, "mk": null}, {"m": "RAD", "min": 90, "ty": "T", "x": "<b>KLAUSUR RAD 14:00.</b>", "to": "praxis", "st": null, "mk": null}], "t": "klausur"}, {"d": "2026-09-05", "o": [{"m": "GAR", "min": 50, "ty": "U", "x": "<b>Übung</b> komplett.", "to": "uebung", "st": null, "mk": null}, {"m": "GAR", "min": 25, "ty": "L", "x": "<b>Taktik</b>.", "to": "taktik", "st": null, "mk": null}], "t": ""}, {"d": "2026-09-06", "o": [{"m": "GAR", "min": 50, "ty": "T", "x": "<b>Übung kalt, mit Uhr.</b>", "to": "uebung", "st": null, "mk": null}, {"m": "GAR", "min": 25, "ty": "W", "x": "<b>Quellen</b> durchsehen.", "to": "quellen", "st": null, "mk": null}], "t": ""}, {"d": "2026-09-07", "o": [{"m": "GAR", "min": 90, "ty": "T", "x": "<b>KLAUSUR GAR.</b>", "to": "taktik", "st": null, "mk": null}], "t": "klausur"}]};
+const T=new Date();T.setHours(0,0,0,0);
+const dt=s=>new Date(s+"T00:00:00");
+const dd=s=>Math.round((dt(s)-T)/864e5);
+const WD=["So","Mo","Di","Mi","Do","Fr","Sa"];
+const fm=s=>{const d=dt(s);return WD[d.getDay()]+" "+String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0")+"."};
+let ST={};try{ST=JSON.parse(localStorage.getItem("kl2609")||"{}")}catch(e){}
+const save=()=>{try{localStorage.setItem("kl2609",JSON.stringify(ST))}catch(e){}};
+/* Einmalige Bereinigung: der Plan ab 29.08.2026 (Tagindex 25) wurde am 29.08. neu
+   geschnitten. Haken haengen an Tag- und Positionsindex, alte Haken ab dort zeigen
+   also auf voellig andere Ziele. Tage 0-24 bleiben unangetastet. */
+/* 18.09.2026: der Leseblock am 18.09. (Tagindex 44) wurde aus einem Block
+   herausgeloest, dadurch verschieben sich dort alle Positionen ab 1 um eins.
+   Nur dieser eine Tag wird zurueckgesetzt, alles andere bleibt. Schritt-Haken
+   dieses Tages ebenso. */
+try{if(localStorage.getItem("kl-recut2209")!=="1"){
+  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=47)delete ST[k];}
+  ST["47_0"]=ST["47_1"]=ST["48_0"]=ST["48_1"]=true;save();
+  try{const raw=JSON.parse(localStorage.getItem("kl-step")||"{}");for(const k of Object.keys(raw)){if(parseInt(k.split("_")[0],10)>=47)delete raw[k];}localStorage.setItem("kl-step",JSON.stringify(raw));}catch(e2){}
+  localStorage.setItem("kl-recut2209","1");
+}}catch(e){}
+try{if(localStorage.getItem("kl-split1809")!=="1"){
+  for(const k of Object.keys(ST)){if(parseInt(k.split("_")[0],10)===44)delete ST[k];}
+  save();
+  /* Schritt-Haken desselben Tages direkt im Speicher, SP gibt es hier noch nicht */
+  try{const raw=JSON.parse(localStorage.getItem("kl-step")||"{}");
+      for(const k of Object.keys(raw)){if(parseInt(k.split("_")[0],10)===44)delete raw[k];}
+      localStorage.setItem("kl-step",JSON.stringify(raw));}catch(e2){}
+  localStorage.setItem("kl-split1809","1");
+}}catch(e){}
+try{if(localStorage.getItem("kl-recut2")!=="2026-08-30"){
+  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=29)delete ST[k];}
+  save();localStorage.setItem("kl-recut2","2026-08-30");
+}}catch(e){}
+try{if(localStorage.getItem("kl-recut")!=="2026-08-29b"){
+  for(const k of Object.keys(ST)){const d=parseInt(k.split("_")[0],10);if(d>=24)delete ST[k];}
+  save();localStorage.setItem("kl-recut","2026-08-29b");
+}}catch(e){}
+
+/* ---------- Navigation ---------- */
+function go(k,tab){
+ const t=document.getElementById("v-"+k);
+ // Unbekannter Hash = In-Page-Anker eines Moduls. Nicht routen, Browser scrollen lassen.
+ if(!t&&k!=="hub")return;
+ document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+ (t||document.getElementById("v-hub")).classList.add("on");
+ document.querySelectorAll("#side .nl").forEach(n=>n.classList.toggle("on",n.dataset.go===k&&!n.dataset.tab));
+ if(tab)swtab(tab);
+ location.hash=k==="hub"?"":k;
+ window.scrollTo(0,0);
+ document.getElementById("side").classList.remove("open");
+}
+function swtab(p){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x.dataset.p===p));
+ document.querySelectorAll(".pane").forEach(x=>x.classList.toggle("on",x.id==="p-"+p));
+}
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>swtab(t.dataset.p));
+
+/* ---------- Sidebar ---------- */
+document.getElementById("navmod").innerHTML=D.mods.map(m=>{
+ const n=dd(m.d);
+ return `<button class="nl${m.has?"":" dis"}" ${m.has?`data-go="${m.k}"`:""}>
+  <span class="kk">${m.k}</span>${m.has?"":"<span style='font-size:11.5px'>kein Dok</span>"}
+  <span class="dd">${n<0?"&#10003;":n+"T"}</span></button>`}).join("");
+document.querySelectorAll("#side .nl[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go,b.dataset.tab));
+/* Die Trainer sind eigene Apps und oeffnen in einem neuen Tab. */
+document.getElementById("navtr").innerHTML=D.mods.filter(m=>m.trainer).map(m=>
+ `<a class="nl" href="${m.trainer.file}" target="_blank" title="${m.trainer.was}">
+  <span class="kk">${m.k}</span>Trainer<span class="dd">&#8599;</span></a>`).join("");
+
+/* ---------- Countdown ---------- */
+function kpi(){
+ const nx=D.mods.filter(m=>dd(m.d)>=0).sort((a,b)=>dd(a.d)-dd(b.d));
+ const p=[];
+ if(nx.length)p.push(`<div class="cdb${dd(nx[0].d)<7?" warn":""}"><div class="n">${dd(nx[0].d)}</div><div class="l">Tage bis ${nx[0].k}</div></div>`);
+ p.push(`<div class="cdb"><div class="n">${Math.max(0,dd("2026-09-01"))}</div><div class="l">Tage Vorbereitung übrig</div></div>`);
+ const w=D.days.map((d,i)=>({...d,i})).filter(d=>d.d>="2026-08-28");
+ const done=w.reduce((a,d)=>a+d.o.filter((_,j)=>ST[d.i+"_"+j]).length,0);
+ const tot=w.reduce((a,d)=>a+d.o.length,0);
+ p.push(`<div class="cdb"><div class="n">${done}/${tot}</div><div class="l">Ziele ab 28.08.</div></div>`);
+ p.push(`<div class="cdb"><div class="n">${D.mods.filter(m=>m.has).length}/${D.mods.length}</div><div class="l">Module dokumentiert</div></div>`);
+ document.getElementById("cd").innerHTML=p.join("");
+ document.getElementById("today").textContent="Heute: "+fm(iso(T));
+}
+kpi();
+
+/* ---------- Modulkarten ---------- */
+document.getElementById("grid").innerHTML=D.mods.map(m=>{
+ const n=dd(m.d),col=n<0?"#c9c9be":n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+ const vt=m.v===3?'<span class="tg v3">3. Versuch</span>':m.v===2?'<span class="tg v2">2. Versuch</span>':'';
+ return `<div class="card"><div class="bar" style="background:${col}"></div>
+  <h3>${m.k}</h3><div class="mn">${m.name} &middot; ${m.prof}</div>
+  <div class="row"><span class="dt">${fm(m.d)} ${m.t}</span>
+   <span class="fine">${n<0?"vorbei":n===0?"HEUTE":"noch "+n+" Tage"}</span></div>
+  <div class="row"><span class="tg ${m.typ==="PF"?"pf":"wp"}">${m.typ==="PF"?"Pflicht":"Wahlpflicht"}</span>
+   ${vt}<span class="tg ${m.has?"ok":"todo"}">${m.has?"dokumentiert":"offen"}</span></div>
+  ${m.mode?`<div class="row"><span class="fine"><b>${m.mode}</b></span></div>`:""}
+  <div class="md">${m.desc}</div>
+  <div><button class="btn ${m.has?"pri":""}" ${m.has?`onclick="go('${m.k}')"`:"disabled"}>
+   ${m.has?"Lerndokument öffnen":"noch kein Dokument"}</button>${m.trainer?
+   `<a class="btn" href="${m.trainer.file}" target="_blank" style="margin-left:7px"
+      title="${m.trainer.was}">Trainer &#8599;</a>`:""}</div></div>`}).join("");
+
+/* ---------- Tagesplan ---------- */
+function days(){
+ let out="",lastW=null;
+ D.days.forEach((d,i)=>{
+  const dte=dt(d.d),n=dd(d.d);
+  const wk=new Date(dte);wk.setDate(wk.getDate()-((wk.getDay()+6)%7));
+  const wkey=iso(wk);
+  if(wkey!==lastW){lastW=wkey;
+   const we=new Date(wk);we.setDate(we.getDate()+6);
+   out+=`<div class="wk">${fm(wkey)} &ndash; ${fm(iso(we))}</div>`}
+  const cls=[d.t,n<0?"past":"",n===0?"today":""].filter(Boolean).join(" ");
+  out+=`<div class="day ${cls}"><div class="dt2">
+    <div class="dnum">${String(dte.getDate()).padStart(2,"0")}.${String(dte.getMonth()+1).padStart(2,"0")}.</div>
+    <div class="dwd">${WD[dte.getDay()]}${n===0?" &middot; heute":""}</div></div><div class="obs">`;
+  d.o.forEach((o,j)=>{const id=i+"_"+j,c=!!ST[id];
+   const jb=o.to?`<button class="jp" title="Zum Lernstoff: ${o.m}" onclick="jump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
+   out+=`<div class="obj${c?" done":""}"><input type="checkbox" id="k${id}" ${c?"checked":""} onchange="tog('${id}')">
+     <span class="mk">${o.m}</span><span class="ty ${o.ty}">${o.ty}</span>
+     <label for="k${id}">${o.x} <span style="color:var(--mut);font-size:12px">· ${o.min} Min</span></label>${jb}</div>`});
+  out+="</div></div>"});
+ document.getElementById("days").innerHTML=out;
+ const done=D.days.reduce((a,d,i)=>a+d.o.filter((_,j)=>ST[i+"_"+j]).length,0);
+ const tot=D.days.reduce((a,d)=>a+d.o.length,0);
+ document.getElementById("pall").style.width=(done/tot*100)+"%";
+ document.getElementById("pinfo").textContent=done+" von "+tot+" Zielen erledigt";
+}
+function tog(id){ST[id]=!ST[id];save();days();cal();lauf();arc();kpi()}
+
+/* Tagesliste ein-/ausklappen (Standard: zu) */
+(function(){
+ const b=document.getElementById("tglr"),w=document.getElementById("dayswrap"),h=document.getElementById("tglrh");
+ let open=false;try{open=localStorage.getItem("kl-list")==="1"}catch(e){}
+ const set=()=>{w.classList.toggle("open",open);b.classList.toggle("open",open);
+  h.textContent=open?"zuklappen":"alle "+D.days.length+" Tage aufklappen";
+  try{localStorage.setItem("kl-list",open?"1":"0")}catch(e){}};
+ b.onclick=()=>{open=!open;set()};set();
+})();
+
+/* ---------- Wochenkalender ---------- */
+const MO=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const byDate={};D.days.forEach((d,i)=>byDate[d.d]={...d,i});
+function monday(d){const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}
+function iso(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function kwnum(d){const x=new Date(d);x.setDate(x.getDate()+3-((x.getDay()+6)%7));
+ const y=new Date(x.getFullYear(),0,4);return 1+Math.round(((x-y)/864e5-3+((y.getDay()+6)%7))/7)}
+const W0=monday(dt(D.days[0].d)), WN=monday(dt(D.days[D.days.length-1].d));
+const NW=Math.round((WN-W0)/6048e5)+1;
+let wi=Math.min(NW-1,Math.max(0,Math.round((monday(T)-W0)/6048e5)));
+function cal(dir){
+ const mon=new Date(W0);mon.setDate(mon.getDate()+wi*7);
+ const sun=new Date(mon);sun.setDate(sun.getDate()+6);
+ document.getElementById("kwlab").textContent="KW "+kwnum(mon);
+ document.getElementById("kwrg").innerHTML=mon.getDate()+". "+MO[mon.getMonth()]+
+   " &ndash; "+sun.getDate()+". "+MO[sun.getMonth()]+" "+sun.getFullYear();
+ let cells="",tot=0,don=0;
+ for(let j=0;j<7;j++){
+  const cur=new Date(mon);cur.setDate(cur.getDate()+j);
+  const key=iso(cur),d=byDate[key],n=dd(key);
+  if(!d){cells+=`<div class="dc void"><div class="dch"><span class="wd">${WD[cur.getDay()]}</span>
+    <span class="dn">${cur.getDate()}</span><span class="mo">${MO[cur.getMonth()]}</span></div></div>`;continue}
+  const done=d.o.filter((_,q)=>ST[d.i+"_"+q]).length;
+  tot+=d.o.length;don+=done;
+  const mins=d.o.reduce((a,o)=>a+(o.min||0),0);
+  const st=done===0?"":done===d.o.length?"full":"part";
+  const cls=["dc",d.t,n<0?"past":"",n===0?"today":""].filter(Boolean).join(" ");
+  const bdg=d.t==="klausur"?'<span class="badge k">Klausur</span>':
+            d.t==="deadline"?'<span class="badge d">Deadline</span>':"";
+  const mods=[...new Set(d.o.map(o=>o.m))];
+  const chips=mods.map(m=>{
+    const alle=d.o.filter(o=>o.m===m);
+    const fertig=alle.every((o,q)=>ST[d.i+"_"+d.o.indexOf(o)]);
+    return `<span class="${fertig?"on":""}">${m}</span>`}).join("");
+  cells+=`<div class="${cls}" onclick="dOpen('${key}')">${bdg}<div class="dch">
+    <span class="wd">${WD[cur.getDay()]}</span><span class="dn">${cur.getDate()}</span>
+    <span class="mo">${MO[cur.getMonth()]}</span><span class="dot ${st}"></span></div>
+    <div class="dsum"><span class="cnt">${done}/${d.o.length}</span>
+      <span class="mins">${Math.round(mins/60*10)/10} h</span></div>
+    <div class="mods">${chips}</div>
+    <div class="more">öffnen &#8599;</div>
+    <div class="dbar"><i style="width:${done/d.o.length*100}%"></i></div>
+  </div>`;
+ }
+ const g=document.getElementById("wgrid");
+ g.className="wgrid";void g.offsetWidth;
+ g.innerHTML=cells;
+ if(dir)g.classList.add(dir>0?"slideL":"slideR");
+ document.getElementById("wsum").textContent=tot?don+" von "+tot+" Zielen diese Woche":"keine Ziele";
+ document.getElementById("wprev").disabled=wi<=0;
+ document.getElementById("wnext").disabled=wi>=NW-1;
+}
+document.getElementById("wprev").onclick=()=>{if(wi>0){wi--;cal(-1)}};
+document.getElementById("wnext").onclick=()=>{if(wi<NW-1){wi++;cal(1)}};
+document.getElementById("wtoday").onclick=()=>{
+ const t=Math.min(NW-1,Math.max(0,Math.round((monday(T)-W0)/6048e5)));
+ const dir=t>wi?1:t<wi?-1:0;wi=t;cal(dir)};
+document.addEventListener("keydown",e=>{
+ if(document.getElementById("ov").classList.contains("on"))return;
+ if(!document.getElementById("p-plan").classList.contains("on"))return;
+ if(e.key==="ArrowLeft"&&wi>0){wi--;cal(-1)}
+ if(e.key==="ArrowRight"&&wi<NW-1){wi++;cal(1)}});
+cal();
+
+
+/* ---------- Tagesdetail ---------- */
+const TY={L:"lesen",U:"üben",D:"aus dem Kopf",T:"Test",W:"Wiederholung",O:"Orga"};
+let dKey=null;
+function dOpen(key){
+ const d=byDate[key]; if(!d)return;
+ dKey=key;
+ const dte=dt(key), n=dd(key);
+ document.getElementById("dtitle").textContent=
+  String(dte.getDate()).padStart(2,"0")+"."+String(dte.getMonth()+1).padStart(2,"0")+"."+dte.getFullYear();
+ document.getElementById("dwd").textContent=
+  WD[dte.getDay()]+(n===0?" · heute":n>0?" · in "+n+" Tagen":" · vorbei");
+ dRender();
+ document.getElementById("dov").classList.add("on");
+ document.body.style.overflow="hidden";
+}
+function dRender(){
+ const d=byDate[dKey]; if(!d)return;
+ const mins=d.o.reduce((a,o)=>a+(o.min||0),0);
+ const done=d.o.filter((_,q)=>ST[d.i+"_"+q]).length;
+ const offen=d.o.reduce((a,o,q)=>a+(ST[d.i+"_"+q]?0:(o.min||0)),0);
+ document.getElementById("dbud").textContent=
+  done+"/"+d.o.length+" · "+Math.round(mins/60*10)/10+" h geplant"+(offen?" · "+Math.round(offen/60*10)/10+" h offen":" · fertig");
+ document.getElementById("dpr").style.width=(done/d.o.length*100)+"%";
+ document.getElementById("dbody").innerHTML=d.o.map((o,q)=>{
+  const id=d.i+"_"+q,c=!!ST[id];
+  const jb=o.to?`<button class="go" title="Zum Lernstoff: ${o.m}" onclick="dJump('${o.m}','${o.m}-${o.to}')">&#8599;</button>`:"";
+  return `<div class="tsk${c?" done":""}">
+    <input type="checkbox" ${c?"checked":""} onchange="dTog('${id}')">
+    <span class="meta"><span class="mk3">${o.m}</span>
+      <span class="ty ${o.ty}">${TY[o.ty]||o.ty}</span>
+      <span class="mn2">${o.min} Min</span></span>
+    <span class="tt">${o.x}</span>${jb}</div>`}).join("")
+  +'<div class="dlg"><b>lesen</b> = Stoff durchgehen &middot; <b>üben</b> = mit Vorlage rechnen '
+  +'&middot; <b>aus dem Kopf</b> = ohne Vorlage &middot; <b>Test</b> = kalt, Zeit stoppen und Punktzahl notieren</div>';
+}
+function dTog(id){ST[id]=!ST[id];save();dRender();days();cal();lauf();arc();kpi();}
+function dJump(m,id){dClose();jump(m,id);}
+function dClose(){document.getElementById("dov").classList.remove("on");document.body.style.overflow="";}
+document.getElementById("dov").onclick=e=>{if(e.target.id==="dov")dClose()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")dClose()});
+
+/* ---------- Zeitachse ---------- */
+(function(){
+ const mx=Math.max(...D.mods.map(m=>dd(m.d)));
+ document.getElementById("tlbox").innerHTML=
+ '<p class="fine">Balkenlänge = verbleibende Tage.</p>'+D.mods.map(m=>{
+  const n=dd(m.d),w=Math.max(2,n/mx*100),col=n<7?"#a3441c":n<21?"#c98a3c":"#3d6b2e";
+  return `<div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--line)">
+   <span style="font:600 13px ui-monospace,monospace;color:var(--mut);min-width:76px">${fm(m.d)}</span>
+   <span style="height:12px;border-radius:3px;flex:1;background:var(--soft);position:relative">
+     <i style="position:absolute;inset:0 auto 0 0;width:${w}%;border-radius:3px;background:${col}"></i></span>
+   <span style="font:600 13px sans-serif;min-width:50px">${m.k}</span>
+   <span class="fine">${n} T</span></div>`}).join("")
+ +`<h3>Die kritischen Fenster</h3><table>
+   <tr><th>Fenster</th><th>Tage</th><th>Was passiert</th></tr>
+   <tr><td><b>26.08. &ndash; 01.09.</b></td><td>7</td><td>Vorbereitung</td></tr>
+   <tr><td><b>02. &ndash; 07.09.</b></td><td>6</td><td>KAF, RAD, GAR</td></tr></table>`;
+})();
+
+/* ---------- Suche ---------- */
+let IDX=null;
+function idx(){
+ if(IDX)return IDX;IDX=[];
+ D.mods.filter(m=>m.has).forEach(m=>{
+  const root=document.getElementById("m-"+m.k);if(!root)return;
+  root.querySelectorAll("h2,h3,h4,p,li,td,pre").forEach(el=>{
+   const t=(el.textContent||"").trim().replace(/\s+/g," ");
+   if(t.length>18&&t.length<400){
+    if(!el.id)el.id="x"+Math.random().toString(36).slice(2,9);
+    IDX.push({k:m.k,id:el.id,t:t})}})});
+ return IDX;
+}
+function search(q){
+ const r=document.getElementById("sres");
+ if(!q||q.length<2){r.innerHTML='<div class="sr fine">Mindestens zwei Zeichen …</div>';return}
+ const ql=q.toLowerCase();
+ const hits=idx().filter(x=>x.t.toLowerCase().includes(ql)).slice(0,40);
+ if(!hits.length){r.innerHTML='<div class="sr fine">Nichts gefunden.</div>';return}
+ r.innerHTML=hits.map((h,i)=>{
+  const p=h.t.toLowerCase().indexOf(ql),s=Math.max(0,p-55);
+  const frag=(s?"…":"")+h.t.slice(s,p)+"<mark>"+h.t.slice(p,p+q.length)+"</mark>"+h.t.slice(p+q.length,p+q.length+90)+"…";
+  return `<div class="sr${i?"":" sel"}" data-k="${h.k}" data-id="${h.id}"><span class="sk">${h.k}</span>${frag}</div>`}).join("");
+ r.querySelectorAll(".sr[data-k]").forEach(el=>el.onclick=()=>jump(el.dataset.k,el.dataset.id));
+}
+function jump(k,id){
+ closeS();
+ if(!document.getElementById("v-"+k))return;
+ go(k);
+ setTimeout(()=>{const e=document.getElementById(id);
+  if(e){
+   const pane=e.closest&&e.closest(".unit");
+   if(pane&&!pane.classList.contains("on")){
+    const u=pane.id.replace(/^[A-Z0-9]+-/,"");
+    const pill=document.querySelector('.pill[data-u="'+u+'"]');
+    if(pill)pill.click();
+   }
+   e.scrollIntoView({block:"center"});
+   const o=e.style.background;e.style.background="#ffe9a8";
+   setTimeout(()=>e.style.background=o,1600)}},60);
+}
+function openS(){document.getElementById("ov").classList.add("on");
+ const i=document.getElementById("sin");i.value="";i.focus();search("")}
+function closeS(){document.getElementById("ov").classList.remove("on")}
+document.getElementById("osearch").onclick=openS;
+document.getElementById("sin").oninput=e=>search(e.target.value);
+document.getElementById("ov").onclick=e=>{if(e.target.id==="ov")closeS()};
+document.getElementById("pov").onclick=e=>{if(e.target.id==="pov")pClose()};
+document.addEventListener("keydown",e=>{
+ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openS()}
+ if(e.key==="Escape"){closeS();pClose();}
+ if(document.getElementById("ov").classList.contains("on")&&(e.key==="Enter")){
+  const s=document.querySelector(".sr.sel[data-k]");if(s)jump(s.dataset.k,s.dataset.id)}
+ if(document.getElementById("ov").classList.contains("on")&&(e.key==="ArrowDown"||e.key==="ArrowUp")){
+  e.preventDefault();const all=[...document.querySelectorAll(".sr[data-k]")];
+  let i=all.findIndex(x=>x.classList.contains("sel"));
+  all.forEach(x=>x.classList.remove("sel"));
+  i=Math.max(0,Math.min(all.length-1,i+(e.key==="ArrowDown"?1:-1)));
+  if(all[i]){all[i].classList.add("sel");all[i].scrollIntoView({block:"nearest"})}}
+});
+
+/* ---------- Theme ---------- */
+const th=document.getElementById("theme");
+
+/* ---------- Der laufende Plan (Wochenraster ab START; davor = Archiv) ---------- */
+const START="2026-08-28";
+function lhrs(d){return d.o.reduce((a,o)=>a+((d.t==="klausur"&&o.ty==="T"&&o.min>=90)?0:(o.min||0)),0)}
+const LW0=monday(dt(START)), LWN=monday(dt(D.days[D.days.length-1].d));
+const LNW=Math.round((LWN-LW0)/6048e5)+1;
+let lwi=Math.min(LNW-1,Math.max(0,Math.round((monday(T)-LW0)/6048e5)));
+
+function laufcal(dir){
+ const mon=new Date(LW0);mon.setDate(mon.getDate()+lwi*7);
+ const sun=new Date(mon);sun.setDate(sun.getDate()+6);
+ document.getElementById("lkwlab").textContent="KW "+kwnum(mon);
+ document.getElementById("lkwrg").innerHTML=mon.getDate()+". "+MO[mon.getMonth()]+
+   " &ndash; "+sun.getDate()+". "+MO[sun.getMonth()]+" "+sun.getFullYear();
+ let cells="",tot=0,don=0;
+ for(let j=0;j<7;j++){
+  const cur=new Date(mon);cur.setDate(cur.getDate()+j);
+  const key=iso(cur),d=byDate[key],n=dd(key);
+  if(!d||key<START){cells+='<div class="dc void"><div class="dch"><span class="wd">'+WD[cur.getDay()]+
+    '</span><span class="dn">'+cur.getDate()+'</span><span class="mo">'+MO[cur.getMonth()]+
+    '</span></div></div>';continue}
+  const done=d.o.filter((_,q)=>ST[d.i+"_"+q]).length;
+  tot+=d.o.length;don+=done;
+  const st=done===0?"":done===d.o.length?"full":"part";
+  const cls=["dc",d.t,n<0?"past":"",n===0?"today":""].filter(Boolean).join(" ");
+  const bdg=d.t==="klausur"?'<span class="badge k">Klausur</span>':"";
+  const chips=[...new Set(d.o.map(o=>o.m))].map(m=>{
+    const fertig=d.o.every((o,q)=>o.m!==m||ST[d.i+"_"+q]);
+    return '<span class="'+(fertig?"on":"")+'">'+m+'</span>'}).join("");
+  cells+='<div class="'+cls+'" onclick="lOpen(\''+key+'\')">'+bdg+'<div class="dch">'+
+    '<span class="wd">'+WD[cur.getDay()]+'</span><span class="dn">'+cur.getDate()+'</span>'+
+    '<span class="mo">'+MO[cur.getMonth()]+'</span><span class="dot '+st+'"></span></div>'+
+    '<div class="dsum"><span class="cnt">'+done+'/'+d.o.length+'</span>'+
+    '<span class="mins">'+Math.round(lhrs(d)/60*10)/10+' h</span></div>'+
+    '<div class="mods">'+chips+'</div><div class="more">öffnen &#8599;</div>'+
+    '<div class="dbar"><i style="width:'+(done/d.o.length*100)+'%"></i></div></div>';
+ }
+ const g=document.getElementById("lwgrid");
+ g.className="wgrid";void g.offsetWidth;
+ g.innerHTML=cells;
+ if(dir)g.classList.add(dir>0?"slideL":"slideR");
+ document.getElementById("lwsum").textContent=tot?don+" von "+tot+" Zielen diese Woche":"keine Ziele";
+ document.getElementById("lwprev").disabled=lwi<=0;
+ document.getElementById("lwnext").disabled=lwi>=LNW-1;
+}
+/* Klick auf eine Karte: Tag unten im Detail aufklappen statt Overlay */
+let lKey=null, lMod=null;
+function lOpen(key){lKey=key;lMod=null;lauf();
+ document.getElementById("laufheute").scrollIntoView({block:"nearest",behavior:"smooth"})}
+
+function lauf(){
+ const win=D.days.map((d,i)=>({...d,i})).filter(d=>d.d>=START);
+ if(!win.length)return;
+ const tot=win.reduce((a,d)=>a+d.o.length,0);
+ const don=win.reduce((a,d)=>a+d.o.filter((_,j)=>ST[d.i+"_"+j]).length,0);
+ const offen=win.reduce((a,d)=>a+d.o.reduce((b,o,j)=>b+(ST[d.i+"_"+j]?0:
+   ((d.t==="klausur"&&o.ty==="T"&&o.min>=90)?0:(o.min||0))),0),0);
+ document.getElementById("laufring").innerHTML=don+"/"+tot+"<small>Ziele</small>";
+ document.getElementById("laufbar").style.width=(tot?don/tot*100:0)+"%";
+ document.getElementById("laufs").innerHTML="ab "+fm(START)+" &middot; "+win.length+
+   " Tage &middot; noch "+Math.round(offen/60)+" h Lernzeit";
+ laufcal();
+
+ /* Filterleiste: Tagesansicht plus je Modul ein Chip mit offenen Zielen */
+ const mods={};
+ win.forEach(d=>d.o.forEach((o,j)=>{
+   if(o.m==="ORGA")return;
+   if(!mods[o.m])mods[o.m]={tot:0,don:0};
+   mods[o.m].tot++; if(ST[d.i+"_"+j])mods[o.m].don++;}));
+ const order=D.mods.map(m=>m.k).filter(k=>mods[k]);
+ let fh='<button class="lchip'+(lMod?"":" on")+'" onclick="lMod=null;lauf()">Tagesansicht</button>';
+ order.forEach(k=>{const m=mods[k],offen=m.tot-m.don;
+   fh+='<button class="lchip'+(lMod===k?" on":"")+(offen?"":" fertig")+'" onclick="lMod=\''+k+'\';lKey=null;lauf()">'+
+       k+' <i>'+offen+' offen</i></button>';});
+ document.getElementById("lauffil").innerHTML=fh;
+
+ if(lMod){laufmod(win);return;}
+
+ const cur=win.find(d=>d.d===lKey)||win.find(d=>d.d===iso(T))||win.find(d=>dd(d.d)>=0)||win[win.length-1];
+ const n=dd(cur.d);
+ document.getElementById("laufheuteh").textContent=
+   n===0?"Heute im Detail":fm(cur.d)+" im Detail";
+ let h='<div class="ltoday"><div class="th"><b>'+fm(cur.d)+'</b><span>'+
+   (n===0?"heute":n===1?"morgen":n>0?"in "+n+" Tagen":Math.abs(n)+" Tage her")+
+   " &middot; "+cur.o.length+" Ziele &middot; "+Math.round(lhrs(cur)/60*10)/10+" h"+
+   (n!==0?' &middot; <a href="#" onclick="lKey=null;lauf();return false">zurück zu heute</a>':"")+
+   "</span></div>";
+ h+=lbody(cur);
+ document.getElementById("laufheute").innerHTML=h+"</div>";
+}
+/* ---------- Archiv: derselbe Aufbau, aber alles VOR START ---------- */
+const AEND="2026-08-27";
+const AW0=monday(dt(D.days[0].d)), AWN=monday(dt(AEND));
+const ANW=Math.max(1,Math.round((AWN-AW0)/6048e5)+1);
+let awi=ANW-1, aKey=null, aMod=null;
+
+function arccal(dir){
+ const mon=new Date(AW0);mon.setDate(mon.getDate()+awi*7);
+ const sun=new Date(mon);sun.setDate(sun.getDate()+6);
+ document.getElementById("akwlab").textContent="KW "+kwnum(mon);
+ document.getElementById("akwrg").innerHTML=mon.getDate()+". "+MO[mon.getMonth()]+
+   " &ndash; "+sun.getDate()+". "+MO[sun.getMonth()]+" "+sun.getFullYear();
+ let cells="",tot=0,don=0;
+ for(let j=0;j<7;j++){
+  const cur=new Date(mon);cur.setDate(cur.getDate()+j);
+  const key=iso(cur),d=byDate[key];
+  if(!d||key>=START){cells+='<div class="dc void"><div class="dch"><span class="wd">'+WD[cur.getDay()]+
+    '</span><span class="dn">'+cur.getDate()+'</span><span class="mo">'+MO[cur.getMonth()]+
+    '</span></div></div>';continue}
+  const done=d.o.filter((_,q)=>ST[d.i+"_"+q]).length;
+  tot+=d.o.length;don+=done;
+  const st=done===0?"":done===d.o.length?"full":"part";
+  const cls=["dc",d.t,"past"].filter(Boolean).join(" ");
+  const bdg=d.t==="klausur"?'<span class="badge k">Klausur</span>':"";
+  const chips=[...new Set(d.o.map(o=>o.m))].map(m=>{
+    const fertig=d.o.every((o,q)=>o.m!==m||ST[d.i+"_"+q]);
+    return '<span class="'+(fertig?"on":"")+'">'+m+'</span>'}).join("");
+  cells+='<div class="'+cls+'" onclick="aOpen(\''+key+'\')">'+bdg+'<div class="dch">'+
+    '<span class="wd">'+WD[cur.getDay()]+'</span><span class="dn">'+cur.getDate()+'</span>'+
+    '<span class="mo">'+MO[cur.getMonth()]+'</span><span class="dot '+st+'"></span></div>'+
+    '<div class="dsum"><span class="cnt">'+done+'/'+d.o.length+'</span>'+
+    '<span class="mins">'+Math.round(lhrs(d)/60*10)/10+' h</span></div>'+
+    '<div class="mods">'+chips+'</div><div class="more">öffnen &#8599;</div>'+
+    '<div class="dbar"><i style="width:'+(done/d.o.length*100)+'%"></i></div></div>';
+ }
+ const g=document.getElementById("awgrid");
+ g.className="wgrid";void g.offsetWidth;
+ g.innerHTML=cells;
+ if(dir)g.classList.add(dir>0?"slideL":"slideR");
+ document.getElementById("awsum").textContent=tot?don+" von "+tot+" Zielen diese Woche":"keine Ziele";
+ document.getElementById("awprev").disabled=awi<=0;
+ document.getElementById("awnext").disabled=awi>=ANW-1;
+}
+function aOpen(key){aKey=key;aMod=null;arc();
+ document.getElementById("archeute").scrollIntoView({block:"nearest",behavior:"smooth"})}
+
+function arc(){
+ const win=D.days.map((d,i)=>({...d,i})).filter(d=>d.d<START);
+ if(!win.length)return;
+ const tot=win.reduce((a,d)=>a+d.o.length,0);
+ const don=win.reduce((a,d)=>a+d.o.filter((_,j)=>ST[d.i+"_"+j]).length,0);
+ document.getElementById("arcring").innerHTML=don+"/"+tot+"<small>Ziele</small>";
+ document.getElementById("arcbar").style.width=(tot?don/tot*100:0)+"%";
+ document.getElementById("arcs").innerHTML=fm(win[0].d)+" &ndash; "+fm(AEND)+" &middot; "+
+   win.length+" Tage &middot; hake ab, was du davon wirklich gemacht hast";
+ arccal();
+ const mods={};
+ win.forEach(d=>d.o.forEach((o,j)=>{
+   if(o.m==="ORGA")return;
+   if(!mods[o.m])mods[o.m]={tot:0,don:0};
+   mods[o.m].tot++; if(ST[d.i+"_"+j])mods[o.m].don++;}));
+ const order=D.mods.map(m=>m.k).filter(k=>mods[k]);
+ let fh='<button class="lchip'+(aMod?"":" on")+'" onclick="aMod=null;arc()">Tagesansicht</button>';
+ order.forEach(k=>{const m=mods[k];
+   fh+='<button class="lchip'+(aMod===k?" on":"")+(m.don===m.tot?" fertig":"")+
+       '" onclick="aMod=\''+k+'\';aKey=null;arc()">'+k+' <i>'+m.don+'/'+m.tot+'</i></button>';});
+ document.getElementById("arcfil").innerHTML=fh;
+ if(aMod){arcmod(win);return;}
+ const cur=win.find(d=>d.d===aKey)||win[win.length-1];
+ let h='<div class="ltoday"><div class="th"><b>'+fm(cur.d)+'</b><span>'+
+   Math.abs(dd(cur.d))+" Tage her &middot; "+cur.o.length+" Ziele &middot; "+
+   Math.round(lhrs(cur)/60*10)/10+" h</span></div>";
+ document.getElementById("archeuteh").textContent=fm(cur.d)+" im Detail";
+ cur.o.forEach((o,j)=>{h+=lrow2(cur,o,j)});
+ document.getElementById("archeute").innerHTML=h+"</div>";
+}
+function arcmod(win){
+ const days=win.filter(d=>d.o.some(o=>o.m===aMod));
+ const tot=days.reduce((a,d)=>a+d.o.filter(o=>o.m===aMod).length,0);
+ const don=days.reduce((a,d)=>a+d.o.filter((o,j)=>o.m===aMod&&ST[d.i+"_"+j]).length,0);
+ document.getElementById("archeuteh").innerHTML=
+   "Alle "+aMod+"-Aufgaben bis "+fm(AEND)+" &middot; "+don+"/"+tot+" abgehakt";
+ let h='<div class="ltoday">';
+ days.forEach(d=>{
+  h+='<div class="ldh"><b>'+fm(d.d)+'</b><span>'+Math.abs(dd(d.d))+' Tage her</span>'+
+     (d.t==="klausur"?'<span class="kl">Klausur</span>':'')+
+     '<a href="#" onclick="aMod=null;aKey=\''+d.d+'\';arc();return false">nur diesen Tag</a></div>';
+  d.o.forEach((o,j)=>{if(o.m===aMod)h+=lrow2(d,o,j)});
+ });
+ document.getElementById("archeute").innerHTML=h+"</div>";
+}
+
+/* ---------- Stand als Text ---------- */
+function stand(){
+ const L=[], strip=t=>t.replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim();
+ L.push("STAND "+fm(iso(T))+"  (aus klausuren.html)");
+ [["ARCHIV  bis "+fm(AEND), d=>d.d<START],
+  ["LAUFENDER PLAN  ab "+fm(START), d=>d.d>=START]].forEach(function(p){
+  const win=D.days.map((d,i)=>({...d,i})).filter(p[1]);
+  L.push(""); L.push("=== "+p[0]+" ===");
+  const mods={};
+  win.forEach(d=>d.o.forEach((o,j)=>{
+   if(o.m==="ORGA")return;
+   const M=mods[o.m]||(mods[o.m]={tot:0,don:0,min:0,offen:[]});
+   M.tot++;
+   if(ST[d.i+"_"+j]){M.don++;M.min+=(o.min||0);}
+   else M.offen.push(d.d.slice(8,10)+"."+d.d.slice(5,7)+"  "+(o.min||0)+"'  "+strip(o.x).slice(0,58));
+  }));
+  const order=D.mods.map(m=>m.k).filter(k=>mods[k]);
+  if(!order.length){L.push("(nichts)");return}
+  order.forEach(k=>{const M=mods[k];
+   L.push(k.padEnd(5)+" "+String(M.don+"/"+M.tot).padEnd(8)+" abgehakt   "+
+          Math.round(M.min/60*10)/10+" h gemacht");});
+  const rest=order.filter(k=>mods[k].offen.length);
+  if(rest.length){
+   L.push(""); L.push("offen geblieben:");
+   rest.forEach(k=>{const M=mods[k];
+    M.offen.slice(0,8).forEach(t=>L.push("  "+k.padEnd(5)+t));
+    if(M.offen.length>8)L.push("  "+k.padEnd(5)+"… und "+(M.offen.length-8)+" weitere");
+   });
+  }
+ });
+ return L.join("\n");
+}
+
+function lmin(a){return a.reduce((s,e)=>s+e[0].min,0)}
+
+/* ---------- Blockdetail: Ueberschrift in der Zeile, Schritte im Panel ---------- */
+const TYN={L:"lesen",U:"\u00fcben",D:"aus dem Kopf",T:"Test",W:"Wiederholung",O:"Orga",V:"K\u00fcr"};
+let SP={};try{SP=JSON.parse(localStorage.getItem("kl-step")||"{}")}catch(e){}
+function spSave(){try{localStorage.setItem("kl-step",JSON.stringify(SP))}catch(e){}}
+/* Modul-Aufgabensprung: Module tragen sich in window.QJUMP ein. */
+function lhead(x){
+ const m=String(x).match(/^\s*<b>([\s\S]*?)<\/b>/);
+ let h=m?m[1]:String(x);
+ h=h.replace(/<[^>]+>/g,"").trim().replace(/[.:\u2014\u2013]\s*$/,"");
+ if(!m&&h.length>84)h=h.slice(0,84).replace(/\s\S*$/,"")+"\u2026";
+ return h;
+}
+let pCur=null;
+function pOpen(di,j){
+ const d=D.days[di],o=d.o[j];pCur=[di,j];
+ const st=o.st||[];
+ let h='<div class="ph"><div class="pmeta"><span class="pmk">'+o.m+'</span>'+
+   '<span class="pty">'+fm(d.d)+' &middot; '+o.min+' Min &middot; '+(TYN[o.ty]||o.ty)+
+   (o.ty==="V"?' <b>(K\u00fcr \u2014 optional)</b>':'')+'</span>'+
+   '<button class="pcl" onclick="pClose()" title="Schlie\u00dfen">&times;</button></div>'+
+   '<h3>'+lhead(o.x)+'</h3></div><div class="pb">';
+ if(st.length){
+  h+='<div class="plab">Der Weg \u2014 '+st.length+' Schritte</div>';
+  st.forEach((sx,k)=>{
+   const id=di+"_"+j+"_"+k,c=!!SP[id];
+   h+='<div class="stp'+(c?" sdone":"")+'"><input type="checkbox" '+(c?"checked":"")+
+     ' onchange="pStep(\''+id+'\')"><div class="sn">'+(k+1)+'</div><div class="sc">'+
+     '<div class="st1">'+sx.t+'</div>'+
+     (sx.d?'<div class="st2">'+sx.d+'</div>':'')+
+     '<div class="sgo">'+
+     (sx.to?'<button onclick="pGo(\''+o.m+'\',\''+o.m+'-'+sx.to+'\')">&#8599; Abschnitt</button>':'')+
+     (sx.q&&sx.q.length?'<span class="qlab">Aufgaben</span>'+
+        sx.q.map(n=>'<button class="qb" onclick="pQ(\''+o.m+'\','+n+')">'+n+'</button>').join(""):'')+
+     (sx.min?'<span class="qlab" style="margin-left:4px">'+sx.min+' Min</span>':'')+
+     '</div></div></div>';
+  });
+  const dn=st.filter((_,k)=>!!SP[di+"_"+j+"_"+k]).length;
+  h+='<div class="pprog'+(dn===st.length?" ok":"")+'">'+(dn===st.length
+    ?"&#10003; <b>Block fertig</b> \u2014 in der Tagesliste automatisch abgehakt."
+    :"<b>"+dn+" von "+st.length+"</b> Schritten erledigt")+'</div>';
+ }else if(o.to){
+  h+='<div class="sgo" style="margin-top:14px"><button onclick="pGo(\''+o.m+'\',\''+o.m+'-'+o.to+'\')">&#8599; Zum Lernstoff</button></div>';
+ }
+ if(o.mk&&o.mk.length){
+  h+='<div class="plab">Danach im Kopf \u2014 das nimmst du mit</div><ul class="pmk2">'+
+     o.mk.map(x=>'<li>'+x+'</li>').join("")+'</ul>';
+ }
+ const rest=String(o.x).replace(/^\s*<b>[\s\S]*?<\/b>\s*/,"").trim();
+ if(rest)h+='<div class="plab">Worum es geht</div><div class="ptxt">'+rest+'</div>';
+ h+='</div>';
+ const b=document.getElementById("pbox");b.innerHTML=h;b.scrollTop=0;
+ document.getElementById("pov").classList.add("on");
+}
+function pClose(){document.getElementById("pov").classList.remove("on")}
+/* Schritt umschalten. Sind danach ALLE Schritte des Blocks gehakt, haekt sich der
+   Block in der Tagesliste selbst ab. Nimmst du einen Schritt wieder raus, waehrend
+   der Block komplett war, geht der Blockhaken wieder weg. Ein von Hand gesetzter
+   Haken bei unvollstaendigen Schritten bleibt unangetastet. */
+function pStep(id){
+ const p=id.split("_"),di=+p[0],j=+p[1],bid=di+"_"+j;
+ const dd=D.days[di],o=dd&&dd.o?dd.o[j]:null,st=(o&&o.st)||[];
+ const was=st.length>0&&st.every((_,k)=>!!SP[bid+"_"+k]);
+ SP[id]=!SP[id];spSave();
+ if(st.length){
+  const now=st.every((_,k)=>!!SP[bid+"_"+k]);
+  if(now&&!ST[bid]){ST[bid]=true;save();days();cal();arc();kpi()}
+  else if(was&&!now&&ST[bid]){ST[bid]=false;save();days();cal();arc();kpi()}
+ }
+ if(pCur)pOpen(pCur[0],pCur[1]);lauf()
+}
+function pGo(k,id){pClose();jump(k,id)}
+function pQ(k,n){pClose();jump(k,k+"-uebung");
+ setTimeout(()=>{try{if(window.QJUMP&&QJUMP[k])QJUMP[k](n)}catch(e){}},420)}
+function pDone(di,j){const st=(D.days[di].o[j].st)||[];
+ if(!st.length)return null;
+ return [st.filter((_,k)=>!!SP[di+"_"+j+"_"+k]).length,st.length];}
+
+/* Die Klausur selbst ist keine Lernzeit — sie zaehlt nicht ins Tagespensum. */
+function lexam(o){return /KLAUSUR/.test(o.x)}
+function llern(a){return a.reduce((s,e)=>s+(lexam(e[0])?0:e[0].min),0)}
+/* Pflicht ueber der Linie, Kuer darunter. Die Linie sagt, wann der Tag erledigt ist. */
+function lbody(d){
+ let h="",pf=[],ku=[];
+ d.o.forEach((o,j)=>{(o.ty==="V"?ku:pf).push([o,j])});
+ pf.forEach(e=>{h+=lrow2(d,e[0],e[1])});
+ if(!pf.length)return h+ku.map(e=>lrow2(d,e[0],e[1])).join("");
+ const done=pf.every(e=>!!ST[d.i+"_"+e[1]]);
+ const lern=llern(pf), nk=pf.filter(e=>!lexam(e[0])).length, hrs=Math.round(lern/60*10)/10;
+ const kl=pf.length-nk;
+ h+='<div class="feier'+(done?" ok":"")+'">'+(done
+   ?"&#10003; <b>Tagesziel erreicht.</b> Der Tag z\u00e4hlt als erledigt"+
+    (ku.length?" \u2014 was darunter steht, ist freiwillig.":".")
+   :"&#9209; <b>Bis hierhin, dann ist genug.</b> "+nk+" Pflichtbl\u00f6cke &middot; "+hrs+" h Lernzeit"+
+    (kl?" (die Klausur nicht gerechnet)":"")+
+    (ku.length?" &middot; darunter "+ku.length+" K\u00fcr-Block"+(ku.length>1?"e":"")+", nur wenn noch Luft ist":""))
+   +"</div>";
+ ku.forEach(e=>{h+=lrow2(d,e[0],e[1])});
+ return h;
+}
+function lrow2(d,o,j){
+ const id=d.i+"_"+j, c=!!ST[id];
+ const jb=o.to?'<button class="jp2" title="Zum Lernstoff: '+o.m+'" onclick="jump(\''+o.m+'\',\''+o.m+"-"+o.to+'\')">&#8599;</button>':"";
+ const pr=pDone(d.i,j);
+ const nq=o.st?o.st.reduce((a,x)=>a+((x.q||[]).length),0):0;
+ const sub=pr?(pr[0]+" von "+pr[1]+" Schritten"+(nq?" \u00b7 "+nq+" Aufgaben":"")):
+   (o.st?o.st.length+" Schritte":"");
+ return '<div class="lt'+(c?" done":"")+(o.ty==="V"?" kur":"")+'"><input type="checkbox" id="L'+id+'" '+(c?"checked":"")+
+   ' onchange="tog(\''+id+'\')"><span class="mk4">'+o.m+'</span><span class="m4">'+o.min+
+   ' Min</span><div class="ltx" onclick="pOpen('+d.i+','+j+')" title="Details und Schritte"><b>'+
+   lhead(o.x)+'</b>'+(sub?'<span class="lsub">'+sub+'</span>':'')+'</div>'+
+   '<button class="chev" onclick="pOpen('+d.i+','+j+')" title="Details und Schritte">&#9656;</button>'+jb+'</div>';
+}
+/* Modulansicht: alle Aufgaben eines Moduls ab START, nach Tagen gruppiert */
+function laufmod(win){
+ const days=win.filter(d=>d.o.some(o=>o.m===lMod));
+ const off=days.reduce((a,d)=>a+d.o.reduce((b,o,j)=>b+((o.m===lMod&&!ST[d.i+"_"+j])?(o.min||0):0),0),0);
+ const tot=days.reduce((a,d)=>a+d.o.filter(o=>o.m===lMod).length,0);
+ const don=days.reduce((a,d)=>a+d.o.filter((o,j)=>o.m===lMod&&ST[d.i+"_"+j]).length,0);
+ document.getElementById("laufheuteh").innerHTML=
+   "Alle "+lMod+"-Aufgaben ab "+fm(START)+" &middot; "+don+"/"+tot+" erledigt &middot; noch "+
+   Math.round(off/60*10)/10+" h";
+ let h='<div class="ltoday">';
+ days.forEach(d=>{
+  const n=dd(d.d);
+  h+='<div class="ldh"><b>'+fm(d.d)+'</b><span>'+
+     (n===0?"heute":n===1?"morgen":n>0?"in "+n+" Tagen":Math.abs(n)+" Tage her")+'</span>'+
+     (d.t==="klausur"?'<span class="kl">Klausur</span>':'')+
+     '<a href="#" onclick="lMod=null;lKey=\''+d.d+'\';lauf();return false">nur diesen Tag</a></div>';
+  d.o.forEach((o,j)=>{if(o.m===lMod)h+=lrow2(d,o,j)});
+ });
+ document.getElementById("laufheute").innerHTML=h+"</div>";
+}
+document.getElementById("lwprev").onclick=()=>{if(lwi>0){lwi--;laufcal(-1)}};
+document.getElementById("lwnext").onclick=()=>{if(lwi<LNW-1){lwi++;laufcal(1)}};
+document.getElementById("lwtoday").onclick=()=>{
+ const t=Math.min(LNW-1,Math.max(0,Math.round((monday(T)-LW0)/6048e5)));
+ const dir=t>lwi?1:t<lwi?-1:0;lwi=t;lKey=null;lMod=null;lauf();if(dir)laufcal(dir)};
+lauf();
+
+/* ---------- Archiv: Bedienung ---------- */
+document.getElementById("awprev").onclick=()=>{if(awi>0){awi--;arccal(-1)}};
+document.getElementById("awnext").onclick=()=>{if(awi<ANW-1){awi++;arccal(1)}};
+document.getElementById("awlast").onclick=()=>{
+ const dir=(ANW-1)>awi?1:-1;awi=ANW-1;aKey=null;aMod=null;arc();arccal(dir)};
+(function(){
+ const b=document.getElementById("tgla"),w=document.getElementById("arcwrap"),h=document.getElementById("tglah");
+ let open=false;try{open=localStorage.getItem("kl-arc")==="1"}catch(e){}
+ const set=()=>{w.classList.toggle("open",open);b.classList.toggle("open",open);
+  h.textContent=open?"zuklappen":"aufklappen und abhaken";
+  try{localStorage.setItem("kl-arc",open?"1":"0")}catch(e){}
+  if(open)arc();};
+ b.onclick=()=>{open=!open;set()};set();
+})();
+(function(){
+ const out=document.getElementById("expout"), msg=document.getElementById("expmsg");
+ document.getElementById("expbtn").onclick=()=>{
+  out.value=stand();out.classList.add("on");out.focus();out.select();
+  msg.textContent="markiert \u2014 Strg+C, dann in den Chat kleben";};
+ document.getElementById("expcopy").onclick=async()=>{
+  if(!out.value)out.value=stand();
+  out.classList.add("on");
+  try{await navigator.clipboard.writeText(out.value);msg.textContent="kopiert \u2713";}
+  catch(e){out.focus();out.select();msg.textContent="Zwischenablage gesperrt \u2014 mit Strg+C kopieren";}
+ };
+})();
+arc();
+
+try{
+  const w=localStorage.getItem("kl-theme");
+  if(w==="dark"||w==="light") document.documentElement.dataset.t=w;
+  else if(matchMedia("(prefers-color-scheme: dark)").matches) document.documentElement.dataset.t="dark";
+}catch(e){}
+th.textContent=document.documentElement.dataset.t==="dark"?"Light":"Dark";
+th.onclick=()=>{const d=document.documentElement.dataset.t==="dark";
+ document.documentElement.dataset.t=d?"light":"dark";
+ th.textContent=d?"Dark":"Light";
+ try{localStorage.setItem("kl-theme",d?"light":"dark")}catch(e){}};
+
+/* ---------- Start ---------- */
+window.addEventListener("hashchange",()=>go(location.hash.slice(1)||"hub"));
+go(location.hash.slice(1)||"hub");
+</script>
+<script>/* ==== KAF ==== */
+function $gKAF(i){i=String(i);return document.getElementById(i.indexOf("KAF-")===0?i:"KAF-"+i);}
+
+/* Selbstbericht je Übung: ✗ kann ich nicht · ~ wackelig · ✓ sitzt. Nochmal klicken hebt die Wahl auf. */
+(function(){
+  var KEY = "kaf-demo-tri", st = {};
+  try{ st = JSON.parse(localStorage.getItem(KEY) || "{}"); }catch(e){}
+  var tris = document.querySelectorAll(".kf-tri");
+  function stand(){
+    var ok = 0, n = tris.length;
+    for(var k in st){ if(st[k] === "ok") ok++; }
+    var el = $gKAF("kfstand");
+    if(el) el.textContent = ok + " von " + n + " Übungen sitzen.";
+  }
+  Array.prototype.forEach.call(tris, function(t){
+    var id = t.getAttribute("data-id");
+    Array.prototype.forEach.call(t.querySelectorAll("button"), function(b){
+      if(st[id] === b.getAttribute("data-v")) b.classList.add("on");
+      b.addEventListener("click", function(){
+        var v = b.getAttribute("data-v");
+        st[id] = (st[id] === v) ? undefined : v;
+        Array.prototype.forEach.call(t.querySelectorAll("button"), function(x){ x.classList.toggle("on", st[id] === x.getAttribute("data-v")); });
+        try{ localStorage.setItem(KEY, JSON.stringify(st)); }catch(e){}
+        stand();
+      });
+    });
+  });
+  stand();
+})();
+
+/* ==== RAD ==== */
+
+/* ==== GAR ==== */
+</script>
+</html>

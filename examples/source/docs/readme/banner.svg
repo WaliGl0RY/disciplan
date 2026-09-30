@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430">
+<rect x="0.5" y="0.5" width="1199" height="429" rx="22" fill="#16161a" stroke="#2c2c33"/>
+<circle cx="509.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="535.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="561.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="587.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="613.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="639.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="665.0" cy="38" r="6" fill="#e08858"/>
+<circle cx="691.0" cy="38" r="5" fill="none" stroke="#e08858" stroke-width="2"/>
+<text x="600" y="108" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="55" font-weight="700" letter-spacing="-1"><tspan fill="#e9e8e3">disci</tspan><tspan fill="#e08858">plan</tspan></text>
+<text x="600" y="196" text-anchor="middle" font-family="Georgia, 'Times New Roman', Times, serif" font-size="64" fill="#e9e8e3">Motivation fades.</text>
+<text x="600" y="268" text-anchor="middle" font-family="Georgia, 'Times New Roman', Times, serif" font-size="64" fill="#e08858">Discipline stays.</text>
+<line x1="330" y1="358" x2="870" y2="358" stroke="#2c2c33" stroke-width="3" stroke-linecap="round"/>
+<line x1="330" y1="358" x2="870" y2="358" stroke="#e08858" stroke-width="3" stroke-linecap="round" opacity=".45"/>
+<circle cx="330" cy="358" r="9" fill="#16161a" stroke="#e08858" stroke-width="3"/>
+<text x="330" y="332" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#e9e8e3">end of July</text>
+<text x="330" y="400" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" fill="#9a9a92">building</text>
+<circle cx="600" cy="358" r="9" fill="#16161a" stroke="#e08858" stroke-width="3"/>
+<text x="600" y="332" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#e9e8e3">4 August</text>
+<text x="600" y="400" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" fill="#9a9a92">studying</text>
+<circle cx="870" cy="358" r="10" fill="#e08858"/>
+<text x="870" y="332" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="21" font-weight="700" fill="#e9e8e3">1–25 Sept</text>
+<text x="870" y="400" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="19" fill="#9a9a92">8 exams</text>
+</svg>

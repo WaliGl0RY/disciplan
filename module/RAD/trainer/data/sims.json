@@ -1,0 +1,21 @@
+[
+{"id": "sim1", "nr": 1, "name": "Probe-Werkstattprüfung (Demo)", "hinweis": "Erfundene Aufgaben, nur zum Zeigen der Simulation.", "minuten": 30,
+ "mc": [
+  {"id": "m1", "lec": null, "quelle": "Demo", "frage": "Vorne 48, hinten 16 Zähne: Übersetzung?", "optionen": ["3", "1/3", "32", "64"], "richtig": [0],
+   "erklaerung": "48 / 16 = 3.", "herkunft": "Demo", "code": "", "erklaerung_en": "48 / 16 = 3.",
+   "optnotiz": ["Richtig.", "Umgedreht.", "Differenz, nicht Verhältnis.", "Summe."], "optnotiz_en": ["Correct.", "Reversed.", "Difference, not ratio.", "Sum."], "varianten": []},
+  {"id": "m2", "lec": null, "quelle": "Demo", "frage": "Bremse quietscht nach dem Regen. Was zuerst?", "optionen": ["Felge und Beläge reinigen", "Neue Kette", "Sattel tiefer", "Mehr Reifendruck"], "richtig": [0],
+   "erklaerung": "Schmutz zwischen Belag und Reibfläche ist die häufigste Ursache.", "herkunft": "Demo", "code": "", "erklaerung_en": "Dirt between pad and braking surface is the usual cause.",
+   "optnotiz": ["Richtig.", "Nein.", "Nein.", "Nein."], "optnotiz_en": ["Correct.", "No.", "No.", "No."], "varianten": []}
+ ],
+ "aufgaben": [
+  {"nr": 1, "titel": "Schlauch wechseln", "punkte": 6, "text": "Wechsle den Schlauch am Hinterrad und pumpe auf den Druck, der auf der Flanke steht.",
+   "checkliste": [{"t": "Rad ausgebaut, ohne das Schaltwerk zu verbiegen", "p": 2}, {"t": "Reifen innen nach Fremdkörpern abgetastet", "p": 2}, {"t": "Druck im Bereich der Flanke", "p": 2}],
+   "test": ["Drucktest: 5 Minuten warten, Druck erneut messen", "Rad drehen: Reifen läuft rund, kein Schlauch sichtbar"],
+   "loesung": "1. Rad ausbauen\n2. Reifen abhebeln, Schlauch raus\n3. Innenseite abtasten\n4. Neuen Schlauch leicht aufpumpen, einlegen\n5. Reifen aufziehen, Druck laut Flanke"},
+  {"nr": 2, "titel": "Schaltung nachstellen", "punkte": 4, "text": "Die Kette springt zwischen zwei Ritzeln. Stelle die Seilzugspannung nach.",
+   "checkliste": [{"t": "Einstellschraube in kleinen Schritten gedreht", "p": 2}, {"t": "Alle Gänge geprüft", "p": 2}],
+   "test": ["Durch alle Gänge schalten, hoch und runter", "Kein Rattern im mittleren Gang"],
+   "loesung": "Einstellschraube eine Viertelumdrehung drehen, testen, wiederholen — immer nur eine kleine Änderung."}
+ ]}
+]

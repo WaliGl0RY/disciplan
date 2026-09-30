@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="330" viewBox="0 0 1200 330" font-family="Segoe UI, -apple-system, Helvetica, Arial, sans-serif">
+<rect x="0.5" y="0.5" width="1199" height="329" rx="18" fill="#16161a" stroke="#2c2c33"/>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#e08858"/></marker></defs>
+<rect x="24" y="40" width="204" height="190" rx="14" fill="#1e1e24" stroke="#2c2c33" stroke-width="1"/>
+<circle cx="54" cy="72" r="15" fill="#25252c"/>
+<text x="54" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">1</text>
+<text x="80" y="78" fill="#e9e8e3" font-size="19" font-weight="700">Material</text>
+<rect x="40" y="106" width="92" height="24" rx="6" fill="#25252c"/>
+<text x="49" y="122.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">quellen/</text>
+<rect x="40" y="136" width="138" height="24" rx="6" fill="#25252c"/>
+<text x="49" y="152.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">altklausuren/</text>
+<text x="40" y="212" fill="#9a9a92" font-size="13">slides, scripts, exercises</text>
+<line x1="231" y1="135.0" x2="253" y2="135.0" stroke="#e08858" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="258" y="40" width="204" height="190" rx="14" fill="#1e1e24" stroke="#2c2c33" stroke-width="1"/>
+<circle cx="288" cy="72" r="15" fill="#25252c"/>
+<text x="288" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">2</text>
+<text x="314" y="78" fill="#e9e8e3" font-size="19" font-weight="700">Analyse</text>
+<rect x="274" y="106" width="156" height="24" rx="6" fill="#25252c"/>
+<text x="283" y="122.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">mode per module</text>
+<text x="274" y="212" fill="#9a9a92" font-size="13">what the exam rewards</text>
+<line x1="465" y1="135.0" x2="487" y2="135.0" stroke="#e08858" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="492" y="40" width="204" height="190" rx="14" fill="#1e1e24" stroke="#e08858" stroke-width="2"/>
+<circle cx="522" cy="72" r="15" fill="#b0522c"/>
+<text x="522" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">3</text>
+<text x="548" y="78" fill="#e9e8e3" font-size="19" font-weight="700">Build</text>
+<rect x="508" y="106" width="92" height="24" rx="6" fill="#25252c"/>
+<text x="517" y="122.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">&lt;K&gt;.html</text>
+<rect x="508" y="136" width="92" height="24" rx="6" fill="#25252c"/>
+<text x="517" y="152.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">trainer/</text>
+<rect x="508" y="166" width="138" height="24" rx="6" fill="#25252c"/>
+<text x="517" y="182.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">fehler-log.md</text>
+<text x="508" y="212" fill="#9a9a92" font-size="13">study doc · self-test · mistakes</text>
+<line x1="699" y1="135.0" x2="721" y2="135.0" stroke="#e08858" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="726" y="40" width="204" height="190" rx="14" fill="#1e1e24" stroke="#e08858" stroke-width="2"/>
+<circle cx="756" cy="72" r="15" fill="#b0522c"/>
+<text x="756" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">4</text>
+<text x="782" y="78" fill="#e9e8e3" font-size="19" font-weight="700">Plan</text>
+<rect x="742" y="106" width="55" height="24" rx="6" fill="#25252c"/>
+<text x="751" y="122.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">DAYS</text>
+<text x="742" y="212" fill="#9a9a92" font-size="13">typed blocks, steps, a daily line</text>
+<line x1="933" y1="135.0" x2="955" y2="135.0" stroke="#e08858" stroke-width="2.5" marker-end="url(#ar)"/>
+<rect x="960" y="40" width="204" height="190" rx="14" fill="#1e1e24" stroke="#2c2c33" stroke-width="1"/>
+<circle cx="990" cy="72" r="15" fill="#25252c"/>
+<text x="990" y="77.5" fill="#fff" font-size="15" font-weight="700" text-anchor="middle">5</text>
+<text x="1016" y="78" fill="#e9e8e3" font-size="19" font-weight="700">Cockpit</text>
+<rect x="976" y="106" width="92" height="24" rx="6" fill="#25252c"/>
+<text x="985" y="122.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">build.py</text>
+<rect x="976" y="136" width="165" height="24" rx="6" fill="#25252c"/>
+<text x="985" y="152.5" fill="#e08858" font-size="14" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">→ klausuren.html</text>
+<text x="976" y="212" fill="#9a9a92" font-size="13">one page for everything</text>
+<path d="M828.0,232 C828.0,292 594.0,292 594.0,236" fill="none" stroke="#e08858" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ar)"/>
+<text x="711.0" y="306" fill="#9a9a92" font-size="13" text-anchor="middle">every drill: mistakes go into fehler-log.md, the next drill starts there</text>
+</svg>
